@@ -16,10 +16,10 @@
     <!--The second div of the page grid-->
     <div>
         <!--The grid which contains the main content of the page-->
-        <div class="grid-container">
+        <div class="about-grid-container">
             <div class="Title">
                 <p>
-                    One
+                    About Me
                 </p>
             </div>
             <div class="Image">
