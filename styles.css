@@ -1,7 +1,7 @@
 body {
 	background-color: #ffffff;
 	}
-/*The font styling*/
+/*FONTS*/
 h1 {
   font-size: 26px;
   font-family: Raleway;
@@ -13,17 +13,18 @@ p {
 }
 
 
-/*The header*/
+/*THE HEADER*/
 .header {
   width: 100%;
   background-color: #0c59cf;
   color: white;
   font-family: Raleway;
-  margin: 0%;
   padding-top: 10px;
   padding-bottom: 10px;
+   
 }
 
+/*THE NAV*/
 /* Grid styling nav*/
 .nav-grid-container {
   background-color: #91e4fb;
@@ -34,9 +35,32 @@ p {
   grid-template-areas: ". . .";
 }
 
+#header-nav-container {
+  position: fixed;
+    right: 0;
+    top: 0;
+    left: 0;
+    height: auto;
+}
+
 /*The nav hover effect*/
-.nav-grid-container-cells:hover {
+.hover-effect:hover {
   background-color:rgba(255, 255, 255, 0.5);
+
+}
+
+/*THE FOOTER*/
+.footer {
+    background-color: #91e4fb;
+    width: 100%;
+    display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: ". .";
+      position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
 
 }
 	
