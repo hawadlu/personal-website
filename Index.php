@@ -6,9 +6,12 @@
         <header>
                 <?php
                         require("Header.php");
-                        require("Nav.php")
+                        
                 ?>
         </header>
+        <?php
+                        require("Nav.php")
+                ?>
     <body></body>       
 	</body>
         <footer>

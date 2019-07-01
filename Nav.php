@@ -4,23 +4,30 @@
 <link rel="stylesheet" href="styles.css">
 <!--The divs that contain each of the nav options-->
 <div class="nav-grid-container">
-	<div>
-		<p>
-		hello
-	</p>
-
-	</div>
-	<div>
-		<p>
-			hello
-		</p>
-
-	</div>
-	<div>
-		<p>
-			hello
-		</p>
-
-	</div>
 	
+	<div>
+		<center>
+			<p>
+				Home
+			</p>
+		</center>
+		
+	</div>
+	<div>
+		<center>
+			<p>
+				Education and Experience
+			</p>
+		</center>
+		
+	</div>
+	<div>
+		<center>
+			<p>
+				Examples
+			</p>
+		</center>
+		
+	</div>
+
 </div>
