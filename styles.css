@@ -1,7 +1,17 @@
 body {
-	background-color: #000000;
+	background-color: #ffffff;
 	}
-	
+
+/*The header*/
+.header {
+  width: 100%;
+  background-color: #0c59cf;
+  color: white;
+  font-family: Raleway;
+  padding: 1px;
+
+}
+
 /* Grid styling nav*/
 .grid-container-nav {
   display: grid;
