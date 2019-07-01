@@ -17,14 +17,30 @@
     <div>
         <!--The grid which contains the main content of the page-->
         <div class="grid-container">
-            <div class="Title"><p>One</p></div>
-            <div class="Image"><p>One</p></div>
-            <div class="Description"><p>One</p></div>
-            <div class="Other"><p>One</p></div>
+            <div class="Title">
+                <p>
+                    One
+                </p>
+            </div>
+            <div class="Image">
+                <p>
+                    One
+                </p>
+            </div>
+            <div class="Description">
+                <p>
+                    One
+                </p>
+            </div>
+            <div class="Other">
+                <p>
+                    One
+                </p>
+            </div>
         </div>  
     </div>
     
-    
+
     
 </div>
 <!-- Footer -->
