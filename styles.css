@@ -13,17 +13,11 @@ body {
 }
 
 /* Grid styling nav*/
-.grid-container-nav {
+.nav-grid-container {
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  margin-top: auto;
-  padding: 0.5%;
-  background-image: #123456;
-}
-.grid-item-nav {
-  text-align: center;
-  margin-top: auto;
-  text-align: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: ". . .";
 }
 	
 	
