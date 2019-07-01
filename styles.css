@@ -1,0 +1,19 @@
+body {
+	background-color: #000000;
+	}
+	
+/* Grid styling nav*/
+.grid-container-nav {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  margin-top: auto;
+  padding: 0.5%;
+  background-image: #123456;
+}
+.grid-item-nav {
+  text-align: center;
+  margin-top: auto;
+  text-align: center;
+}
+	
+	
