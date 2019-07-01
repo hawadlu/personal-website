@@ -5,7 +5,7 @@
 <!--The divs that contain each of the nav options-->
 <div class="nav-grid-container">
 	
-	<div>
+	<div class="nav-grid-container-cells">
 		<center>
 			<p>
 				Home
@@ -13,7 +13,7 @@
 		</center>
 		
 	</div>
-	<div>
+	<div class="nav-grid-container-cells">
 		<center>
 			<p>
 				Education and Experience
@@ -21,7 +21,7 @@
 		</center>
 		
 	</div>
-	<div>
+	<div class="nav-grid-container-cells">
 		<center>
 			<p>
 				Examples

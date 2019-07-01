@@ -33,5 +33,11 @@ p {
   grid-template-rows: 1fr;
   grid-template-areas: ". . .";
 }
+
+/*The nav hover effect*/
+.nav-grid-container-cells:hover {
+  background-color:rgba(255, 255, 255, 0.5);
+
+}
 	
 	
