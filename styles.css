@@ -35,14 +35,6 @@ p {
   grid-template-areas: ". . .";
 }
 
-#header-nav-container {
-  position: fixed;
-    right: 0;
-    top: 0;
-    left: 0;
-    height: auto;
-}
-
 /*The nav hover effect*/
 .hover-effect:hover {
   background-color:rgba(255, 255, 255, 0.5);
@@ -63,5 +55,38 @@ p {
     left: 0;
 
 }
+
+/*STYLING FOR THE MAIN PAGE ELEMENTS*/
+/*The grid that holds all the elements*/
+.page-grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: "." ".";
+  padding-bottom: 50px;
+}
+
+#header-nav-container {
+  position: fixed;
+    right: 0;
+    top: 0;
+    left: 0;
+    height: auto;
+}
+/*The about me grid on the home page*/
+.about-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: "Image Title" "Image Description" "Other Other";
+}
+
+.about-Title { grid-area: about-Title; }
+
+.about-Image { grid-area: about-Image; }
+
+.about-Description { grid-area: about-Description; }
+
+.about-Other { grid-area: about-Other; }
 	
 	
