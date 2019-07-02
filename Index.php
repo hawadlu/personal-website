@@ -14,7 +14,7 @@
     <!--The second div of the page grid-->
     <div>
         <!--The grid which contains the main content of the page-->
-        <div class="about-grid-container">
+        <div class="aboutMe-grid-container">
             <div class="aboutMe-Title">
                 <p>
                     About Me

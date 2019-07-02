@@ -74,25 +74,16 @@ p {
     height: auto;
 }
 /*The about me grid on the home page*/
-.aboutMe-Title { grid-area: about-Title;}
-.aboutMe-Image { grid-area: about-Image; }
-.aboutMe-Description{ grid-area: about-Description; }
-
-
-
-.about-grid-container {
-  display: inline-grid;
-  grid-template-areas:
-    'about-Image about-Title'
-    'about-Image about-Description'
-    'about-Description about-Description';
-  grid-gap: 1px;
-  margin: 0% 10% 15% 10%;
-  width: 90%;
-  padding: 3px;
-  border-radius: 6px;
-  align-items: center;
-  background:rgba(255,255,255, 0.1)
+.aboutMe-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "aboutMe-Image aboutMe-Title" "aboutMe-Image aboutMe-Descritption";
 }
-	
+
+.aboutMe-Image { grid-area: aboutMe-Image; }
+
+.aboutMe-Title { grid-area: aboutMe-Title; }
+
+.aboutMe-Descritption { grid-area: aboutMe-Descritption; }
 	
