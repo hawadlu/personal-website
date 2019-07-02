@@ -15,17 +15,17 @@
     <div>
         <!--The grid which contains the main content of the page-->
         <div class="about-grid-container">
-            <div class="about-Title">
+            <div class="aboutMe-Title">
                 <p>
                     About Me
                 </p>
             </div>
-            <div class="about-Image">
+            <div class="aboutMe-Image">
                 <p>
                     <img src="Images/Test Image.png" alt="TEST IMAGE">
                 </p>
             </div>
-            <div class="about-Description">
+            <div class="aboutMe-Description">
                 <p>
                     One
                 </p>
