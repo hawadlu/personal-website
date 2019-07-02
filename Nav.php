@@ -7,25 +7,31 @@
 	
 	<div class="hover-effect">
 		<center>
-			<p>
-				Home
-			</p>
+			<a href="index.php">
+				<p>
+					Home
+				</p>
+			</a>
 		</center>
 		
 	</div>
 	<div class="hover-effect">
 		<center>
-			<p>
-				Education and Experience
-			</p>
+			<a href="educationAndExperience.php">
+				<p>
+					Education and Experience
+				</p>
+			</a>
 		</center>
 		
 	</div>
 	<div class="hover-effect">
 		<center>
-			<p>
-				Examples
-			</p>
+			<a href="examples.php">
+				<p>
+					Examples
+				</p>
+			</a>
 		</center>
 		
 	</div>
