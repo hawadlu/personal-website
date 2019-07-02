@@ -25,7 +25,7 @@
             <div class="aboutMe-Image">
                 <center>
                     <p>
-                        <img src="Images/Test Image.png" alt="TEST IMAGE">
+                        <img src="Images/Test Image.jpg" alt="TEST IMAGE">
                     </p>
                 </center>
             </div>
