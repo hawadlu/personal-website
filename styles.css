@@ -1,6 +1,6 @@
 body {
 	background-color: #ffffff;
-	}
+}
 /*FONTS*/
 h1 {
   font-size: 26px;
@@ -21,7 +21,7 @@ p {
   font-family: Raleway;
   padding-top: 10px;
   padding-bottom: 10px;
-   
+
 }
 
 /*THE NAV*/
@@ -43,16 +43,16 @@ p {
 
 /*THE FOOTER*/
 .footer {
-    background-color: #91e4fb;
-    width: 100%;
-    display: grid;
+  background-color: #91e4fb;
+  width: 100%;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: ". .";
-      position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
 }
 
@@ -68,22 +68,24 @@ p {
 
 #header-nav-container {
   position: fixed;
-    right: 0;
-    top: 0;
-    left: 0;
-    height: auto;
+  right: 0;
+  top: 0;
+  left: 0;
+  height: auto;
 }
 /*The about me grid on the home page*/
 .aboutMe-grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas: "aboutMe-Image aboutMe-Title" "aboutMe-Image aboutMe-Descritption";
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  grid-template-areas: "aboutMe-Title"
+  "aboutMe-Image"
+  "aboutMe-Descritption";
 }
 
 .aboutMe-Image { grid-area: aboutMe-Image; }
 
-.aboutMe-Title { grid-area: aboutMe-Title; }
+  .aboutMe-Title { grid-area: aboutMe-Title; }
 
-.aboutMe-Descritption { grid-area: aboutMe-Descritption; }
-	
+  .aboutMe-Description { grid-area: aboutMe-Descritption; }
+
