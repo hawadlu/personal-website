@@ -1,47 +1,40 @@
 
 <html>
 <!--Pulls in the head and other required pages-->
-<?php require("Head.php") ?>
-<div class="page-grid-container">       
+<?php require("Head.php") ?>  
+<div class="page-grid-container">     
     <!--The first div of the page grid-->
-    <div class="page-grid-container">  
-        <div style="background-color: red">
-            <?php
-            require("Header.php");
-            require("Nav.php");
-            ?>
-        </div>
+    <div>
+        <?php
+        require("Header.php");
+        require("Nav.php");
+        ?>
     </div>
 
     <!--The second div of the page grid-->
     <div>
         <!--The grid which contains the main content of the page-->
         <div class="about-grid-container">
-            <div class="Title">
+            <div class="about-Title">
                 <p>
                     About Me
                 </p>
             </div>
-            <div class="Image">
+            <div class="about-Image">
                 <p>
-                    One
+                    <img src="Images/Test Image.png" alt="TEST IMAGE">
                 </p>
             </div>
-            <div class="Description">
-                <p>
-                    One
-                </p>
-            </div>
-            <div class="Other">
+            <div class="about-Description">
                 <p>
                     One
                 </p>
             </div>
         </div>  
     </div>
-    
 
-    
+
+
 </div>
 <!-- Footer -->
 <?php
