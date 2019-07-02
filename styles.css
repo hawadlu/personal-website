@@ -38,8 +38,19 @@ p {
 /*The nav hover effect*/
 .hover-effect:hover {
   background-color:rgba(255, 255, 255, 0.5);
-
 }
+  /*For mobile devices*/
+@media (max-width:650px){
+.nav-grid-container {
+  background-color: #91e4fb;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: " . " " . " " .";
+}
+}
+
 
 /*THE FOOTER*/
 .footer {
