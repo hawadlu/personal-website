@@ -15,8 +15,16 @@
     <div>
         <!--The grid which contains the main content of the page-->
         <div class="tab">
-          <button class="tablinks" onclick="showEducationAndExperience(event, 'Education')">Education</button>
-          <button class="tablinks" onclick="showEducationAndExperience(event, 'Experience')">Experience</button>
+            <div class="educationAndExperience-grid-container">
+              <div>               
+                  <button class="tablinks" onclick="showEducationAndExperience(event, 'Education')">Education</button>
+              </div>
+              <div>
+                  <button class="tablinks" onclick="showEducationAndExperience(event, 'Experience')">Experience</button>
+              </div>
+          </div>
+          
+          
       </div>
 
       <div id="Education" class="tabcontent">
