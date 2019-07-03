@@ -38,7 +38,7 @@
             </div>
             <div class="education-Subject">
                 <center>
-                        <p><strong>Subject: </strong>xyz</p>
+                    <p><strong>Subject: </strong>xyz</p>
                 </center>
             </div>
             <div class="education-Grade">
@@ -67,15 +67,45 @@
 
     <div id="Experience" class="tabcontent">
       <div class="experience-grid-container">
-  <div class="experience-name"><p>Hi</p></div>
-  <div class="experience-year"><p>Hi</p></div>
-  <div class="experience-langauges"><p>Hi</p></div>
-  <div class="experience-link"><p>Hi</p></div>
-  <div class="experience-description"><p>Hi</p></div>
+          <div class="experience-name">
+            <center>
+                <h1>
+                    Experience Name
+                </h1>
+            </center>
+        </div>
+        <div class="experience-year">
+            <center>
+                <p>
+                    Year: 2019
+                </p>
+            </center>
+        </div>
+        <div class="experience-langauges">
+            <center>
+                <p>
+                    language(s): HTML, CSS, JavaScript
+                </p>
+            </center>
+        </div>
+        <div class="experience-link">
+            <center>
+                <p>
+                    link: abcdef
+                </p>
+            </center>
+        </div>
+        <div class="experience-description">
+            <center>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac elementum tellus. Pellentesque vehicula metus eu posuere vulputate. Aliquam erat volutpat. Sed metus nibh, malesuada consectetur dolor a, commodo convallis sapien. Vestibulum ex magna, laoreet vitae nibh feugiat, sodales vestibulum eros. Nullam gravida ultricies magna, quis fringilla est posuere nec. Integer congue cursus eros, quis maximus orci. In hac habitasse platea dictumst. Nam tincidunt, nisl eget eleifend posuere, nisi ex gravida ex, vitae blandit felis erat a urna. Sed id quam odio. Sed suscipit id nunc ut porttitor. Suspendisse feugiat eget erat sit amet dapibus. Donec auctor velit vitae quam lobortis dignissim.
+                </p>
+            </center>
+        </div>
+    </div>
 </div>
-  </div>
 
-  <script>
+<script>
     function showEducationAndExperience(evt, cityName) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("tabcontent");
