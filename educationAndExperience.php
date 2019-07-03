@@ -14,38 +14,45 @@
     <!--The second div of the page grid-->
     <div>
         <!--The grid which contains the main content of the page-->
-        <div class="aboutMe-grid-container">
-            <div class="aboutMe-Title">
-                <center>
-                    <h1>
-                        About Me
-                    </h1>
-                </center>
-            </div>
-            <div class="aboutMe-Image">
-                <center>
-                    <p>
-                        <img src="Images/Test Image.jpg" alt="TEST IMAGE">
-                    </p>
-                </center>
-            </div>
-            <div class="aboutMe-Description">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed sagittis sem. Fusce iaculis leo at lacus fermentum vulputate. Integer scelerisque feugiat dui eu maximus. Suspendisse potenti. Integer arcu ligula, gravida ut purus nec, mollis dictum est. Fusce cursus mauris at felis fringilla ultricies. Sed vestibulum mollis congue. Mauris ut scelerisque magna. Curabitur euismod magna at sapien facilisis ultrices. Vestibulum mollis diam feugiat, dignissim sapien ac, vestibulum tellus. Donec gravida bibendum consectetur. Quisque vel erat ac turpis volutpat scelerisque. Nunc aliquet nunc vitae porta rutrum. Donec aliquet suscipit nulla et feugiat. Morbi sed urna sed nunc vulputate porttitor.
-                    <br>
-                    <br>
-                    Sed laoreet quam in elit dapibus, porttitor feugiat eros ultricies. Nulla sit amet tincidunt nunc. Suspendisse ut mi orci. Aenean sit amet faucibus dui. Donec at varius nisl. Pellentesque lacus mauris, imperdiet eu bibendum interdum, gravida ac ex. Sed lobortis eleifend eros a tincidunt.
-                </p>
-            </div>
-        </div>  
-    </div>
+        <div class="tab">
+          <button class="tablinks" onclick="showEducationAndExperience(event, 'Education')">Education</button>
+          <button class="tablinks" onclick="showEducationAndExperience(event, 'Experience')">Experience</button>
+      </div>
+
+      <div id="Education" class="tabcontent">
+          <h3>Education</h3>
+          <p>London is the capital city of England.</p>
+      </div>
+
+      <div id="Experience" class="tabcontent">
+          <h3>Experience</h3>
+          <p>Paris is the capital of France.</p> 
+      </div>
+
+      <script>
+        function showEducationAndExperience(evt, cityName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</div>
 
 
 
 </div>
 <!-- Footer -->
 <?php
-        //Pull information from the footer page
-            require("Footer.php");//'Require is 100% needed for this site to run
-            ?>
-            </html>
+//Pull information from the footer page
+require("Footer.php");//'Require is 100% needed for this site to run
+?>
+</html>
