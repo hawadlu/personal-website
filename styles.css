@@ -125,7 +125,7 @@ button {
 
 /* Style the tab */
 .tab {
-  
+  overflow: hidden;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
 }
@@ -168,6 +168,18 @@ button {
   grid-template-areas: "Institution Institution Institution Institution" 
   "Subject Grade Credits Year";
 }
+
+/*Styling for mobile*/
+@media (max-width:450px){
+  .education-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1auto 1auto 1auto;
+  grid-template-areas: "Institution Institution" 
+  "Subject Grade" 
+  "Credits Year";
+}
+  }
 
 .education-Institution { grid-area: Institution; }
 
