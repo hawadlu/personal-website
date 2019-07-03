@@ -28,8 +28,13 @@
       </div>
 
       <div id="Education" class="tabcontent">
-          <h3>Education</h3>
-          <p>London is the capital city of England.</p>
+          <div class="education-grid-container">
+            <div class="education-Institution"><p>Hi</p></div>
+              <div class="education-Subject"><p>Hi</p></div>
+              <div class="education-Grade"><p>Hi</p></div>
+              <div class="education-Credits"><p>Hi</p></div>
+              <div class="education-Year"><p>Hi</p></div>
+          </div>
       </div>
 
       <div id="Experience" class="tabcontent">
