@@ -1,4 +1,5 @@
 CREATE TABLE `Projects` (
+	`uniqueKey` tinyint(2) NOT NULL UNIQUE,
 	`name` varchar(30) NOT NULL,
 	`description` varchar(1000) NOT NULL,
 	`projectYear` year(4) NOT NULL,
@@ -14,7 +15,7 @@ CREATE TABLE `Languages` (
 );
 
 CREATE TABLE `Education` (
-	`key` tinyint NOT NULL UNIQUE,
+	`uniqueKey` tinyint NOT NULL UNIQUE,
 	`institutionFK` tinyint(2) NOT NULL UNIQUE,
 	`subjectFK` tinyint(2) NOT NULL UNIQUE,
 	`gradeFk` tinyint(2) NOT NULL UNIQUE,
@@ -23,7 +24,7 @@ CREATE TABLE `Education` (
 );
 
 CREATE TABLE `Experience` (
-	`key` tinyint(2) NOT NULL UNIQUE,
+	`uniqueKey` tinyint(2) NOT NULL UNIQUE,
 	`name` varchar(30) NOT NULL,
 	`experienceYear` DATE NOT NULL,
 	`experienceDescription` varchar(255) NOT NULL,
