@@ -1,9 +1,10 @@
-CREATE TABLE `Primary` (
+CREATE TABLE `Projects` (
 	`name` varchar(30) NOT NULL,
 	`description` varchar(1000) NOT NULL,
 	`projectYear` year(4) NOT NULL,
 	`languageFK` tinyint(2) NOT NULL,
-	`link` varchar(100) NOT NULL
+	`Link` varchar(100) NOT NULL,
+	`projectDescription` varchar(255) NOT NULL
 );
 
 CREATE TABLE `Languages` (
@@ -12,5 +13,61 @@ CREATE TABLE `Languages` (
 	PRIMARY KEY (`languagePK`)
 );
 
-ALTER TABLE `Primary` ADD CONSTRAINT `Primary_fk0` FOREIGN KEY (`languageFK`) REFERENCES `Languages`(`languagePK`);
+CREATE TABLE `Education` (
+	`key` tinyint NOT NULL UNIQUE,
+	`institutionFK` tinyint(2) NOT NULL UNIQUE,
+	`subjectFK` tinyint(2) NOT NULL UNIQUE,
+	`gradeFk` tinyint(2) NOT NULL UNIQUE,
+	`Credits` tinyint NOT NULL,
+	`Year` DATE NOT NULL
+);
+
+CREATE TABLE `Experience` (
+	`key` tinyint(2) NOT NULL UNIQUE,
+	`name` varchar(30) NOT NULL,
+	`experienceYear` DATE NOT NULL,
+	`experienceDescription` varchar(255) NOT NULL,
+	`languageOneFK` tinyint(2) NOT NULL,
+	`languageTwoFK` tinyint(2) NOT NULL,
+	`languageThreeFK` tinyint(2) NOT NULL,
+	`languageFourFK` tinyint(2) NOT NULL,
+	`languageFiveFK` tinyint(2) NOT NULL,
+	`Link` varchar(100) NOT NULL
+);
+
+CREATE TABLE `Institution` (
+	`institutionPK` tinyint(2) NOT NULL,
+	`institution` varchar(20) NOT NULL,
+	PRIMARY KEY (`institutionPK`)
+);
+
+CREATE TABLE `Subject` (
+	`subjectPK` tinyint(2) NOT NULL,
+	`Subject` varchar(20) NOT NULL,
+	PRIMARY KEY (`subjectPK`)
+);
+
+CREATE TABLE `Grade` (
+	`gradePK` tinyint(2) NOT NULL,
+	`Grade` varchar(1) NOT NULL,
+	PRIMARY KEY (`gradePK`)
+);
+
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk0` FOREIGN KEY (`languageFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Education` ADD CONSTRAINT `Education_fk0` FOREIGN KEY (`institutionFK`) REFERENCES `Institution`(`institutionPK`);
+
+ALTER TABLE `Education` ADD CONSTRAINT `Education_fk1` FOREIGN KEY (`subjectFK`) REFERENCES `Subject`(`subjectPK`);
+
+ALTER TABLE `Education` ADD CONSTRAINT `Education_fk2` FOREIGN KEY (`gradeFk`) REFERENCES `Grade`(`gradePK`);
+
+ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk0` FOREIGN KEY (`languageOneFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk1` FOREIGN KEY (`languageTwoFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk2` FOREIGN KEY (`languageThreeFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk3` FOREIGN KEY (`languageFourFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk4` FOREIGN KEY (`languageFiveFK`) REFERENCES `Languages`(`languagePK`);
 
