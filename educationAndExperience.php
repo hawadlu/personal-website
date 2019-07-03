@@ -29,35 +29,63 @@
 
       <div id="Education" class="tabcontent">
           <div class="education-grid-container">
-            <div class="education-Institution"><p>Hi</p></div>
-              <div class="education-Subject"><p>Hi</p></div>
-              <div class="education-Grade"><p>Hi</p></div>
-              <div class="education-Credits"><p>Hi</p></div>
-              <div class="education-Year"><p>Hi</p></div>
-          </div>
-      </div>
+            <div class="education-Institution">
+                <center>
+                    <h1>
+                        Institution
+                    </h1>
+                </center>
+            </div>
+            <div class="education-Subject">
+                <center>
+                        <p><strong>Subject: </strong>xyz</p>
+                </center>
+            </div>
+            <div class="education-Grade">
+                <center>
+                    <p>
+                        Grade: E
+                    </p>
+                </center>
+            </div>
+            <div class="education-Credits">
+                <center>
+                    <p>
+                        Credits: 25
+                    </p>
+                </center>
+            </div>
+            <div class="education-Year">
+                <center>
+                    <p>
+                        Year: 2019
+                    </p>
+                </center>
+            </div>
+        </div>
+    </div>
 
-      <div id="Experience" class="tabcontent">
-          <h3>Experience</h3>
-          <p>Paris is the capital of France.</p> 
-      </div>
+    <div id="Experience" class="tabcontent">
+      <h3>Experience</h3>
+      <p>Paris is the capital of France.</p> 
+  </div>
 
-      <script>
-        function showEducationAndExperience(evt, cityName) {
-          var i, tabcontent, tablinks;
-          tabcontent = document.getElementsByClassName("tabcontent");
-          for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
+  <script>
+    function showEducationAndExperience(evt, cityName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
     }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
     // Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
+    document.getElementById("defaultOpen").click();
 </script>
 
 </div>
