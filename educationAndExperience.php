@@ -66,36 +66,36 @@
     </div>
 
     <div id="Experience" class="tabcontent">
-      <div class="experience-grid-container">
-          <div class="experience-name">
+      <div class="experience-examples-grid-container">
+          <div class="experience-examples-name">
             <center>
                 <h1>
                     Experience Name
                 </h1>
             </center>
         </div>
-        <div class="experience-year">
+        <div class="experience-examples-year">
             <center>
                 <p>
                     Year: 2019
                 </p>
             </center>
         </div>
-        <div class="experience-langauges">
+        <div class="experience-examples-langauges">
             <center>
                 <p>
                     language(s): HTML, CSS, JavaScript
                 </p>
             </center>
         </div>
-        <div class="experience-link">
+        <div class="experience-examples-link">
             <center>
                 <p>
                     link: abcdef
                 </p>
             </center>
         </div>
-        <div class="experience-description">
+        <div class="experience-examples-description">
             <center>
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac elementum tellus. Pellentesque vehicula metus eu posuere vulputate. Aliquam erat volutpat. Sed metus nibh, malesuada consectetur dolor a, commodo convallis sapien. Vestibulum ex magna, laoreet vitae nibh feugiat, sodales vestibulum eros. Nullam gravida ultricies magna, quis fringilla est posuere nec. Integer congue cursus eros, quis maximus orci. In hac habitasse platea dictumst. Nam tincidunt, nisl eget eleifend posuere, nisi ex gravida ex, vitae blandit felis erat a urna. Sed id quam odio. Sed suscipit id nunc ut porttitor. Suspendisse feugiat eget erat sit amet dapibus. Donec auctor velit vitae quam lobortis dignissim.
