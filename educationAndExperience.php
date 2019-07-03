@@ -17,7 +17,7 @@
         <div class="tab">
             <div class="educationAndExperience-grid-container">
               <div>               
-                  <button class="tablinks" onclick="showEducationAndExperience(event, 'Education')">Education</button>
+                  <button class="tablinks" id="defaultOpen" onclick="showEducationAndExperience(event, 'Education')">Education</button>
               </div>
               <div>
                   <button class="tablinks" onclick="showEducationAndExperience(event, 'Experience')">Experience</button>
@@ -56,6 +56,8 @@
         document.getElementById(cityName).style.display = "block";
         evt.currentTarget.className += " active";
     }
+    // Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
 </script>
 
 </div>
