@@ -66,8 +66,13 @@
     </div>
 
     <div id="Experience" class="tabcontent">
-      <h3>Experience</h3>
-      <p>Paris is the capital of France.</p> 
+      <div class="experience-grid-container">
+  <div class="experience-name"><p>Hi</p></div>
+  <div class="experience-year"><p>Hi</p></div>
+  <div class="experience-langauges"><p>Hi</p></div>
+  <div class="experience-link"><p>Hi</p></div>
+  <div class="experience-description"><p>Hi</p></div>
+</div>
   </div>
 
   <script>

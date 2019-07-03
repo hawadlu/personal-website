@@ -190,3 +190,21 @@ button {
 .education-Credits { grid-area: Credits; }
 
 .education-Year { grid-area: Year; }
+
+/*THE EXPERIENCE GRID*/
+.experience-grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1auto 1auto 1auto 1auto 1auto;
+  grid-template-areas: "name" "year" "langauges" "link" "description";
+}
+
+.experience-name { grid-area: name; }
+
+.experience-year { grid-area: year; }
+
+.experience-langauges { grid-area: langauges; }
+
+.experience-link { grid-area: link; }
+
+.experience-description { grid-area: description; }
