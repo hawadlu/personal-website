@@ -3,9 +3,13 @@ CREATE TABLE `Projects` (
 	`name` varchar(30) NOT NULL,
 	`description` varchar(1000) NOT NULL,
 	`projectYear` year(4) NOT NULL,
-	`languageFK` tinyint(2) NOT NULL,
 	`Link` varchar(100) NOT NULL,
-	`projectDescription` varchar(255) NOT NULL
+	`projectDescription` varchar(255) NOT NULL,
+	`languageOneFK` tinyint(2) NOT NULL,
+	`languageTwoFK` tinyint(2) NOT NULL,
+	`languageThreeFK` tinyint(2) NOT NULL,
+	`languageFourFk` tinyint(2) NOT NULL,
+	`languageFiveFK` tinyint(2) NOT NULL
 );
 
 CREATE TABLE `Languages` (
@@ -54,7 +58,15 @@ CREATE TABLE `Grade` (
 	PRIMARY KEY (`gradePK`)
 );
 
-ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk0` FOREIGN KEY (`languageFK`) REFERENCES `Languages`(`languagePK`);
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk0` FOREIGN KEY (`languageOneFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk1` FOREIGN KEY (`languageTwoFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk2` FOREIGN KEY (`languageThreeFK`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk3` FOREIGN KEY (`languageFourFk`) REFERENCES `Languages`(`languagePK`);
+
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk4` FOREIGN KEY (`languageFiveFK`) REFERENCES `Languages`(`languagePK`);
 
 ALTER TABLE `Education` ADD CONSTRAINT `Education_fk0` FOREIGN KEY (`institutionFK`) REFERENCES `Institution`(`institutionPK`);
 
