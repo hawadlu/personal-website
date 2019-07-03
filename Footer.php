@@ -3,14 +3,7 @@
 	<center>
 		<div>
 			<p>
-				Hello
-			</p>
-		</div>
-	</center>
-	<center>
-		<div>
-			<p>
-				Hello
+				<a class="footerLink" href="https://github.com/hawadlu">GitHub</a>
 			</p>
 		</div>
 	</center>
