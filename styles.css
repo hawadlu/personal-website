@@ -169,35 +169,80 @@ button {
 }
 
 /*THE EDUCATION GRID*/
-.education-grid-container {
+/*University*/
+.education-grid-container-uni {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1auto 1auto;
   grid-template-areas: "Institution Institution Institution Institution" 
-  "Subject Grade Credits Year";
+  "Subject Grade subjectLevel Year";
 }
 
 /*Styling for mobile*/
 @media (max-width:450px){
-  .education-grid-container {
+  .education-grid-container-uni {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1auto 1auto 1auto;
   grid-template-areas: "Institution Institution" 
   "Subject Grade" 
-  "Credits Year";
+  "subjectLevel Year";
 }
   }
 
-.education-Institution { grid-area: Institution; }
+.education-Institution-uni { grid-area: Institution; }
 
-.education-Subject { grid-area: Subject; }
+.education-Subject-uni { grid-area: Subject; }
 
-.education-Grade { grid-area: Grade; }
+.education-Grade-uni { grid-area: Grade; }
 
-.education-Credits { grid-area: Credits; }
+.education-Credits-uni { grid-area: subjectLevel; }
 
-.education-Year { grid-area: Year; }
+.education-Year-uni { grid-area: Year; }
+
+/*College*/
+
+.education-grid-container-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1auto 1auto;
+  grid-template-areas: "Institution  Institution Institution Institution" 
+  "Subject Credits Endorsement subjectLevel Year";
+}
+
+/*Styling for mobile*/
+@media (max-width:450px){
+  .education-grid-container-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1auto 1auto 1auto;
+  grid-template-areas: "Institution Institution" 
+  "Subject Subject"
+  "Credits Endorsement" 
+  "subjectLevel Year";
+}
+  }
+
+.education-Institution-col { grid-area: Institution; }
+
+.education-Subject-col { grid-area: Subject; }
+
+.education-Endorsement-col { grid-area: Endorsement; }
+
+.education-Credits-col { grid-area: Credits; }
+
+.education-Year-col { grid-area: Year; }
+
+.education-subjectLevel-col { grid-area: subjectLevel; }
+
+
+
+
+
+
+
+
+
 
 /*THE EXPERIENCE GRID*/
 .experience-examples-grid-container {

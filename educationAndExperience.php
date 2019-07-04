@@ -48,10 +48,13 @@ require("connect.php")?>
 
 			$EducationResult = mysqli_query($con,$EducationQuery);
 			while($EducationOutput=mysqli_fetch_array($EducationResult)) {
+				//checks for university than college
+				if (($EducationOutput['institutionFK']) == '0') {
+
 				?>
 				
-				<div class="education-grid-container">
-					<div class="education-Institution">
+				<div class="education-grid-container-uni">
+					<div class="education-Institution-uni">
 						<center>
 							<h1>
 								<?php
@@ -65,7 +68,7 @@ require("connect.php")?>
 							</h1>
 						</center>
 					</div>
-					<div class="education-Subject">
+					<div class="education-Subject-uni">
 						<center>
 							<p>
 								<strong>
@@ -80,7 +83,7 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Grade">
+					<div class="education-Grade-uni">
 						<center>
 							<p>
 								Grade: 
@@ -90,7 +93,7 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Credits">
+					<div class="education-Credits-uni">
 						<center>
 							<p>
 								Credits: 
@@ -100,7 +103,73 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Year">
+					<div class="education-Year-uni">
+						<center>
+							<p>
+								Year: 
+								<?php
+									echo $EducationOutput['relevantYear'];
+								?>
+							</p>
+						</center>
+					</div>
+				</div>
+				<?php
+			} else {
+				//printing results for tawa college
+				?>
+				
+				<div class="education-grid-container-uni">
+					<div class="education-Institution-uni">
+						<center>
+							<h1>
+								<?php
+								if (($EducationOutput['institution'])!=($institution)) {
+									echo $EducationOutput['institution'];
+									$institution = $EducationOutput['institution'];
+
+								}
+
+								?>
+							</h1>
+						</center>
+					</div>
+					<div class="education-Subject-uni">
+						<center>
+							<p>
+								<strong>
+									Subject: 
+									<?php
+										echo '(' . $EducationOutput['subjectAbbreviation'] . ')';
+									?>
+								</strong>
+								<?php
+									echo $EducationOutput['subject'];
+								?>
+							</p>
+						</center>
+					</div>
+					<div class="education-Grade-uni">
+						<center>
+							<p>
+								Grade: 
+								<?php
+									echo $EducationOutput['grade'];
+								?>
+							</p>
+						</center>
+					</div>
+					<div class="education-Credits-uni">
+						<center>
+							<p>
+								Credits: 
+								<?php
+									echo $EducationOutput['credits'];
+								?>
+							</p>
+						</center>
+					</div>
+					<div class="education-Year-uni">
 						<center>
 							<p>
 								Year: 
@@ -113,6 +182,7 @@ require("connect.php")?>
 				</div>
 				<?php
 			}
+		} 
 			?>
 
 		</div>
