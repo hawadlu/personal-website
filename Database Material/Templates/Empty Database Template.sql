@@ -1,7 +1,6 @@
 CREATE TABLE `Projects` (
 	`uniqueKey` tinyint(2) NOT NULL UNIQUE,
 	`name` varchar(30) NOT NULL,
-	`description` varchar(1000) NOT NULL,
 	`projectYear` year(4) NOT NULL,
 	`Link` varchar(100) NOT NULL,
 	`projectDescription` varchar(255) NOT NULL,
