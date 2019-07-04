@@ -67,8 +67,8 @@ CREATE TABLE `subjectLevel` (
 );
 
 CREATE TABLE `Year` (
-	`yearPK` tinyint(2) NOT NULL AUTO_INCREMENT,
-	`year` DATE(2) NOT NULL AUTO_INCREMENT,
+	`yearPK` tinyint(2) NOT NULL,
+	`year` DATE(2) NOT NULL,
 	PRIMARY KEY (`yearPK`)
 );
 
