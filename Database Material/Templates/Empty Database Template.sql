@@ -24,7 +24,8 @@ CREATE TABLE `Education` (
 	`subjectFK` tinyint(2) NOT NULL UNIQUE,
 	`gradeFk` tinyint(2) NOT NULL UNIQUE,
 	`Credits` tinyint NOT NULL,
-	`Year` DATE NOT NULL
+	`Year` DATE NOT NULL,
+	`subjectAbbreviation` varchar(10) NOT NULL
 );
 
 CREATE TABLE `Experience` (
