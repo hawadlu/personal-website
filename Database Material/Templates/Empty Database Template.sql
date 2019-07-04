@@ -25,7 +25,7 @@ CREATE TABLE `Education` (
 	`subjectLevelFK` tinyint(2) NOT NULL,
 	`Credits` tinyint NOT NULL,
 	`ClassYearFK` tinyint(2) NOT NULL,
-	`subjectAbbreviationFK` tinyint(10) NOT NULL DEFAULT '2',
+	`subjectAbbreviationFK` tinyint(2) NOT NULL DEFAULT '2',
 	`Endorsement` varchar(1)
 );
 
@@ -66,19 +66,19 @@ CREATE TABLE `subjectLevel` (
 	PRIMARY KEY (`subjectLevelPK`)
 );
 
-CREATE TABLE `Year` (
-	`yearPK` tinyint(2) NOT NULL,
-	`year` DATE(2) NOT NULL,
-	PRIMARY KEY (`yearPK`)
-);
-
 CREATE TABLE `subjectAbbreviation` (
 	`subjectAbbreviationPK` tinyint(2) NOT NULL AUTO_INCREMENT,
-	`subjectAbbreviation` varchar(10) NOT NULL AUTO_INCREMENT,
+	`subjectAbbreviation` varchar(10) NOT NULL,
 	PRIMARY KEY (`subjectAbbreviationPK`)
 );
 
-ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk0` FOREIGN KEY (`projectYearFK`) REFERENCES `Year`(`yearPK`);
+CREATE TABLE `relevantYear` (
+	`relevantYearPK` tinyint(2) NOT NULL AUTO_INCREMENT,
+	`relevantYear` DATE NOT NULL,
+	PRIMARY KEY (`relevantYearPK`)
+);
+
+ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk0` FOREIGN KEY (`projectYearFK`) REFERENCES `relevantYear`(`relevantYearPK`);
 
 ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk1` FOREIGN KEY (`languageOneFK`) REFERENCES `Languages`(`languagePK`);
 
@@ -98,11 +98,11 @@ ALTER TABLE `Education` ADD CONSTRAINT `Education_fk2` FOREIGN KEY (`gradeFk`) R
 
 ALTER TABLE `Education` ADD CONSTRAINT `Education_fk3` FOREIGN KEY (`subjectLevelFK`) REFERENCES `subjectLevel`(`subjectLevelPK`);
 
-ALTER TABLE `Education` ADD CONSTRAINT `Education_fk4` FOREIGN KEY (`ClassYearFK`) REFERENCES `Year`(`yearPK`);
+ALTER TABLE `Education` ADD CONSTRAINT `Education_fk4` FOREIGN KEY (`ClassYearFK`) REFERENCES `relevantYear`(`relevantYearPK`);
 
 ALTER TABLE `Education` ADD CONSTRAINT `Education_fk5` FOREIGN KEY (`subjectAbbreviationFK`) REFERENCES `subjectAbbreviation`(`subjectAbbreviationPK`);
 
-ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk0` FOREIGN KEY (`experienceYearFK`) REFERENCES `Year`(`yearPK`);
+ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk0` FOREIGN KEY (`experienceYearFK`) REFERENCES `relevantYear`(`relevantYearPK`);
 
 ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk1` FOREIGN KEY (`languageOneFK`) REFERENCES `Languages`(`languagePK`);
 
