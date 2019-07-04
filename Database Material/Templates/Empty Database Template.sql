@@ -44,7 +44,7 @@ CREATE TABLE `Experience` (
 
 CREATE TABLE `Institution` (
 	`institutionPK` tinyint(2) NOT NULL,
-	`institution` varchar(20) NOT NULL,
+	`institution` varchar(30) NOT NULL,
 	PRIMARY KEY (`institutionPK`)
 );
 
