@@ -196,9 +196,11 @@ button {
 
 .education-Grade-uni { grid-area: Grade; }
 
-.education-Credits-uni { grid-area: subjectLevel; }
+.education-subjectLevel-uni { grid-area: subjectLevel; }
 
 .education-Year-uni { grid-area: Year; }
+
+
 
 /*College*/
 
@@ -206,7 +208,7 @@ button {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1auto 1auto;
-  grid-template-areas: "Institution  Institution Institution Institution" 
+  grid-template-areas: "Institution Institution Institution Institution Institution" 
   "Subject Credits Endorsement subjectLevel Year";
 }
 

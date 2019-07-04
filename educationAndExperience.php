@@ -93,12 +93,12 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Credits-uni">
+					<div class="education-subjectLevel-uni">
 						<center>
 							<p>
-								Credits: 
+								Subject Level: 
 								<?php
-									echo $EducationOutput['credits'];
+									echo $EducationOutput['subjectLevel'];
 								?>
 							</p>
 						</center>
@@ -119,8 +119,8 @@ require("connect.php")?>
 				//printing results for tawa college
 				?>
 				
-				<div class="education-grid-container-uni">
-					<div class="education-Institution-uni">
+				<div class="education-grid-container-col">
+					<div class="education-Institution-col">
 						<center>
 							<h1>
 								<?php
@@ -134,7 +134,7 @@ require("connect.php")?>
 							</h1>
 						</center>
 					</div>
-					<div class="education-Subject-uni">
+					<div class="education-Subject-col">
 						<center>
 							<p>
 								<strong>
@@ -149,17 +149,17 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Grade-uni">
+					<div class="education-Endorsement-col">
 						<center>
 							<p>
-								Grade: 
+								Endorsement: 
 								<?php
-									echo $EducationOutput['grade'];
+									echo $EducationOutput['endorsement'];
 								?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Credits-uni">
+					<div class="education-Credits-col">
 						<center>
 							<p>
 								Credits: 
@@ -169,7 +169,17 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
-					<div class="education-Year-uni">
+					<div class="education-subjectLevel-col">
+						<center>
+							<p>
+								Subject Level: 
+								<?php
+									echo $EducationOutput['subjectLevel'];
+								?>
+							</p>
+						</center>
+					</div>
+					<div class="education-Year-col">
 						<center>
 							<p>
 								Year: 
