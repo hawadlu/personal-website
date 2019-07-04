@@ -174,23 +174,22 @@ button {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1auto 1auto;
-  grid-template-areas: "Institution Institution Institution Institution" 
+  grid-template-areas:
   "Subject Grade subjectLevel Year";
 }
 
 /*Styling for mobile*/
-@media (max-width:450px){
+@media (max-width:750px){
   .education-grid-container-uni {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1auto 1auto 1auto;
-  grid-template-areas: "Institution Institution" 
+  grid-template-areas: 
   "Subject Grade" 
   "subjectLevel Year";
 }
   }
 
-.education-Institution-uni { grid-area: Institution; }
 
 .education-Subject-uni { grid-area: Subject; }
 
@@ -208,24 +207,22 @@ button {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1auto 1auto;
-  grid-template-areas: "Institution Institution Institution Institution Institution" 
+  grid-template-areas:
   "Subject Credits Endorsement subjectLevel Year";
 }
 
 /*Styling for mobile*/
-@media (max-width:450px){
+@media (max-width:750px){
   .education-grid-container-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1auto 1auto 1auto;
-  grid-template-areas: "Institution Institution" 
+  grid-template-areas:
   "Subject Subject"
   "Credits Endorsement" 
   "subjectLevel Year";
 }
   }
-
-.education-Institution-col { grid-area: Institution; }
 
 .education-Subject-col { grid-area: Subject; }
 

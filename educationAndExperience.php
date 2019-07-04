@@ -33,6 +33,9 @@ require("connect.php")?>
 			//Setting a varibale so that the institution is only printed once
 			$institution = '';
 
+			//Variabke that allows alternating background colours
+			$count = 0;
+
         	//The query which shows the education history
 			$EducationQuery = ("SELECT `Education`.`subjectFK`, `Subject`.`subject`, `Education`.`institutionFK`, `Institution`.`institution`, `Education`.`gradeFk`, `Grade`.`grade`, `Education`.`subjectLevelFK`, `subjectLevel`.`subjectLevel`, `Education`.`credits`, `Education`.`classYearFK`, `relevantYear`.`relevantYear`, `Education`.`subjectAbbreviationFK`, `subjectAbbreviation`.`subjectAbbreviation`, `Education`.`endorsementFK`, `Endorsement`.`endorsement`
 				FROM `Education` 
@@ -48,14 +51,23 @@ require("connect.php")?>
 
 			$EducationResult = mysqli_query($con,$EducationQuery);
 			while($EducationOutput=mysqli_fetch_array($EducationResult)) {
+				//Changing the background colour
+				if ($count % 2 == 0) {
+					//even
+					$colour = 'grey';
+					$count += 1;
+				} else {
+					//odd
+					$colour = 'white';
+					$count += 1;
+				}
+
 				//checks for university than college
 				if (($EducationOutput['institutionFK']) == '0') {
 
+
 				?>
-				
-				<div class="education-grid-container-uni">
-					<div class="education-Institution-uni">
-						<center>
+							<center>
 							<h1>
 								<?php
 								if (($EducationOutput['institution'])!=($institution)) {
@@ -66,8 +78,8 @@ require("connect.php")?>
 
 								?>
 							</h1>
-						</center>
-					</div>
+						</center>			
+				<div style = "background-color: <?php echo $colour; ?>" class="education-grid-container-uni">
 					<div class="education-Subject-uni">
 						<center>
 							<p>
@@ -118,10 +130,7 @@ require("connect.php")?>
 			} else {
 				//printing results for tawa college
 				?>
-				
-				<div class="education-grid-container-col">
-					<div class="education-Institution-col">
-						<center>
+				<center>
 							<h1>
 								<?php
 								if (($EducationOutput['institution'])!=($institution)) {
@@ -133,7 +142,7 @@ require("connect.php")?>
 								?>
 							</h1>
 						</center>
-					</div>
+				<div style = "background-color: <?php echo $colour; ?>" class="education-grid-container-col">
 					<div class="education-Subject-col">
 						<center>
 							<p>
