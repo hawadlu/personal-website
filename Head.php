@@ -18,7 +18,7 @@
         <!--Importing Fonts-->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-        <link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="Images/Favicon/Favicon (16x16).ico" type="image/x-icon">
         <!--Displays the website favicon-->
         <!--<link rel="icon" href="Images/favicon.ico" type="image/x-icon">-->
         <!--Displays the wbsite title in the tab-->
