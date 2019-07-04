@@ -49,7 +49,7 @@ CREATE TABLE `Institution` (
 
 CREATE TABLE `Subject` (
 	`subjectPK` tinyint(2) NOT NULL,
-	`Subject` varchar(20) NOT NULL,
+	`Subject` varchar(100) NOT NULL,
 	PRIMARY KEY (`subjectPK`)
 );
 
