@@ -20,8 +20,8 @@ CREATE TABLE `Languages` (
 CREATE TABLE `Education` (
 	`uniqueKey` tinyint NOT NULL UNIQUE,
 	`institutionFK` tinyint(2) NOT NULL,
-	`subjectFK` tinyint(2) NOT NULL UNIQUE,
-	`gradeFk` tinyint(2) NOT NULL UNIQUE,
+	`subjectFK` tinyint(2) NOT NULL,
+	`gradeFk` tinyint(2) NOT NULL,
 	`subjectLevelFK` tinyint(2) NOT NULL,
 	`credits` tinyint NOT NULL,
 	`classYearFK` tinyint(2) NOT NULL,
