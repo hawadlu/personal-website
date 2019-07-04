@@ -30,6 +30,9 @@ require("connect.php")?>
 
 		<div id="Education" class="tabcontent">
 			<?php
+			//Setting a varibale so that the institution is only printed once
+			$institution = '';
+
         	//The query which shows the education history
 			$EducationQuery = ("SELECT `Education`.`subjectFK`, `Subject`.`subject`, `Education`.`institutionFK`, `Institution`.`institution`, `Education`.`gradeFk`, `Grade`.`grade`, `Education`.`subjectLevelFK`, `subjectLevel`.`subjectLevel`, `Education`.`credits`, `Education`.`classYearFK`, `relevantYear`.`relevantYear`, `Education`.`subjectAbbreviationFK`, `subjectAbbreviation`.`subjectAbbreviation`, `Education`.`endorsementFK`, `Endorsement`.`endorsement`
 				FROM `Education` 
@@ -52,7 +55,12 @@ require("connect.php")?>
 						<center>
 							<h1>
 								<?php
-								echo $EducationOutput['institution'];
+								if (($EducationOutput['institution'])!=($institution)) {
+									echo $EducationOutput['institution'];
+									$institution = $EducationOutput['institution'];
+
+								}
+
 								?>
 							</h1>
 						</center>
