@@ -61,7 +61,7 @@ CREATE TABLE `Grade` (
 
 CREATE TABLE `subjectLevel` (
 	`subjectLevelPK` tinyint(2) NOT NULL AUTO_INCREMENT,
-	`subjectLevel` int(3) NOT NULL,
+	`subjectLevel` varchar(20) NOT NULL,
 	PRIMARY KEY (`subjectLevelPK`)
 );
 
