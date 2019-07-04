@@ -74,7 +74,7 @@ CREATE TABLE `subjectAbbreviation` (
 
 CREATE TABLE `relevantYear` (
 	`relevantYearPK` tinyint(2) NOT NULL AUTO_INCREMENT,
-	`relevantYear` DATE NOT NULL,
+	`relevantYear` int(4) NOT NULL,
 	PRIMARY KEY (`relevantYearPK`)
 );
 
