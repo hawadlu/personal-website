@@ -23,6 +23,7 @@ CREATE TABLE `Education` (
 	`institutionFK` tinyint(2) NOT NULL UNIQUE,
 	`subjectFK` tinyint(2) NOT NULL UNIQUE,
 	`gradeFk` tinyint(2) NOT NULL UNIQUE,
+	`subjectLevelFK` tinyint(2) NOT NULL,
 	`Credits` tinyint NOT NULL,
 	`Year` DATE NOT NULL,
 	`subjectAbbreviation` varchar(10) NOT NULL
@@ -59,6 +60,12 @@ CREATE TABLE `Grade` (
 	PRIMARY KEY (`gradePK`)
 );
 
+CREATE TABLE `subjectLevel` (
+	`subjectLevelPK` tinyint(2) NOT NULL AUTO_INCREMENT,
+	`subjectLevel` int(3) NOT NULL,
+	PRIMARY KEY (`subjectLevelPK`)
+);
+
 ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk0` FOREIGN KEY (`languageOneFK`) REFERENCES `Languages`(`languagePK`);
 
 ALTER TABLE `Projects` ADD CONSTRAINT `Projects_fk1` FOREIGN KEY (`languageTwoFK`) REFERENCES `Languages`(`languagePK`);
@@ -74,6 +81,8 @@ ALTER TABLE `Education` ADD CONSTRAINT `Education_fk0` FOREIGN KEY (`institution
 ALTER TABLE `Education` ADD CONSTRAINT `Education_fk1` FOREIGN KEY (`subjectFK`) REFERENCES `Subject`(`subjectPK`);
 
 ALTER TABLE `Education` ADD CONSTRAINT `Education_fk2` FOREIGN KEY (`gradeFk`) REFERENCES `Grade`(`gradePK`);
+
+ALTER TABLE `Education` ADD CONSTRAINT `Education_fk3` FOREIGN KEY (`subjectLevelFK`) REFERENCES `subjectLevel`(`subjectLevelPK`);
 
 ALTER TABLE `Experience` ADD CONSTRAINT `Experience_fk0` FOREIGN KEY (`languageOneFK`) REFERENCES `Languages`(`languagePK`);
 
