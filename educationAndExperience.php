@@ -38,7 +38,7 @@
             </div>
             <div class="education-Subject">
                 <center>
-                    <p><strong>Subject: </strong>xyz</p>
+                    <p><strong>Subject: (abbreviation here)</strong>xyz</p>
                 </center>
             </div>
             <div class="education-Grade">
