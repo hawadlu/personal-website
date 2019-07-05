@@ -19,7 +19,7 @@ LEFT JOIN `relevantYear` ON `Experience`.`experienceYearFK` = `relevantYear`.`re
 ORDER BY `relevantYear`.`relevantYear` DESC
 
 GETS LANGUAGES FOR EXPERIENCE PAGE
-SELECT `Experience`.`languageOneFK`, `Languages`.`language`, `Experience`.`uniqueKey`
-FROM `Experience` 
-LEFT JOIN `Languages` ON `Experience`.`languageOneFK` = `Languages`.`languagePK`
-WHERE `Experience`.`uniqueKey` = 1
+SELECT Languages.language
+FROM Experience
+LEFT JOIN Languages ON Experience.languageOneFK = Languages.languagePK
+WHERE Experience.uniqueKey LIKE $key
