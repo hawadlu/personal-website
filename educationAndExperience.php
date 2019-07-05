@@ -374,7 +374,20 @@ require("connect.php")?>
 										echo $ExperienceOutput['Link'];
 										?>
 									</a>
+<<<<<<< HEAD
 >>>>>>> parent of b9b1b0b... Update educationAndExperience.php
+=======
+
+								</p>
+								<p>
+									GitHub: 
+									<a class="pageLink" href="<?php ExperienceOutput['github'];?>">
+									<?php
+										if (($ExperienceOutput['github']) != NULL) {
+											echo $ExperienceOutput['github'];
+										}
+									?>
+>>>>>>> parent of 837351a... Update educationAndExperience.php
 								</p>
 							</center>
 						</div>
