@@ -17,9 +17,9 @@
 	</div>
 	<div class="hover-effect">
 		<center>
-			<a href="educationAndExperience.php">
+			<a href="examples.php">
 				<p>
-					Education and Experience
+					Examples
 				</p>
 			</a>
 		</center>
@@ -27,9 +27,9 @@
 	</div>
 	<div class="hover-effect">
 		<center>
-			<a href="examples.php">
+			<a href="education.php">
 				<p>
-					Examples
+					Education
 				</p>
 			</a>
 		</center>
