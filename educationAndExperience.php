@@ -373,7 +373,6 @@ require("connect.php")?>
 											echo $ExperienceOutput['github'];
 										}
 									?>
-								</a>
 								</p>
 							</center>
 						</div>
