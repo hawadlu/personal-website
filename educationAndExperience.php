@@ -214,7 +214,7 @@ require("connect.php")?>
 		<div id="Experience" class="tabcontent">
 			<?php
 			//The query which shows the education history
-			$ExpeienceQuery = ("SELECT `Experience`.`uniqueKey`, `Experience`.`name`, `Experience`.`experienceYearFK`, `relevantYear`.`relevantYear`, `Experience`.`experienceDescription`, `Experience`.`Link`
+			$ExpeienceQuery = ("SELECT `Experience`.`uniqueKey`, `Experience`.`name`, `Experience`.`experienceYearFK`, `relevantYear`.`relevantYear`, `Experience`.`experienceDescription`, `Experience`.`Link`, `Experience`.`github`
 				FROM `Experience` 
 				LEFT JOIN `relevantYear` ON `Experience`.`experienceYearFK` = `relevantYear`.`relevantYearPK`
 				ORDER BY `relevantYear`.`relevantYear` DESC
@@ -358,11 +358,21 @@ require("connect.php")?>
 							<center>
 								<p>
 									link: 
-									<a class="pageLink" href="<?php ExperienceOutput['Lin'];?>">
+									<a class="pageLink" href="<?php ExperienceOutput['Link'];?>">
 										<?php 
 										echo $ExperienceOutput['Link'];
 										?>
 									</a>
+
+								</p>
+								<p>
+									GitHub: 
+									<a class="pageLink" href="<?php ExperienceOutput['github'];?>">
+									<?php
+										if (($ExperienceOutput['github']) != NULL) {
+											echo $ExperienceOutput['github'];
+										}
+									?>
 								</p>
 							</center>
 						</div>
