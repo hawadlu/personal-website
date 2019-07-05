@@ -267,6 +267,21 @@ button {
   "link image"
   "description description";
 }
+
+/*Styling for mobile*/
+@media (max-width:750px){
+.experience-examples-grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1auto 1auto 1auto 1auto 1auto 1auto;
+  grid-template-areas: "name"
+  "year"
+  "langauges"
+  "link"
+  "image"
+  "description";
+}
+
 .experience-examples-image { grid-area: image; }
 
 .experience-examples-name { grid-area: name; }
