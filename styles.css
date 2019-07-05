@@ -253,32 +253,27 @@ button {
 
 
 /*THE EXPERIENCE GRID*/
-.experience-examples-grid-container {
-  display: inline-grid;
-  width: 100%;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto auto auto;
-  grid-template-areas: "name image"
-  "year image"
-  "langauges image"
-  "link image"
-  "description description";
+.experience-examples-grid-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1auto 1auto;
+  grid-template-areas:
+  "Subject Credits Endorsement subjectLevel Year";
 }
 
 /*Styling for mobile*/
 @media (max-width:750px){
-.experience-examples-grid-container {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto auto auto auto auto;
-  grid-template-areas: "name"
-  "year"
-  "langauges"
-  "link"
-  "image"
-  "description";
+  .experience-examples-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1auto 1auto 1auto;
+    grid-template-areas:
+    "Subject Subject"
+    "Credits Endorsement" 
+    "subjectLevel Year";
+  }
 }
+
 .experience-examples-image { grid-area: image; }
 
 .experience-examples-name { grid-area: name; }

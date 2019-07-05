@@ -214,7 +214,7 @@ require("connect.php")?>
 		<div id="Experience" class="tabcontent">
 			<?php
 			//The query which shows the education history
-			$ExpeienceQuery = ("SELECT `Experience`.`uniqueKey`, `Experience`.`name`, `Experience`.`experienceYearFK`, `relevantYear`.`relevantYear`, `Experience`.`experienceDescription`, `Experience`.`Link`
+			$ExpeienceQuery = ("SELECT `Experience`.`uniqueKey`, `Experience`.`name`, `Experience`.`experienceYearFK`, `relevantYear`.`relevantYear`, `Experience`.`experienceDescription`, `Experience`.`Link`, `Experience`.`github`
 				FROM `Experience` 
 				LEFT JOIN `relevantYear` ON `Experience`.`experienceYearFK` = `relevantYear`.`relevantYearPK`
 				ORDER BY `relevantYear`.`relevantYear` DESC
