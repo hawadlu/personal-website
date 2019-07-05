@@ -17,11 +17,24 @@ a {
   color: black;
 }
 
+img {
+  border-radius: 5%;
+  margin-top: 10px;
+}
+
 /*BUTTONS*/
 button {
   width: 100%;
 
 }
+
+.pageLink:hover {
+  color: blue;
+  transition: 0.3s;
+}
+
+
+
 
 
 /*THE HEADER*/
@@ -50,16 +63,16 @@ button {
 .hover-effect:hover {
   background-color:rgba(255, 255, 255, 0.5);
 }
-  /*For mobile devices*/
+/*For mobile devices*/
 @media (max-width:650px){
-.nav-grid-container {
-  background-color: #91e4fb;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-areas: " . " " . " " .";
-}
+  .nav-grid-container {
+    background-color: #91e4fb;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas: " . " " . " " .";
+  }
 }
 
 
@@ -118,9 +131,9 @@ button {
 
 .aboutMe-Image { grid-area: aboutMe-Image; }
 
-  .aboutMe-Title { grid-area: aboutMe-Title; }
+.aboutMe-Title { grid-area: aboutMe-Title; }
 
-  .aboutMe-Description { grid-area: aboutMe-Descritption; }
+.aboutMe-Description { grid-area: aboutMe-Descritption; }
 
 
 /*THE TABS ON THE EDUCATION AND EXPERIENCE PAGE*/
@@ -181,14 +194,14 @@ button {
 /*Styling for mobile*/
 @media (max-width:750px){
   .education-grid-container-uni {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1auto 1auto 1auto;
-  grid-template-areas: 
-  "Subject Grade" 
-  "subjectLevel Year";
-}
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1auto 1auto 1auto;
+    grid-template-areas: 
+    "Subject Grade" 
+    "subjectLevel Year";
   }
+}
 
 
 .education-Subject-uni { grid-area: Subject; }
@@ -214,15 +227,15 @@ button {
 /*Styling for mobile*/
 @media (max-width:750px){
   .education-grid-container-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1auto 1auto 1auto;
-  grid-template-areas:
-  "Subject Subject"
-  "Credits Endorsement" 
-  "subjectLevel Year";
-}
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1auto 1auto 1auto;
+    grid-template-areas:
+    "Subject Subject"
+    "Credits Endorsement" 
+    "subjectLevel Year";
   }
+}
 
 .education-Subject-col { grid-area: Subject; }
 
@@ -246,10 +259,15 @@ button {
 /*THE EXPERIENCE GRID*/
 .experience-examples-grid-container {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1auto 1auto 1auto 1auto 1auto;
-  grid-template-areas: "name" "year" "langauges" "link" "description";
+  grid-template-areas: "name image"
+  "year image"
+  "langauges image"
+  "link image"
+  "description description";
 }
+.experience-examples-image { grid-area: image; }
 
 .experience-examples-name { grid-area: name; }
 
