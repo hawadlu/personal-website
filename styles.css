@@ -266,14 +266,14 @@ button {
   }
 }
 
-.experience-examples-image { grid-area: image; background-color: red;}
+.experience-examples-image { grid-area: image;}
 
-.experience-examples-name { grid-area: name; background-color: blue;}
+.experience-examples-name { grid-area: name;}
 
-.experience-examples-year { grid-area: year; background-color: green;}
+.experience-examples-year { grid-area: year;}
 
-.experience-examples-langauges { grid-area: langauges; background-color: black}
+.experience-examples-langauges { grid-area: langauges;}
 
-.experience-examples-link { grid-area: link; background-color: orange;}
+.experience-examples-link { grid-area: link;}
 
-.experience-examples-description { grid-area: description; background-color: yellow;}
+.experience-examples-description { grid-area: description;}
