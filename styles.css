@@ -258,9 +258,9 @@ button {
 
 /*THE EXPERIENCE GRID*/
 .experience-examples-grid-container {
-  display: grid;
+  display: inline-grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1auto 1auto 1auto 1auto 1auto;
+  grid-template-rows: auto;
   grid-template-areas: "name image"
   "year image"
   "langauges image"
@@ -273,7 +273,7 @@ button {
 .experience-examples-grid-container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1auto 1auto 1auto 1auto 1auto 1auto;
+  grid-template-rows: auto auto auto auto auto auto;
   grid-template-areas: "name"
   "year"
   "langauges"
