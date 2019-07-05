@@ -247,12 +247,23 @@ button {
 
 .education-subjectLevel-col { grid-area: subjectLevel; }
 
+
+
 /*THE EXPERIENCE GRID*/
 .experience-examples-grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
   grid-template-areas: "name image" "year image" "languages image" "link image" "description description";
+}
+
+@media (max-width: 750px) {
+  .experience-examples-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "name" "year" "languages" "link" "image" "description";
+  }
 }
 
 .experience-examples-image { grid-area: image; background-color: red;}
