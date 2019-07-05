@@ -348,7 +348,6 @@ require("connect.php")?>
 									<?php 
 									echo $ExperienceOutput['Link'];
 									?>
-<<<<<<< HEAD
 								</a>
 
 							</p>
@@ -360,7 +359,6 @@ require("connect.php")?>
 										echo $ExperienceOutput['github'];
 									}
 									?>
-=======
 								</p>
 							</center>
 						
@@ -374,9 +372,6 @@ require("connect.php")?>
 										echo $ExperienceOutput['Link'];
 										?>
 									</a>
-<<<<<<< HEAD
->>>>>>> parent of b9b1b0b... Update educationAndExperience.php
-=======
 
 								</p>
 								<p>
@@ -387,7 +382,6 @@ require("connect.php")?>
 											echo $ExperienceOutput['github'];
 										}
 									?>
->>>>>>> parent of 837351a... Update educationAndExperience.php
 								</p>
 							</center>
 						</div>
