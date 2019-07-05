@@ -247,41 +247,22 @@ button {
 
 .education-subjectLevel-col { grid-area: subjectLevel; }
 
-
-
-
-
-
 /*THE EXPERIENCE GRID*/
-.experience-examples-grid-container{
+.experience-examples-grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1auto 1auto;
-  grid-template-areas:
-  "Subject Credits Endorsement subjectLevel Year";
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: "name image" "year image" "languages image" "link image" "description description";
 }
 
-/*Styling for mobile*/
-@media (max-width:750px){
-  .experience-examples-grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1auto 1auto 1auto;
-    grid-template-areas:
-    "Subject Subject"
-    "Credits Endorsement" 
-    "subjectLevel Year";
-  }
-}
+.experience-examples-image { grid-area: image; background-color: red;}
 
-.experience-examples-image { grid-area: image; }
+.experience-examples-name { grid-area: name; background-color: blue;}
 
-.experience-examples-name { grid-area: name; }
+.experience-examples-year { grid-area: year; background-color: green;}
 
-.experience-examples-year { grid-area: year; }
+.experience-examples-langauges { grid-area: langauges; background-color: black}
 
-.experience-examples-langauges { grid-area: langauges; }
+.experience-examples-link { grid-area: link; background-color: orange;}
 
-.experience-examples-link { grid-area: link; }
-
-.experience-examples-description { grid-area: description; }
+.experience-examples-description { grid-area: description; background-color: yellow;}
