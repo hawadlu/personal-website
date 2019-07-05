@@ -1,3 +1,5 @@
+GETS EDUCATION INFORMATION
+
 SELECT `Education`.`subjectFK`, `Subject`.`subject`, `Education`.`institutionFK`, `Institution`.`institution`, `Education`.`gradeFk`, `Grade`.`grade`, `Education`.`subjectLevelFK`, `subjectLevel`.`subjectLevel`, `Education`.`credits`, `Education`.`classYearFK`, `relevantYear`.`relevantYear`, `Education`.`subjectAbbreviationFK`, `subjectAbbreviation`.`subjectAbbreviation`, `Education`.`endorsementFK`, `Endorsement`.`endorsement`
 				FROM `Education` 
 				LEFT JOIN `Subject` ON `Education`.`subjectFK` = `Subject`.`subjectPK` 
@@ -8,3 +10,9 @@ SELECT `Education`.`subjectFK`, `Subject`.`subject`, `Education`.`institutionFK`
 				LEFT JOIN `subjectAbbreviation` ON `Education`.`subjectAbbreviationFK` = `subjectAbbreviation`.`subjectAbbreviationPK` 
 				LEFT JOIN `Endorsement` ON `Education`.`endorsementFK` = `Endorsement`.`endorsementPK`
 				ORDER BY `relevantYear`.`relevantYear` DESC;
+
+
+GETS EXPERIENCE INFORMATION (NOT INCLUDING LANGUAGES)
+SELECT `Experience`.`uniqueKey`, `Experience`.`name`, `Experience`.`experienceYearFK`, `relevantYear`.`relevantYear`, `Experience`.`experienceDescription`, `Experience`.`Link`
+FROM `Experience` 
+	LEFT JOIN `relevantYear` ON `Experience`.`experienceYearFK` = `relevantYear`.`relevantYearPK`;
