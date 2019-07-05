@@ -250,7 +250,7 @@ button {
 /*THE EXPERIENCE GRID*/
 .experience-examples-grid-container {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   grid-template-areas: "name image" "year image" "languages image" "link image" "description description";
 }
