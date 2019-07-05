@@ -16,3 +16,8 @@ GETS EXPERIENCE INFORMATION (NOT INCLUDING LANGUAGES)
 SELECT `Experience`.`uniqueKey`, `Experience`.`name`, `Experience`.`experienceYearFK`, `relevantYear`.`relevantYear`, `Experience`.`experienceDescription`, `Experience`.`Link`
 FROM `Experience` 
 	LEFT JOIN `relevantYear` ON `Experience`.`experienceYearFK` = `relevantYear`.`relevantYearPK`;
+
+GETS LANGUAGES FOR EXPERIENCE PAGE
+SELECT `Experience`.`languageOneFK`, `Languages`.`language`
+FROM `Experience` 
+	LEFT JOIN `Languages` ON `Experience`.`languageOneFK` = `Languages`.`languagePK`;
