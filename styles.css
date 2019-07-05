@@ -267,6 +267,7 @@ button {
   "link image"
   "description description";
 }
+<<<<<<< HEAD
 
 /*Styling for mobile*/
 @media (max-width:750px){
@@ -282,6 +283,8 @@ button {
   "description";
 }
 
+=======
+>>>>>>> parent of 8303df6... Update styles.css
 .experience-examples-image { grid-area: image; }
 
 .experience-examples-name { grid-area: name; }
