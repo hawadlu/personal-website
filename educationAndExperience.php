@@ -54,7 +54,7 @@ require("connect.php")?>
 				//Changing the background colour
 				if ($count % 2 == 0) {
 					//even
-					$colour = 'grey';
+					$colour = '#D3D3D3';
 					$count += 1;
 				} else {
 					//odd
@@ -67,10 +67,16 @@ require("connect.php")?>
 
 
 				?>
+
 							<center>
 							<h1>
 								<?php
 								if (($EducationOutput['institution'])!=($institution)) {
+									?>
+									<br>
+									<br>
+									<br>
+									<?php
 									echo $EducationOutput['institution'];
 									$institution = $EducationOutput['institution'];
 
