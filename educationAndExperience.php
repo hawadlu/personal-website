@@ -327,7 +327,7 @@ require("connect.php")?>
 						$LanguageFiveResult = mysqli_query($con,$LanguageFiveQuery);
 						$LanguageFiveOutput=mysqli_fetch_row($LanguageFiveResult);
 						$LanguageFive = implode(" ", $LanguageFiveOutput);
-						
+
 
 						?>
 						<center>
@@ -356,23 +356,37 @@ require("connect.php")?>
 					<div class="experience-examples-link">
 						<center>
 							<p>
-								link: 
-								<a class="pageLink" href="<?php echo $ExperienceOutput['Link'];?>">
-									<?php 
-									echo $ExperienceOutput['Link'];
-									?>
-								</a>
+								<?php 
+								//Only displays if there is a link to display
+								if ($ExperienceOutput['Link'] != '0') {
+								?> 
+									GitHub: 
+									<a class="pageLink" href="<?php echo $ExperienceOutput['Link'];?>">
+										<?php
+											echo $ExperienceOutput['Link'];
+										?>
+									</a>
+									<?php
+								}
+								?>
 
 							</p>
 							<p>
-								GitHub: 
-								<a class="pageLink" href="<?php echo $ExperienceOutput['github'];?>">
+								<?php 
+								//Only displays if there is a link to display
+								if ($ExperienceOutput['github'] != '0') {
+
+
+								?> 
+									GitHub: 
+									<a class="pageLink" href="<?php echo $ExperienceOutput['github'];?>">
+										<?php
+											echo $ExperienceOutput['github'];
+										?>
+									</a>
 									<?php
-									if (($ExperienceOutput['github']) != NULL) {
-										echo $ExperienceOutput['github'];
-									}
-									?>
-								</a>
+								}
+								?>
 							</p>
 						</center>
 					</div>
