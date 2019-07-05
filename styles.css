@@ -252,27 +252,24 @@ button {
 
 
 
-
-
-
-
 /*THE EXPERIENCE GRID*/
 .experience-examples-grid-container {
   display: inline-grid;
+  width: 100%;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
+  grid-template-rows: auto auto auto auto auto;
   grid-template-areas: "name image"
   "year image"
   "langauges image"
   "link image"
   "description description";
 }
-<<<<<<< HEAD
 
 /*Styling for mobile*/
 @media (max-width:750px){
 .experience-examples-grid-container {
   display: grid;
+  width: 100%;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto auto auto auto auto;
   grid-template-areas: "name"
@@ -282,9 +279,6 @@ button {
   "image"
   "description";
 }
-
-=======
->>>>>>> parent of 8303df6... Update styles.css
 .experience-examples-image { grid-area: image; }
 
 .experience-examples-name { grid-area: name; }

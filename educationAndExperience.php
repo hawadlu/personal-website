@@ -234,21 +234,6 @@ require("connect.php")?>
 				}
 				?>
 				<div style = "background-color: <?php echo $colour; ?>" class="experience-examples-grid-container">
-					<div class="experience-examples-image">
-						<?php
-						$image = $ExperienceOutput['name'];
-						$image = "Images/Project and Experience/Experience/" . $image . ".png";
-						if (file_exists($image)) {
-
-						} else {
-                            //If the image does not exist, this is the default file path.
-							$image = "Images/Project and Experience/No Image.png";
-						}
-						?>
-						<center>
-							<img src = "<?php echo $image;?>">
-						</center>
-					</div>
 					<div class="experience-examples-name">
 						<center>
 							<h1>
@@ -258,7 +243,7 @@ require("connect.php")?>
 							</h1>
 						</center>
 					</div>
-					<div class="experience-examples-year">
+<div class="experience-examples-year">
 						<center>
 							<p>
 								Year: 
@@ -268,14 +253,16 @@ require("connect.php")?>
 							</p>
 						</center>
 					</div>
+					
+					
 					<div class="experience-examples-langauges">
 						<?php
 							//Setting session variables for the uniqueKey
-							
-							$key = $ExperienceOutput['uniqueKey'];
+
+						$key = $ExperienceOutput['uniqueKey'];
 
 							//Running queries to get the languages
-							$LanguageOneQuery = ("SELECT Languages.language
+						$LanguageOneQuery = ("SELECT Languages.language
 							FROM Experience
 							LEFT JOIN Languages ON Experience.languageOneFK = Languages.languagePK
 							WHERE Experience.uniqueKey LIKE $key
@@ -329,49 +316,48 @@ require("connect.php")?>
 						$LanguageFive = implode(" ", $LanguageFiveOutput);
 						
 
-							?>
-							<center>
-								<p>
-									language(s): 
-									<?php
-										if ($LanguageOne != 'NA') {
-											echo $LanguageOne;
-										}
-										if ($LanguageTwo != 'NA') {
-											echo (', ' . $LanguageTwo);
-										}
-										if ($LanguageThree != 'NA') {
-											echo (', ' . $LanguageThree);
-										}
-										if ($LanguageFour != 'NA') {
-											echo (', ' . $LanguageFour);
-										}
-										if ($LanguageFive != 'NA') {
-											echo (', ' . $LanguageFive);
-										}
+						?>
+						<center>
+							<p>
+								language(s): 
+								<?php
+								if ($LanguageOne != 'NA') {
+									echo $LanguageOne;
+								}
+								if ($LanguageTwo != 'NA') {
+									echo (', ' . $LanguageTwo);
+								}
+								if ($LanguageThree != 'NA') {
+									echo (', ' . $LanguageThree);
+								}
+								if ($LanguageFour != 'NA') {
+									echo (', ' . $LanguageFour);
+								}
+								if ($LanguageFive != 'NA') {
+									echo (', ' . $LanguageFive);
+								}
+								?>
+							</p>
+						</center>						
+					</div>
+					<div class="experience-examples-link">
+						<center>
+							<p>
+								link: 
+								<a class="pageLink" href="<?php ExperienceOutput['Link'];?>">
+									<?php 
+									echo $ExperienceOutput['Link'];
 									?>
-								</p>
-							</center>
-						
-						</div>
-						<div class="experience-examples-link">
-							<center>
-								<p>
-									link: 
-									<a class="pageLink" href="<?php ExperienceOutput['Link'];?>">
-										<?php 
-										echo $ExperienceOutput['Link'];
-										?>
-									</a>
+								</a>
 
-								</p>
-								<p>
-									GitHub: 
-									<a class="pageLink" href="<?php ExperienceOutput['github'];?>">
+							</p>
+							<p>
+								GitHub: 
+								<a class="pageLink" href="<?php ExperienceOutput['github'];?>">
 									<?php
-										if (($ExperienceOutput['github']) != NULL) {
-											echo $ExperienceOutput['github'];
-										}
+									if (($ExperienceOutput['github']) != NULL) {
+										echo $ExperienceOutput['github'];
+									}
 									?>
 								</p>
 							</center>
@@ -385,6 +371,21 @@ require("connect.php")?>
 								</p>
 							</center>
 						</div>
+						<div class="experience-examples-image">
+						<?php
+						$image = $ExperienceOutput['name'];
+						$image = "Images/Project and Experience/Experience/" . $image . ".png";
+						if (file_exists($image)) {
+
+						} else {
+                            //If the image does not exist, this is the default file path.
+							$image = "Images/Project and Experience/No Image.png";
+						}
+						?>
+						<center>
+							<img src = "<?php echo $image;?>">
+						</center>
+					</div>
 					</div>
 				<?php } ?> 
 			</div>
