@@ -2,14 +2,14 @@
 <html>
 <!--Pulls in the head and other required pages-->
 <?php 
-require("Head.php");
+require("head.php");
 require("connect.php")?>  
 <div class="page-grid-container">     
 	<!--The first div of the page grid-->
 	<div>
 		<?php
-		require("Header.php");
-		require("Nav.php");
+		require("header.php");
+		require("nav.php");
 		?>
 	</div>
 
@@ -201,6 +201,6 @@ require("connect.php")?>
 <!-- Footer -->
 <?php
 //Pull information from the footer page
-require("Footer.php");//'Require is 100% needed for this site to run
+require("footer.php");//'Require is 100% needed for this site to run
 ?>
 </html>
