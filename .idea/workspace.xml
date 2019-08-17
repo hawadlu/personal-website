@@ -26,6 +26,7 @@
     <option name="width" value="1400" />
     <option name="height" value="937" />
   </component>
+  <component name="ProjectId" id="1PX5ILucRiyWOLgRwQz2eCy3WCz" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -47,6 +48,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
