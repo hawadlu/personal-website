@@ -20,7 +20,7 @@ require("connect.php")
 		</div>
 		<?php
 			//The query which shows the education history
-			$ExpeienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`
+			$ExpeienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`, `Examples`.`imageLink`
 				FROM `Examples` 
 				LEFT JOIN `relevantYear` ON `Examples`.`exampleYearFK` = `relevantYear`.`relevantYearPK`
 				ORDER BY `relevantYear`.`relevantYear` DESC
@@ -54,6 +54,11 @@ require("connect.php")
 						?>
 						<center>
 							<img src = "<?php echo $image;?>">
+						</center>
+						<center>
+							<p>
+								<a style = "color: blue;" href = "<?php echo $ExamplesOutput['imageLink']; ?>">See More</a>
+							</p>
 						</center>
 					</div>
 					<div class="experience-examples-name">
@@ -167,7 +172,7 @@ require("connect.php")
 								//Only displays if there is a link to display
 								if ($ExamplesOutput['Link'] != '0') {
 								?> 
-									GitHub: 
+									Link: 
 									<a class="pageLink" href="<?php echo $ExamplesOutput['Link'];?>">
 										<?php
 											echo $ExamplesOutput['Link'];
