@@ -51,23 +51,21 @@ require("connect.php")
                     $image = "Images/Examples/No Image.png";
                 }
                 ?>
-                <center>
+                <div style="text-align: center;">
                     <img src="<?php echo $image; ?>">
-                </center>
-                <center>
+                </div>
+                <div style="text-align: center;">
                     <p>
                         <a style="color: blue;" href="<?php echo $ExamplesOutput['imageLink']; ?>">See More</a>
                     </p>
-                </center>
+                </div>
             </div>
             <div class="experience-examples-name">
-                <center>
                     <h1>
                         <?php
                         echo $ExamplesOutput['name'];
                         ?>
                     </h1>
-                </center>
             </div>
             <div class="experience-examples-year">
                 <p>
