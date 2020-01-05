@@ -19,7 +19,7 @@ require("connect.php")
     </div>
     <?php
     //The query which shows the education history
-    $ExpeienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`, `Examples`.`imageLink`
+    $ExpeienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`, `Examples`.`privateRepo`, `Examples`.`imageLink`
 				FROM `Examples` 
 				LEFT JOIN `relevantYear` ON `Examples`.`exampleYearFK` = `relevantYear`.`relevantYearPK`
 				ORDER BY `relevantYear`.`relevantYear` DESC
@@ -177,9 +177,8 @@ require("connect.php")
                 </p>
                 <p>
                     <?php
-                    //Only displays if there is a link to display
-                    if ($ExamplesOutput['github'] != '0') {
-
+                    //Only displays if there is a link to display and repo is not private
+                    if ($ExamplesOutput['github'] != '0' && $ExamplesOutput['privateRepo'] != 0) {
 
                         ?>
                         GitHub:
