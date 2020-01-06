@@ -19,7 +19,7 @@ require("connect.php")
     </div>
     <?php
     //The query which shows the education history
-    $ExpeienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`, `Examples`.`privateRepo`, `Examples`.`imageLink`
+    $ExpeienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`, `Examples`.`privateRepo`
 				FROM `Examples` 
 				LEFT JOIN `relevantYear` ON `Examples`.`exampleYearFK` = `relevantYear`.`relevantYearPK`
 				ORDER BY `relevantYear`.`relevantYear` DESC
@@ -41,31 +41,94 @@ require("connect.php")
         ?>
         <div style="background-color: <?php echo $colour; ?>" class="experience-examples-grid-container">
             <div class="experience-examples-image">
-                <?php
-                $image = $ExamplesOutput['name'];
-                $image = "Images/Examples/" . $image . ".png";
-                if (file_exists($image)) {
+                <div class="slideshowContainer">
+                    <?php
+                    //Load the filepath for the primary images
+                    $primaryImage = $ExamplesOutput['name'];
+                    $directoryName = "Images/Examples/" . $ExamplesOutput['name'];
+                    $primaryImage = $primaryImage . ".png";
+                    if (!file_exists($directoryName . "/" . $primaryImage)) {
+                        //If the image does not exist, this is the default file path.
+                        $primaryImage = "Images/Examples/No Image.png";
+                    } else {
+                        $primaryImage = $directoryName . "/" . $primaryImage;
+                    }
 
-                } else {
-                    //If the image does not exist, this is the default file path.
-                    $image = "Images/Examples/No Image.png";
-                }
-                ?>
-                <div style="text-align: center;">
-                    <img src="<?php echo $image; ?>">
-                </div>
-                <div style="text-align: center;">
-                    <p>
-                        <a style="color: blue;" href="<?php echo $ExamplesOutput['imageLink']; ?>">See More</a>
-                    </p>
+                    //Get the number of other files in the directory
+                    $fileCount = 0;
+                    $files = glob($directoryName . "/*");
+                    if ($files) {
+                        $fileCount = count($files);
+                    }
+                    ?>
+
+                    <!-- Load the primary image -->
+                    <div class="imageHolder">
+                        <div class="slideProgress" style="align-content: center">
+                            <p>
+                                1 / <?php echo $fileCount; ?>
+                            </p>
+                        </div>
+                        <img src="<?php echo $primaryImage; ?>" class="center">
+                    </div>
+
+                    <!--Load the next images -->
+                    <?php
+                    //Load the sub images
+                    $progress = 2;
+                    foreach (glob($directoryName . "/*") as $file) {
+                        //Don't show the primary image
+                        if ($file != $primaryImage) {
+                            ?>
+                            <!-- Load the secondary image -->
+                            <div class="imageHolder">
+                                <div class="slideProgress">
+                                    <p>
+                                        <?php echo $progress . " / " . $fileCount; ?>
+                                    </p>
+                                </div>
+                                <img src="<?php echo $file; ?>" class="center">
+                            </div>
+                            <?php
+                            //Increment the progress
+                            $progress += 1;
+                        }
+                    }
+                    ?>
+
+                    <!--navigation buttons for the sideshow -->
+                    <a class="prev" onclick="plusDivs(-1)">&#10094;</a>
+                    <a class="next" onclick="plusDivs(+1)">&#10095;</a>
+
+
+                    <!-- Javascript -->
+                    <script>
+                        var slideIndex = 1;
+                        showDivs(slideIndex);
+
+                        function plusDivs(n) {
+                            showDivs(slideIndex += n);
+                        }
+
+                        function showDivs(n) {
+                            var i;
+                            var x = document.getElementsByClassName("imageHolder");
+                            if (n > x.length) {slideIndex = 1}
+                            if (n < 1) {slideIndex = x.length} ;
+                            for (i = 0; i < x.length; i++) {
+                                x[i].style.display = "none";
+                            }
+                            x[slideIndex-1].style.display = "block";
+                        }
+                    </script>
                 </div>
             </div>
             <div class="experience-examples-name">
-                    <h1>
-                        <?php
-                        echo $ExamplesOutput['name'];
-                        ?>
-                    </h1>
+                <h1>
+                    <?php
+                    echo $ExamplesOutput['name'];
+                    ?>
+                </h1>
             </div>
             <div class="experience-examples-year">
                 <p>
@@ -177,9 +240,8 @@ require("connect.php")
                 </p>
                 <p>
                     <?php
-                    //Only displays if there is a link to display and repo is not private
-                    if ($ExamplesOutput['github'] != '0' && $ExamplesOutput['privateRepo'] != 0) {
-
+                    //Only displays if there is a link to display and the repo is no private
+                    if ($ExamplesOutput['github'] != '0' || $ExamplesOutput['privateRepo'] == 0) {
                         ?>
                         GitHub:
                         <a class="pageLink" href="<?php echo $ExamplesOutput['github']; ?>">
