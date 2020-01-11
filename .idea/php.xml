@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpInterpreters">
+    <interpreters>
+      <interpreter id="8ddd04ff-ed08-41a6-a1a9-b740df79acb5" name="Remote PHP" home="sftp://DATA" debugger_id="php.debugger.XDebug">
+        <remote_data WEB_SERVER_CONFIG_ID="9d94f44a-9887-4ab9-91c2-0f81981be62f" WEB_SERVER_CONFIG_NAME="Awardspace" WEB_SERVER_CREDENTIALS_ID="sftp://2450097@luke.dx.am:221" INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="" INITIALIZED="false" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" />
+      </interpreter>
+    </interpreters>
+  </component>
+</project>

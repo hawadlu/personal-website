@@ -5,56 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e5a796a-ec5a-4450-bfc7-12029fc26e84" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/personal-website.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/2:7:19/Projects.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/3:7:19/V1/personalWebsite.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/3:7:19/V2/personalWebsite.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/4:7:19/personalWebsite.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/5:7:19/personalWebsite.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/6:7:19/V1/personalWebsite.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Entire Database/6:7:19/V2/personalWebsite.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/Endorsement.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/Grade.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/Languages.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/Subject.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/relevantYear.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/subjectAbbreviation.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/DB versions/Tables/3:7:19/subjectLevel.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Course Abbreviations.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Course Abbreviations.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Education.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Education.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Endorsement.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Endorsement.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Experience.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Experience.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Grade.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Grade.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Institution.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Institution.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Subject.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Subject.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Year.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/Year.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/languages.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/languages.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/projects.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/projects.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/subjectLevel.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Spreadsheets/subjectLevel.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Templates/Database Template.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Templates/Database Template.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database Material/Templates/Empty Database Template.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Images/Examples/Yumyum House.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/Index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Queries.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/connect.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples.php" beforeDir="false" afterPath="$PROJECT_DIR$/examples.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -70,16 +24,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 7.1" />
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="Remote PHP" />
   <component name="ProjectId" id="1VxKIjgemXPosuxSFp1qQQhDvAf" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
   </component>
@@ -119,6 +75,8 @@
       <workItem from="1578189251371" duration="2062000" />
       <workItem from="1578191949046" duration="1367000" />
       <workItem from="1578264764537" duration="9826000" />
+      <workItem from="1578616234528" duration="707000" />
+      <workItem from="1578703110591" duration="94000" />
     </task>
     <servers />
   </component>
@@ -130,7 +88,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
