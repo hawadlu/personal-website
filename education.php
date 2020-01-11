@@ -3,13 +3,13 @@
 <!--Pulls in the head and other required pages-->
 <?php 
 require("head.php");
-require("connect.php")?>  
+require("Connect.php") ?>
 <div class="page-grid-container">     
 	<!--The first div of the page grid-->
 	<div>
 		<?php
-		require("header.php");
-		require("nav.php");
+		require("Header.php");
+		require("Nav.php");
 		?>
 	</div>
 

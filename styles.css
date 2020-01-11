@@ -21,7 +21,7 @@ a {
 
 img {
   border-radius: 5%;
-  margin-top: 10px;
+  margin: 0;
 }
 
 /*BUTTONS*/
@@ -57,13 +57,36 @@ button {
 
 }
 
+/*THE HOME PAGE*/
+/*Fading animation for the slideshow*/
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 2s;
+  animation-name: fade;
+  animation-duration: 2s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+
+
+
 /*THE NAV*/
 /* Grid styling nav*/
 .nav-grid-container {
   background-color: #91e4fb;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: ". . .";
 }
@@ -317,6 +340,4 @@ img {
   width: 100%;
 
 }
-
-/* Add a transparency effect for thumnbail images */
 

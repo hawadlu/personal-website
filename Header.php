@@ -1,5 +1,5 @@
 <!--Links to the stylesheet-->
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="Styles.css">
 <!--Makes the page scale properly for mobile devices-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <div class="header">
