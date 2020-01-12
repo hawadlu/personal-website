@@ -2,7 +2,7 @@
 <html>
 <!--Pulls in the head and other required pages-->
 <?php 
-require("head.php");
+require("Head.php");
 require("Connect.php") ?>
 <div class="page-grid-container">     
 	<!--The first div of the page grid-->

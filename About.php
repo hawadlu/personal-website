@@ -1,7 +1,7 @@
 
 <html>
 <!--Pulls in the head and other required pages-->
-<?php require("head.php") ?>  
+<?php require("Head.php") ?>
 <div class="page-grid-container">     
     <!--The first div of the page grid-->
     <div>

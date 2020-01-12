@@ -4,6 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="1e5a796a-ec5a-4450-bfc7-12029fc26e84" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/About.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
@@ -17,6 +18,9 @@
       <change beforePath="$PROJECT_DIR$/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/Styles.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+=======
+    <list default="true" id="390cac2b-d55e-4dd3-ad55-fded8f4c1c89" name="Default Changelist" comment="" />
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,6 +34,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< Updated upstream
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="Remote PHP" />
   <component name="ProjectId" id="1VxKIjgemXPosuxSFp1qQQhDvAf" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -41,19 +46,30 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+=======
+  <component name="ProjectId" id="1PX5ILucRiyWOLgRwQz2eCy3WCz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+>>>>>>> Stashed changes
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -77,12 +93,20 @@
       <created>1578189229912</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
+<<<<<<< Updated upstream
       <updated>1578189229912</updated>
       <workItem from="1578189251371" duration="2062000" />
       <workItem from="1578191949046" duration="1367000" />
       <workItem from="1578264764537" duration="9826000" />
       <workItem from="1578616234528" duration="707000" />
       <workItem from="1578703110591" duration="4109000" />
+=======
+      <updated>1561961048315</updated>
+      <workItem from="1566007546983" duration="1093000" />
+      <workItem from="1566613783702" duration="335000" />
+      <workItem from="1566614264311" duration="327000" />
+      <workItem from="1578867095329" duration="314000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>

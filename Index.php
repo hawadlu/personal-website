@@ -1,7 +1,7 @@
 <html>
     <head>
         <?php
-        require("head.php");
+        require("Head.php");
         require("Header.php");
         require("Nav.php");
         ?>
