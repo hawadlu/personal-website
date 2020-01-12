@@ -55,7 +55,7 @@ require("Connect.php") ?>
 
 					?>
 
-					<center>
+					<div style="text-align: center;">
 						<h1>
 							<?php
 							if (($EducationOutput['institution'])!=($institution)) {
@@ -66,10 +66,10 @@ require("Connect.php") ?>
 
 							?>
 						</h1>
-					</center>			
+					</div>
 					<div style = "background-color: <?php echo $colour; ?>" class="education-grid-container-uni">
 						<div class="education-Subject-uni">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									<strong>
 										Subject: 
@@ -81,37 +81,37 @@ require("Connect.php") ?>
 									echo $EducationOutput['subject'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-Grade-uni">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Grade: 
 									<?php
 									echo $EducationOutput['grade'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-subjectLevel-uni">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Subject Level: 
 									<?php
 									echo $EducationOutput['subjectLevel'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-Year-uni">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Year: 
 									<?php
 									echo $EducationOutput['relevantYear'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 					</div>
 					<?php
@@ -119,7 +119,7 @@ require("Connect.php") ?>
 				//printing results for tawa college
 
 					?>
-					<center>
+					<div style="text-align: center;">
 						<h1>
 							<?php
 							if (($EducationOutput['institution'])!=($institution)) {
@@ -130,10 +130,10 @@ require("Connect.php") ?>
 
 							?>
 						</h1>
-					</center>
+					</div>
 					<div style = "background-color: <?php echo $colour; ?>" class="education-grid-container-col">
 						<div class="education-Subject-col">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									<strong>
 										Subject: 
@@ -145,47 +145,47 @@ require("Connect.php") ?>
 									echo $EducationOutput['subject'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-Endorsement-col">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Endorsement: 
 									<?php
 									echo $EducationOutput['endorsement'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-Credits-col">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Credits: 
 									<?php
 									echo $EducationOutput['credits'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-subjectLevel-col">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Subject Level: 
 									<?php
 									echo $EducationOutput['subjectLevel'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 						<div class="education-Year-col">
-							<center>
+							<div style="text-align: center;">
 								<p>
 									Year: 
 									<?php
 									echo $EducationOutput['relevantYear'];
 									?>
 								</p>
-							</center>
+							</div>
 						</div>
 					</div>
 					<?php
@@ -201,6 +201,6 @@ require("Connect.php") ?>
 <!-- Footer -->
 <?php
 //Pull information from the footer page
-require("footer.php");//'Require is 100% needed for this site to run
+require("Footer.php");//'Require is 100% needed for this site to run
 ?>
 </html>
