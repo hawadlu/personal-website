@@ -9,6 +9,10 @@
 
     <!--Disable scrolling-->
     <body style = "margin: 0; height: 100%; overflow: hidden;">
+    <!--Navigation buttons-->
+    <div class="home-buttons-container">
+        <a href = "About.php">About Me</a>
+    </div>
             <?php
             //Load BG Images
             foreach (glob("BG Images/*") as $file) {

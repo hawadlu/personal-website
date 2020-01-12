@@ -47,6 +47,6 @@
 <!-- Footer -->
 <?php
         //Pull information from the footer page
-            require("footer.php");//'Require is 100% needed for this site to run
+            require("Footer.php");//'Require is 100% needed for this site to run
             ?>
             </html>
