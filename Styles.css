@@ -25,6 +25,17 @@ a {
   margin: 0;
 }
 
+/*Used for the image on the home page*/
+.center-fit {
+  padding: 0;
+  display: block;
+  margin: 0 auto;
+  max-height: 100%;
+  max-width: 100%;
+  min-width: 50%;
+  min-height: 50%;
+}
+
 /*BUTTONS*/
 button {
   width: 100%;
@@ -111,24 +122,6 @@ button {
   left: 0;
 
 }
-
-/*THE HOME PAGE*/
-/*Fading animation for the slideshow*/
-/* Fading animation */
-
-@-webkit-keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
-
-@keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
-
-/*The navigation buttons on the home screen*/
-/*The about me grid on the home page*/
-
 
 /*STYLING FOR THE MAIN PAGE ELEMENTS*/
 /*The grid that holds all the elements*/

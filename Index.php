@@ -8,8 +8,8 @@
     </head>
 
     <!--Disable scrolling-->
-    <body style = "margin: 0; height: 100%; overflow: hidden;">
-    
+    <body style = "overflow: hidden">
+        <img class="center-fit" style = "height: auto; width: auto;" src= "Images/BG%20Image.png"
     </body>
 
 
