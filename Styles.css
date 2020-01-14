@@ -1,3 +1,8 @@
+/*VARIABLES*/
+:root {
+  --imgHeight: auto; /* the default */
+}
+
 body {
 	background-color: #ffffff;
   margin: 0;
@@ -25,15 +30,12 @@ a {
   margin: 0;
 }
 
-/*Used for the image on the home page*/
-.center-fit {
+img {
   padding: 0;
   display: block;
   margin: 0 auto;
-  max-height: 100%;
-  max-width: 100%;
-  min-width: 50%;
-  min-height: 50%;
+  height: var(--imgHeight);
+  width: auto;
 }
 
 /*BUTTONS*/
