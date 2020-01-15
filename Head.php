@@ -14,7 +14,7 @@
 	<meta content="Luke Hawinkels" name="description">
 	<meta content="HTML,CSS,XML,JavaScript" name="keywords">
 	<meta content="Luke Hawinkels" name="author">
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="Styles.css">
         <!--Importing Fonts-->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
