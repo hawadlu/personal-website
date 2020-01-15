@@ -69,7 +69,7 @@ require("Connect.php")
                                 1 / <?php echo $fileCount; ?>
                             </p>
                         </div>
-                        <img class = "rounded" src="<?php echo $primaryImage; ?>" class="center">
+                        <img class = "center rounded" src="<?php echo $primaryImage; ?>">
                     </div>
 
                     <!--Load the next images -->

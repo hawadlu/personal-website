@@ -24,7 +24,7 @@
             </div>
             <div class="aboutMe-Image">
                 <div style="text-align: center;">
-                    <img class="rounded" src="Images/Profile Pic.png" alt="Me">
+                    <img class="center rounded" src="Images/Profile Pic.png" alt="Me">
                 </div>
             </div>
             <div class="aboutMe-Description">
