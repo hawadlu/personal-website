@@ -18,6 +18,8 @@ p {
 a {
   text-decoration: none;
   color: black;
+  font-size: 14px;
+  font-family: Raleway;
 }
 
 /*Used to round the corners of some images*/
@@ -30,72 +32,63 @@ a {
 /*Too small for any image*/
 @media (max-width: 320px) {
   .background-img {
-    background: #ffffff;
-    background-image: none;
+    background: #ffffff none;
   }
 }
 
 /*Devices with a resolution between W320-W412 and H556-H732*/
 @media (min-width: 320px) and (max-width: 412px) {
     .background-img {
-        background: #ffffff;
-        background-image: url("Images/BG Images/w320-412 h556-732.jpeg");
+      background: #ffffff url("Images/BG Images/w320-412 h556-732.jpeg");
     }
 }
 
 /*Devices with a resolution between W412-W600 and H732-H960*/
 @media (min-width: 412px) and (max-width: 600px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w412-600 h732-960.jpeg");
+    background: #ffffff url("Images/BG Images/w412-600 h732-960.jpeg");
   }
 }
 
 /*Devices with a resolution between W600-W1024 and H960-H1366*/
 @media (min-width: 600px) and (max-width: 1024px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w600-1024 h960-1366.jpeg");
+    background: #ffffff url("Images/BG Images/w600-1024 h960-1366.jpeg");
   }
 }
 
 /*Devices with a resolution between W1024-W2560 and H1366-H1504*/
 @media (min-width: 1024px) and (max-width: 2560px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w1024-2560 h1366-1504.jpeg");
+    background: #ffffff url("Images/BG Images/w1024-2560 h1366-1504.jpeg");
   }
 }
 
 /*Devices with a resolution between W2560-W3200 and H1504-H1800*/
 @media (min-width: 2560px) and (max-width: 3200px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w2560-3200 h1504-1800.jpeg");
+    background: #ffffff url("Images/BG Images/w2560-3200 h1504-1800.jpeg");
   }
 }
 
 /*Devices with a resolution between W3200-W3840 and H1800-H2160*/
 @media (min-width: 3200px) and (max-width: 3840px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w3200-3840 h1800-2160.jpeg");
+    background: #ffffff url("Images/BG Images/w3200-3840 h1800-2160.jpeg");
   }
 }
 
 /*Devices with a resolution between W3880-W5000 and H2160-H3750*/
 @media (min-width: 3840px) and (max-width: 5000px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w3840-500 h2160-3750.jpeg");
+    background: #ffffff url("Images/BG Images/w3840-500 h2160-3750.jpeg");
   }
 }
 
 /*Display the largest image*/
 @media (min-width: 5000px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/max.jpeg");
+    background: #ffffff url("Images/BG Images/max.jpeg");
   }
 }
 
@@ -110,7 +103,6 @@ img {
 /*BUTTONS*/
 button {
   width: 100%;
-
 }
 
 .pageLink:hover {
@@ -226,6 +218,19 @@ button {
 .aboutMe-Title { grid-area: aboutMe-Title; }
 
 .aboutMe-Description { grid-area: aboutMe-Descritption; padding: 5%}
+
+/*BUTTONS ON THE INDEX PAGE*/
+.indexNav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 5%;
+  grid-row-gap: 0px;
+  background: white;
+  width: 50%;
+  margin-left: 25%;
+  margin-top: 25%;
+}
 
 
 /*THE TABS ON THE EDUCATION AND EXPERIENCE PAGE*/

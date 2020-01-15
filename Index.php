@@ -9,6 +9,20 @@
 
 <!--Disable scrolling-->
 <body class="background-img">
+    <div style="text-align: center">
+        <div class="indexNav">
+            <div>
+                <a>
+                    Hello
+                </a>
+            </div>
+            <div>
+                <p>
+                    Hello
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 
 
