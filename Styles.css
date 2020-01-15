@@ -1,3 +1,8 @@
+/*VARIABLES*/
+:root {
+  --imgHeight: auto; /* the default */
+}
+
 body {
 	background-color: #ffffff;
   margin: 0;
@@ -22,6 +27,14 @@ a {
 img {
   border-radius: 5%;
   margin: 0;
+}
+
+img {
+  padding: 0;
+  display: block;
+  margin: 0 auto;
+  height: var(--imgHeight);
+  width: auto;
 }
 
 /*BUTTONS*/
@@ -111,58 +124,6 @@ button {
 
 }
 
-<<<<<<< Updated upstream
-/*THE HOME PAGE*/
-/*Fading animation for the slideshow*/
-/* Fading animation */
-=======
-<<<<<<< HEAD
-=======
-/*THE HOME PAGE*/
-/*Fading animation for the slideshow*/
-/* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
-  -webkit-animation-duration: 2s;
-  animation-name: fade;
-  animation-duration: 2s;
-}
->>>>>>> Stashed changes
-
-@-webkit-keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
-
-@keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
-
-/*The navigation buttons on the home screen*/
-/*The about me grid on the home page*/
-<<<<<<< Updated upstream
-
-
-=======
-.home-buttons-container {
-  width: 100%;
-  margin: 0 50% 0 50%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto;
-  grid-template-areas: "aboutMe examples education";
-}
-
-.aboutMe { grid-area: aboutMe; }
-
-.examples { grid-area: examples; }
-
-.education { grid-area: education; padding: 5%}
-
-
->>>>>>> parent of 664f0a9... Restricts image rounding to about and examples.
->>>>>>> Stashed changes
 /*STYLING FOR THE MAIN PAGE ELEMENTS*/
 /*The grid that holds all the elements*/
 .page-grid-container {
