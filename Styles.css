@@ -1,13 +1,9 @@
-/*VARIABLES*/
-:root {
-  --imgHeight: auto; /* the default */
-}
-
 body {
-	background-color: #ffffff;
+  background-color: #ffffff;
   margin: 0;
   padding: 0;
 }
+
 /*FONTS*/
 h1 {
   font-size: 26px;
@@ -24,17 +20,110 @@ a {
   color: black;
 }
 
-img {
+/*Used to round the corners of some images*/
+.rounded{
   border-radius: 5%;
   margin: 0;
 }
+
+/* VARIOUS BG IMAGE SIZES*/
+/*Too small for any image*/
+@media (max-width: 320px) or (max-width: 8000px) {
+  .background-img {
+    background: #ffffff;
+    background-image: none;
+  }
+}
+@media (min-width: 320px) and (max-width: 450px){
+  .background-img {
+    background-image: url("Images/BG Images/450.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 450px) and (max-width: 768px) {
+  .background-img {
+    background-image: url("Images/BG Images/768.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1000px) {
+  .background-img {
+    background-image: url("Images/BG Images/768.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1280px) {
+  .background-img {
+    background-image: url("Images/BG Images/1280.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1500px) {
+  .background-img {
+    background-image: url("Images/BG Images/1500.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 1500px) and (max-width: 1800px) {
+  .background-img {
+    background-image: url("Images/BG Images/1800.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 1800px) and (max-width: 2100px) {
+  .background-img {
+    background-image: url("Images/BG Images/2100.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 2100px) and (max-width: 3000px) {
+  .background-img {
+    background-image: url("Images/BG Images/3000.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 3000px) and (max-width: 4000px) {
+  .background-img {
+    background-image: url("Images/BG Images/4000.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+@media (min-width: 4000px) and (max-width: 8000px) {
+  .background-img {
+    background-image: url("Images/BG Images/max.jpeg");
+    width: auto;
+    height: auto;
+  }
+}
+
+
+
+
 
 img {
   padding: 0;
   display: block;
   margin: 0 auto;
-  height: var(--imgHeight);
-  width: auto;
+  height: auto;
+  width: 100%;
 }
 
 /*BUTTONS*/
@@ -270,13 +359,6 @@ button {
   }
 }
 
-
-/* EXAMPLES IMAGES */
-img {
-  vertical-align: middle;
-  horiz-align: center;
-}
-
 /* Position the image container (needed to position the left and right arrows) */
 .slideshowContainer {
   position: relative;
@@ -286,9 +368,6 @@ img {
 .imageHolder {
   display: none;
 }
-
-/* Add a pointer when hovering over the thumbnail images */
-
 
 /* Next & previous buttons */
 .prev,
