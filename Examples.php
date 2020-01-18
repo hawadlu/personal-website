@@ -87,7 +87,7 @@ require("Connect.php")
                                         <?php echo $progress . " / " . $fileCount; ?>
                                     </p>
                                 </div>
-                                <img src="<?php echo $file; ?>" class="center">
+                                <img  class="center rounded" src="<?php echo $file; ?>">
                             </div>
                             <?php
                             //Increment the progress

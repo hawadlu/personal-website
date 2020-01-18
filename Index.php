@@ -12,14 +12,18 @@
     <div style="text-align: center">
         <div class="indexNav">
             <div>
-                <a>
-                    Hello
+                <ahref="About.php">
+                    <button class="indexButton">
+                        About Me
+                    </button>
                 </a>
             </div>
             <div>
-                <p>
-                    Hello
-                </p>
+                <a href="Examples.php">
+                    <button class="indexButton">
+                        Examples
+                    </button>
+                </a>
             </div>
         </div>
     </div>

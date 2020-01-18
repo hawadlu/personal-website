@@ -20,6 +20,7 @@ a {
   color: black;
   font-size: 14px;
   font-family: Raleway;
+
 }
 
 /*Used to round the corners of some images*/
@@ -103,6 +104,7 @@ img {
 /*BUTTONS*/
 button {
   width: 100%;
+  height: 100%;
 }
 
 .pageLink:hover {
@@ -226,10 +228,26 @@ button {
   grid-template-rows: 1fr;
   grid-column-gap: 5%;
   grid-row-gap: 0px;
-  background: white;
   width: 50%;
   margin-left: 25%;
   margin-top: 25%;
+}
+
+/*Styling for buttons on the index page*/
+.indexButton {
+  border-radius: 5px;
+  border-width: 5px;
+  border-color: #ffffff;
+  background: none;
+  padding: 10px;
+}
+
+/*Hover effects for the buttons on the index page*/
+.indexButton:hover {
+  background-color: #0c59cf;
+  transition: 0.5s;
+  text-decoration-color: aquamarine;
+  color: hotpink;
 }
 
 
