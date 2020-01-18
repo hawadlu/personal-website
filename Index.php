@@ -14,14 +14,18 @@
             <div>
                 <ahref="About.php">
                     <button class="indexButton">
-                        About Me
+                        <strong>
+                            About Me
+                        </strong>
                     </button>
                 </a>
             </div>
             <div>
                 <a href="Examples.php">
                     <button class="indexButton">
-                        Examples
+                        <strong>
+                            Examples
+                        </strong>
                     </button>
                 </a>
             </div>

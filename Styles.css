@@ -33,7 +33,7 @@ a {
 /*Too small for any image*/
 @media (max-width: 320px) {
   .background-img {
-    background: #ffffff none;
+    background: #ffffff url("Images/BG Images/min.jpeg");
   }
 }
 
@@ -105,6 +105,8 @@ img {
 button {
   width: 100%;
   height: 100%;
+  font-size: 20px;
+  font-family: Raleway;
 }
 
 .pageLink:hover {
@@ -126,7 +128,8 @@ button {
 /*THE HEADER*/
 .header {
   width: 100%;
-  background-color: #0c59cf;
+  opacity: 75%;
+  background-color: #9A9591;
   color: white;
   font-family: Raleway;
   padding-top: 10px;
@@ -137,27 +140,66 @@ button {
 /*THE NAV*/
 /* Grid styling nav*/
 .nav-grid-container {
-  background-color: #91e4fb;
+  background-color: #9A9591;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: ". . .";
+  opacity:50%;
 }
 
 /*The nav hover effect*/
 .hover-effect:hover {
   background-color:rgba(255, 255, 255, 0.5);
 }
+
+.hamburger {
+  display: none;
+}
+
 /*For mobile devices*/
 @media (max-width:650px){
+  .hamburger {
+    display: block;
+    background-color: #9A9591;
+  }
+
+  .hamburger:hover .nav-grid-container {
+    background-color: #9A9591;
+    display: block;
+  }
+
+  .hamburgerImg {
+    max-height: 50px;
+    max-width: 50px;
+  }
+
   .nav-grid-container {
-    background-color: #91e4fb;
+    background-color: #9A9591;
     width: 100%;
-    display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas: " . " " . " ".";
+    opacity: 100%;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    width: 100%;
+    opacity: 100%;
+    z-index: 1;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
 }
 
@@ -170,12 +212,13 @@ button {
 }
 
 .footerLink:hover {
-  color: blue;
+  color: #ffcf00;
   transition: 0.3s;
 }
 
 .footer {
-  background-color: #91e4fb;
+  background-color: #9A9591;
+  opacity: 75%;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
@@ -222,32 +265,50 @@ button {
 .aboutMe-Description { grid-area: aboutMe-Descritption; padding: 5%}
 
 /*BUTTONS ON THE INDEX PAGE*/
-.indexNav {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: 5%;
-  grid-row-gap: 0px;
-  width: 50%;
-  margin-left: 25%;
-  margin-top: 25%;
+/*Styling for smaller device*/
+@media (max-width: 500px) {
+  .indexNav {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-row-gap: 10%;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 25%;
+  }
+}
+
+/*Styling for larger device*/
+@media (min-width: 500px) {
+  .indexNav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5%;
+    grid-row-gap: 0px;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 25%;
+  }
 }
 
 /*Styling for buttons on the index page*/
 .indexButton {
   border-radius: 5px;
   border-width: 5px;
-  border-color: #ffffff;
+  border-color: #69696B;
   background: none;
   padding: 10px;
+  transition: 0.5s;
 }
 
 /*Hover effects for the buttons on the index page*/
 .indexButton:hover {
-  background-color: #0c59cf;
+  background-color: #9A9591;
+  border-color: #9A9591;
   transition: 0.5s;
   text-decoration-color: aquamarine;
-  color: hotpink;
+  color: #ffcf00;
 }
 
 
