@@ -3,6 +3,15 @@
 <!--Connects to the styleseet-->
 <link rel="stylesheet" href="Styles.css">
 
+<?php
+//Gets the current file name. Used to determine the opacity of the header and nav.
+if (basename($_SERVER["PHP_SELF"]) == "Index.php") {
+    $opacityNav = "50%";
+} else {
+    $opacityNav = "100%";
+}
+?>
+
 <div style="text-align: center;">
     <div class="dropdown">
         <!--Display hamburger menu icon if required-->
@@ -10,7 +19,8 @@
             <img class="hamburgerImg" src="Images/Hamburger Icon.png">
         </div>
         <div class="dropdown-content">
-            <div class="nav-grid-container">
+
+            <div class="nav-grid-container" style="--navOpacity: <?php echo $opacityNav;?>;">
                 <div class="hover-effect">
                     <div style="text-align: center;">
                         <a href="Index.php">

@@ -3,7 +3,6 @@
     <?php
     require("Head.php");
     require("Header.php");
-    require("Nav.php");
     ?>
 </head>
 
@@ -12,7 +11,7 @@
     <div style="text-align: center">
         <div class="indexNav">
             <div>
-                <ahref="About.php">
+                <a href = "About.php">
                     <button class="indexButton">
                         <strong>
                             About Me
