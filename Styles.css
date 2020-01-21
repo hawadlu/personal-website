@@ -120,7 +120,7 @@ button {
 }
 
 .pageLink:hover {
-  color: blue;
+  color: #EF4A4A;
   transition: 0.3s;
 }
 
@@ -247,8 +247,10 @@ button {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: "." ".";
-  padding-bottom: 50px;
+  padding-bottom: 0;
+  width: 90%;
   margin: 150px 5% 75px;
+
   opacity: 80%;
   border-radius: 20px;
   background-color: white;
@@ -387,7 +389,7 @@ button {
 
 
 /*THE EXPERIENCE GRID*/
-.experience-examples-grid-container {
+.examples-grid-container {
   display: grid;
     padding: 5%;
   grid-template-columns: 1fr 1fr;
@@ -396,12 +398,17 @@ button {
 }
 
 /*Rounds only the top corners. called for the first instance of the experience div*/
-.roundTopExperience {
+.roundTopExamples {
   border-radius: 20px 20px 0 0;
 }
 
+/*Rounds only the bottom corners. called for the first instance of the experience div*/
+.roundBottomExamples {
+  border-radius: 0 0 20px 20px;
+}
+
 @media (max-width: 750px) {
-  .experience-examples-grid-container {
+  .examples-grid-container {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -409,20 +416,20 @@ button {
   }
 }
 
-.experience-examples-image { grid-area: image;}
+.examples-image { grid-area: image;}
 
-.experience-examples-name { grid-area: name;}
+.examples-name { grid-area: name;}
 
-.experience-examples-year { grid-area: year;}
+.examples-year { grid-area: year;}
 
-.experience-examples-language {grid-area: languages;}
+.examples-language {grid-area: languages;}
 
-.experience-examples-link { grid-area: link;}
+.examples-link { grid-area: link;}
 
-.experience-examples-description { grid-area: description;}
+.examples-description { grid-area: description;}
 
 @media (max-width: 750px) {
-  .experience-examples-name, .experience-examples-year, .experience-examples-language, .experience-examples-link {
+  .examples-name, .examples-year, .examples-language, .examples-link {
     text-align: center;
   }
 }

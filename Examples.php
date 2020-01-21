@@ -15,8 +15,19 @@ require("Connect.php");
                     ");
 
     $ExamplesResult = mysqli_query($con, $ExpeienceQuery);
+    $recordCount = mysqli_num_rows($ExamplesResult);
     $count = 0;
     while ($ExamplesOutput = mysqli_fetch_array($ExamplesResult)) {
+        //Calculates if any rounding of the examples div is required
+        $class = "";
+        if ($count == 0) {
+            $class = "examples-grid-container roundTopExamples";
+        } elseif ($count == $recordCount - 1) {
+            $class = "examples-grid-container roundBottomExamples";
+        } else {
+            $class = "examples-grid-container";
+        }
+
         //Changing the background colour
         if ($count % 2 == 0) {
             //even
@@ -28,8 +39,8 @@ require("Connect.php");
             $count += 1;
         }
         ?>
-        <div style="background-color: <?php echo $colour; ?>" class="experience-examples-grid-container">
-            <div class="experience-examples-image">
+        <div style="background-color: <?php echo $colour; ?>" class="<?php echo $class;?>">
+            <div class="examples-image">
                 <div class="slideshowContainer">
                     <?php
                     //Load the filepath for the primary images
@@ -93,14 +104,14 @@ require("Connect.php");
                     <a class="next" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
                 </div>
             </div>
-            <div class="experience-examples-name">
+            <div class="examples-name">
                 <h1>
                     <?php
                     echo $ExamplesOutput['name'];
                     ?>
                 </h1>
             </div>
-            <div class="experience-examples-year">
+            <div class="examples-year">
                 <p>
                     Year:
                     <?php
@@ -108,7 +119,7 @@ require("Connect.php");
                     ?>
                 </p>
             </div>
-            <div class="experience-examples-language">
+            <div class="examples-language">
                 <?php
                 //Setting session variables for the uniqueKey
 
@@ -191,7 +202,7 @@ require("Connect.php");
                     ?>
                 </p>
             </div>
-            <div class="experience-examples-link">
+            <div class="examples-link">
                 <p>
                     <?php
                     //Only displays if there is a link to display
@@ -224,7 +235,7 @@ require("Connect.php");
                     ?>
                 </p>
             </div>
-            <div class="experience-examples-description">
+            <div class="examples-description">
                 <p>
                     <?php
                     echo $ExamplesOutput['examplesDescription'];
@@ -246,7 +257,7 @@ require("Connect.php");
 
     //Pre-populate the list. Dynamically adjusts based on the number of instances of the slideshow class
     var slideId = [];
-    for (i = 0; i < document.querySelectorAll(".experience-examples-grid-container").length; i++) {
+    for (i = 0; i < document.querySelectorAll(".examples-grid-container").length; i++) {
         slideId.push("ssID" + (i + 1));
         slideIndex.push(1);
         showDivs(1, i);
