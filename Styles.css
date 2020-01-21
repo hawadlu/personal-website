@@ -395,6 +395,11 @@ button {
   grid-template-areas: "name image" "year image" "languages image" "link image" "description image";
 }
 
+/*Rounds only the top corners. called for the first instance of the experience div*/
+.roundTopExperience {
+  border-radius: 20px 20px 0 0;
+}
+
 @media (max-width: 750px) {
   .experience-examples-grid-container {
     display: grid;
@@ -463,7 +468,7 @@ button {
 
 /* Number text (1/3 etc) */
 .slideProgress {
-  color: #f2f2f2;
+  color: red;
   font-size: 20px;
   padding: 0px;
   position: relative;
