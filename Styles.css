@@ -197,6 +197,7 @@ button {
     position: relative;
     display: inline-block;
     width: 100%;
+    z-index: -1;
   }
 
   .dropdown-content {
@@ -204,7 +205,6 @@ button {
     position: absolute;
     width: 100%;
     opacity: 100%;
-    z-index: 1;
   }
 
   .dropdown:hover .dropdown-content {
@@ -252,7 +252,6 @@ button {
   opacity: 80%;
   border-radius: 20px;
   background-color: white;
-  z-index: -1;
 }
 
 .header-nav-container {
@@ -442,7 +441,7 @@ button {
   width: auto;
   padding: 16px;
   margin-top: -50px;
-  color: white;
+  color: blue;
   font-weight: bold;
   font-size: 20px;
   border-radius: 0 3px 3px 0;
