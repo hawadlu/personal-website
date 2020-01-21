@@ -3,7 +3,6 @@
 <?php
 require("Head.php");
 require("Connect.php");
-require("Header.php");
 ?>
 
 <body class="background-img">
@@ -192,6 +191,12 @@ require("Header.php");
 
     </div>
 <body class="background-img">
+
+<!--Called last so that it renders at the top-->
+<?php
+    require("Header.php");;
+?>
+
 <!-- Footer -->
 <?php
 //Pull information from the footer page

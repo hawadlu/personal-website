@@ -1,7 +1,6 @@
 <html>
 <!--Pulls in the head and other required pages-->
 <?php require("Head.php");
-require("Header.php");
 ?>
 <body class="background-img">
 <div class="page-grid-container">
@@ -174,6 +173,10 @@ require("Header.php");
     </div>
 </div>
 </body>
+<!--Called last so that it renders at the top-->
+<?php
+    require("Header.php");;
+?>
 <!-- Footer -->
 <?php
 //Pull information from the footer page

@@ -34,6 +34,6 @@
 
 
 <?php
-require("Footer.php");
+    require("Footer.php");
 ?>
 </html>
