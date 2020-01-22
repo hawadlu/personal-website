@@ -24,6 +24,11 @@ a {
 
 }
 
+/*Used align specific text to the left*/
+.alignTextLeft {
+  text-align: left;
+}
+
 /*Used to round the corners of some images*/
 .rounded{
   border-radius: 10px;
@@ -418,7 +423,7 @@ button {
 
 .examples-image { grid-area: image;}
 
-.examples-name { grid-area: name;}
+.examples-name { grid-area: name; }
 
 .examples-year { grid-area: year;}
 

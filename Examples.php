@@ -112,7 +112,7 @@ require("Connect.php");
                 </h1>
             </div>
             <div class="examples-year">
-                <p>
+                <p class="alignTextLeft">
                     Year:
                     <?php
                     echo $ExamplesOutput['relevantYear'];
@@ -181,8 +181,8 @@ require("Connect.php");
 
 
                 ?>
-                <p>
-                    language(s):
+                <p class="alignTextLeft">
+                    Language(s):
                     <?php
                     if ($LanguageOne != 'NA') {
                         echo $LanguageOne;
@@ -202,7 +202,7 @@ require("Connect.php");
                     ?>
                 </p>
             </div>
-            <div class="examples-link">
+            <div class="examples-link" onload="addUrl(<?php echo $ExamplesOutput['Link'];?>)">
                 <p>
                     <?php
                     //Only displays if there is a link to display
@@ -222,20 +222,28 @@ require("Connect.php");
                 <p>
                     <?php
                     //Only displays if there is a link to display and the repo is no private
-                    if ($ExamplesOutput['github'] != '0' || $ExamplesOutput['privateRepo'] == 0) {
+                    if ($ExamplesOutput['github'] != '0') {
                         ?>
                         GitHub:
-                        <a class="pageLink" href="<?php echo $ExamplesOutput['github']; ?>">
-                            <?php
-                            echo $ExamplesOutput['github'];
-                            ?>
-                        </a>
                         <?php
+                        if ($ExamplesOutput['privateRepo'] != 0) {
+                            ?>
+                            <a class="pageLink" href="<?php echo $ExamplesOutput['github']; ?>">
+                                <?php
+                                    echo $ExamplesOutput['github'];
+                                ?>
+                            </a>
+                            <?php
+                        } else {
+                            ?>
+                            Sorry. This one has to be kept secret.
+                            <?php
+                        }
                     }
                     ?>
                 </p>
             </div>
-            <div class="examples-description">
+            <div class="examples-description alignTextLeft">
                 <p>
                     <?php
                     echo $ExamplesOutput['examplesDescription'];
@@ -255,15 +263,16 @@ require("Connect.php");
 
     var slideIndex = [];
 
-    //Pre-populate the list. Dynamically adjusts based on the number of instances of the slideshow class
+    //Pre-populate the list. Dynamically adjusts based on the number of instances of the grid class
     var slideId = [];
     for (i = 0; i < document.querySelectorAll(".examples-grid-container").length; i++) {
         slideId.push("ssID" + (i + 1));
         slideIndex.push(1);
         showDivs(1, i);
     }
-    // showDivs(1, 0);
-    // showDivs(1, 1);
+
+    //Shorten all the necessary links
+
 
     function plusDivs(n, no) {
         showDivs(slideIndex[no] += n, no);
