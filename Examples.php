@@ -21,9 +21,9 @@ require("Connect.php");
         //Calculates if any rounding of the examples div is required
         $class = "";
         if ($count == 0) {
-            $class = "examples-grid-container roundTopExamples";
+            $class = "examples-grid-container roundTop";
         } elseif ($count == $recordCount - 1) {
-            $class = "examples-grid-container roundBottomExamples";
+            $class = "examples-grid-container roundBottom";
         } else {
             $class = "examples-grid-container";
         }

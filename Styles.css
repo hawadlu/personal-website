@@ -27,6 +27,7 @@ a {
 /*Used align specific text to the left*/
 .alignTextLeft {
   text-align: left;
+  margin-left: 10px;
 }
 
 /*Used to round the corners of some images*/
@@ -318,78 +319,39 @@ button {
 
 
 /*THE TABS ON THE EDUCATION AND EXPERIENCE PAGE*/
-.educationAndExperience-grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: " . " " . ";
-}
 
 /*THE EDUCATION GRID*/
-/*University*/
-.education-grid-container-uni {
+.education-grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: 40% 15% 30% 15%;
+  grid-template-rows: auto;
   grid-template-areas:
-  "Subject Grade subjectLevel Year";
+  "Subject Credits subjectLevel Year";
 }
 
 /*Styling for mobile*/
 @media (max-width:750px){
-  .education-grid-container-uni {
+  .education-grid-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
-    grid-template-areas: 
-    "Subject Grade" 
-    "subjectLevel Year";
-  }
-}
-
-
-.education-Subject-uni { grid-area: Subject; }
-
-.education-Grade-uni { grid-area: Grade; }
-
-.education-subjectLevel-uni { grid-area: subjectLevel; }
-
-.education-Year-uni { grid-area: Year; }
-
-
-
-/*College*/
-
-.education-grid-container-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-  "Subject Credits Endorsement subjectLevel Year";
-}
-
-/*Styling for mobile*/
-@media (max-width:750px){
-  .education-grid-container-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
     grid-template-areas:
-    "Subject Subject"
-    "Credits Endorsement" 
-    "subjectLevel Year";
+    "Subject"
+    "Year"
+    "Credits"
+    "subjectLevel";
   }
 }
 
-.education-Subject-col { grid-area: Subject; }
+.education-Subject { grid-area: Subject; }
 
-.education-Endorsement-col { grid-area: Endorsement; }
+.education-Credits { grid-area: Credits; }
 
-.education-Credits-col { grid-area: Credits; }
+.education-Year { grid-area: Year; }
 
-.education-Year-col { grid-area: Year; }
-
-.education-subjectLevel-col { grid-area: subjectLevel; }
+.education-subjectLevel { grid-area: subjectLevel; }
 
 
 
@@ -402,13 +364,13 @@ button {
   grid-template-areas: "name image" "year image" "languages image" "link image" "description image";
 }
 
-/*Rounds only the top corners. called for the first instance of the experience div*/
-.roundTopExamples {
+/*Rounds only the top corners. called for the first instance of the experience and education div*/
+.roundTop {
   border-radius: 20px 20px 0 0;
 }
 
 /*Rounds only the bottom corners. called for the first instance of the experience div*/
-.roundBottomExamples {
+.roundBottom {
   border-radius: 0 0 20px 20px;
 }
 
