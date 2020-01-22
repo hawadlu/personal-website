@@ -38,34 +38,34 @@ require("Connect.php");
             $colour = 'white';
             $count += 1;
         }
+
+        //Load the filepath for the primary images
+        $primaryImage = $ExamplesOutput['name'];
+        $directoryName = "Images/Examples/" . $ExamplesOutput['name'];
+        $primaryImage = $primaryImage . ".png";
+        if (!file_exists($directoryName . "/" . $primaryImage)) {
+            //If the image does not exist, this is the default file path.
+            $primaryImage = "Images/Examples/No Image.png";
+        } else {
+            $primaryImage = $directoryName . "/" . $primaryImage;
+        }
+
+        //Get the number of other files in the directory
+        $fileCount = 0;
+        $files = glob($directoryName . "/*");
+        if ($files) {
+            $fileCount = count($files);
+        }
+
+        //Create the slideshow id
+        $slideshowID = "ssID" . $count;
+
+        $imgWidth = getimagesize($primaryImage)[0];
         ?>
-        <div style="background-color: <?php echo $colour; ?>" class="<?php echo $class;?>">
+        <div style="background-color: <?php echo $colour; ?>;" class="<?php echo $class;?>">
             <div class="examples-image">
-                <div class="slideshowContainer">
-                    <?php
-                    //Load the filepath for the primary images
-                    $primaryImage = $ExamplesOutput['name'];
-                    $directoryName = "Images/Examples/" . $ExamplesOutput['name'];
-                    $primaryImage = $primaryImage . ".png";
-                    if (!file_exists($directoryName . "/" . $primaryImage)) {
-                        //If the image does not exist, this is the default file path.
-                        $primaryImage = "Images/Examples/No Image.png";
-                    } else {
-                        $primaryImage = $directoryName . "/" . $primaryImage;
-                    }
-
-                    //Get the number of other files in the directory
-                    $fileCount = 0;
-                    $files = glob($directoryName . "/*");
-                    if ($files) {
-                        $fileCount = count($files);
-                    }
-
-                    //Create the slideshow id
-                    $slideshowID = "ssID" . $count;
-                    ?>
-
-                    <!-- Load the primary image -->
+                    <div class="slideshowContainer" style = "--width: <?php echo $imgWidth;?>;">
+                                   <!-- Load the primary image -->
                     <div class="<?php echo $slideshowID; ?>">
                         <div class="slideProgress" style="align-content: center">
                             <p>
@@ -100,8 +100,8 @@ require("Connect.php");
                     ?>
 
                     <!--navigation buttons for the sideshow -->
-                    <a class="prev" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
-                    <a class="next" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
+                    <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
+                    <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
                 </div>
             </div>
             <div class="examples-name">
