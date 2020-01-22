@@ -12,15 +12,13 @@ require("Connect.php");
         $institution = '';
 
         //The query which shows the education history
-        $EducationQuery = ("SELECT `Education`.`subjectFK`, `Subject`.`subject`, `Education`.`institutionFK`, `Institution`.`institution`, `Education`.`gradeFk`, `Grade`.`grade`, `Education`.`subjectLevelFK`, `subjectLevel`.`subjectLevel`, `Education`.`credits`, `Education`.`classYearFK`, `relevantYear`.`relevantYear`, `Education`.`subjectAbbreviationFK`, `subjectAbbreviation`.`subjectAbbreviation`
-                        FROM `Education` 
-                        LEFT JOIN `Subject` ON `Education`.`subjectFK` = `Subject`.`subjectPK` 
-                        LEFT JOIN `Institution` ON `Education`.`institutionFK` = `Institution`.`institutionPK` 
-                        LEFT JOIN `Grade` ON `Education`.`gradeFk` = `Grade`.`gradePK` 
-                        LEFT JOIN `subjectLevel` ON `Education`.`subjectLevelFK` = `subjectLevel`.`subjectLevelPK` 
-                        LEFT JOIN `relevantYear` ON `Education`.`classYearFK` = `relevantYear`.`relevantYearPK` 
-                        LEFT JOIN `subjectAbbreviation` ON `Education`.`subjectAbbreviationFK` = `subjectAbbreviation`.`subjectAbbreviationPK` 
-                        ORDER BY `Education`.`institutionFK` DESC, `Grade`.`grade` ASC, `relevantYear`.`relevantYear`DESC, `Education`.`credits` DESC");
+        $EducationQuery = ("SELECT `Education`.`subject`, `Education`.`credits`, `Grade`.`grade`, `Institution`.`institution`, `relevantYear`.`relevantYear`, `subjectLevel`.`subjectLevel`
+FROM `Education` 
+	LEFT JOIN `Grade` ON `Education`.`gradeFk` = `Grade`.`gradePK` 
+	LEFT JOIN `Institution` ON `Education`.`institutionFK` = `Institution`.`institutionPK` 
+	LEFT JOIN `relevantYear` ON `Education`.`classYearFK` = `relevantYear`.`relevantYearPK` 
+	LEFT JOIN `subjectLevel` ON `Education`.`subjectLevelFK` = `subjectLevel`.`subjectLevelPK`
+    ORDER BY `Education`.`institutionFK` DESC, `Grade`.`grade` ASC, `relevantYear`.`relevantYear`DESC, `Education`.`credits` DESC");
 
         $EducationResult = mysqli_query($con, $EducationQuery);
         $institution = "";
@@ -75,13 +73,8 @@ require("Connect.php");
             <div class="education-Subject">
                 <div style="text-align: center;">
                     <p class="alignTextLeft">
-                        <strong>
                             Subject:
                             <?php
-                            echo '(' . $EducationOutput['subjectAbbreviation'] . ')';
-                            ?>
-                        </strong>
-                        <?php
                         echo $EducationOutput['subject'];
                         ?>
                     </p>
