@@ -2,6 +2,7 @@ body {
   background-color: #ffffff;
   margin: 0;
   padding: 0;
+
 }
 
 /*FONTS*/
@@ -18,11 +19,20 @@ p {
 a {
   text-decoration: none;
   color: black;
+  font-size: 14px;
+  font-family: Raleway;
+
+}
+
+/*Used align specific text to the left*/
+.alignTextLeft {
+  text-align: left;
+  margin-left: 10px;
 }
 
 /*Used to round the corners of some images*/
 .rounded{
-  border-radius: 5%;
+  border-radius: 10px;
   margin: 0;
 }
 
@@ -30,72 +40,64 @@ a {
 /*Too small for any image*/
 @media (max-width: 320px) {
   .background-img {
-    background: #ffffff;
-    background-image: none;
+    background: #ffffff url("Images/BG Images/min.jpeg") fixed;
   }
 }
 
 /*Devices with a resolution between W320-W412 and H556-H732*/
 @media (min-width: 320px) and (max-width: 412px) {
     .background-img {
-        background: #ffffff;
-        background-image: url("Images/BG Images/w320-412 h556-732.jpeg");
+      background: #ffffff url("Images/BG Images/w320-412 h556-732.jpeg") fixed;
+      height: 100%;
     }
 }
 
 /*Devices with a resolution between W412-W600 and H732-H960*/
 @media (min-width: 412px) and (max-width: 600px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w412-600 h732-960.jpeg");
+    background: #ffffff url("Images/BG Images/w412-600 h732-960.jpeg") fixed;
   }
 }
 
 /*Devices with a resolution between W600-W1024 and H960-H1366*/
 @media (min-width: 600px) and (max-width: 1024px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w600-1024 h960-1366.jpeg");
+    background: #ffffff url("Images/BG Images/w600-1024 h960-1366.jpeg") fixed;
   }
 }
 
 /*Devices with a resolution between W1024-W2560 and H1366-H1504*/
 @media (min-width: 1024px) and (max-width: 2560px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w1024-2560 h1366-1504.jpeg");
+    background: #ffffff url("Images/BG Images/w1024-2560 h1366-1504.jpeg") fixed;
   }
 }
 
 /*Devices with a resolution between W2560-W3200 and H1504-H1800*/
 @media (min-width: 2560px) and (max-width: 3200px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w2560-3200 h1504-1800.jpeg");
+    background: #ffffff url("Images/BG Images/w2560-3200 h1504-1800.jpeg") fixed;
   }
 }
 
 /*Devices with a resolution between W3200-W3840 and H1800-H2160*/
 @media (min-width: 3200px) and (max-width: 3840px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w3200-3840 h1800-2160.jpeg");
+    background: #ffffff url("Images/BG Images/w3200-3840 h1800-2160.jpeg") fixed;
   }
 }
 
 /*Devices with a resolution between W3880-W5000 and H2160-H3750*/
 @media (min-width: 3840px) and (max-width: 5000px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/w3840-500 h2160-3750.jpeg");
+    background: #ffffff url("Images/BG Images/w3840-500 h2160-3750.jpeg") fixed;
   }
 }
 
 /*Display the largest image*/
 @media (min-width: 5000px) {
   .background-img {
-    background: #ffffff;
-    background-image: url("Images/BG Images/max.jpeg");
+    background: #ffffff url("Images/BG Images/max.jpeg") fixed;
   }
 }
 
@@ -107,14 +109,24 @@ img {
   width: 100%;
 }
 
+/*Used for the image on the about me page*/
+.aboutMeImg {
+  width: auto;
+  height: auto;
+  float: left;
+  padding: 10px;
+}
+
 /*BUTTONS*/
 button {
   width: 100%;
-
+  height: 100%;
+  font-size: 20px;
+  font-family: Raleway;
 }
 
 .pageLink:hover {
-  color: blue;
+  color: #EF4A4A;
   transition: 0.3s;
 }
 
@@ -132,38 +144,77 @@ button {
 /*THE HEADER*/
 .header {
   width: 100%;
-  background-color: #0c59cf;
+  opacity: var(--headerOpacity);
+  background-color: #9A9591;
   color: white;
   font-family: Raleway;
   padding-top: 10px;
   padding-bottom: 10px;
-
 }
 
 /*THE NAV*/
 /* Grid styling nav*/
 .nav-grid-container {
-  background-color: #91e4fb;
+  background-color: #9A9591;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: ". . .";
+  opacity: var(--navOpacity);
 }
 
 /*The nav hover effect*/
 .hover-effect:hover {
   background-color:rgba(255, 255, 255, 0.5);
 }
+
+.hamburger {
+  display: none;
+}
+
 /*For mobile devices*/
 @media (max-width:650px){
+  .hamburger {
+    display: block;
+    background-color: #9A9591;
+  }
+
+  .hamburger:hover .nav-grid-container {
+    background-color: #9A9591;
+    display: block;
+  }
+
+  .hamburgerImg {
+    max-height: 50px;
+    max-width: 50px;
+  }
+
   .nav-grid-container {
-    background-color: #91e4fb;
+    background-color: #9A9591;
     width: 100%;
-    display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas: " . " " . " ".";
+    opacity: 100%;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    z-index: -1;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    width: 100%;
+    opacity: 100%;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
 }
 
@@ -176,12 +227,12 @@ button {
 }
 
 .footerLink:hover {
-  color: blue;
+  color: #ffcf00;
   transition: 0.3s;
 }
 
 .footer {
-  background-color: #91e4fb;
+  background-color: #9A9591;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
@@ -197,115 +248,115 @@ button {
 /*STYLING FOR THE MAIN PAGE ELEMENTS*/
 /*The grid that holds all the elements*/
 .page-grid-container {
+  position: absolute;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: 1fr;
   grid-template-areas: "." ".";
-  padding-bottom: 50px;
+  padding-bottom: 0;
+  width: 90%;
+  margin: 150px 5% 75px;
+
+  opacity: 80%;
+  border-radius: 20px;
+  background-color: white;
 }
 
-#header-nav-container {
+.header-nav-container {
   position: fixed;
   right: 0;
   top: 0;
   left: 0;
   height: auto;
 }
-/*The about me grid on the home page*/
-.aboutMe-grid-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto auto;
-  grid-template-areas: "aboutMe-Title"
-  "aboutMe-Image"
-  "aboutMe-Descritption";
+
+/*BUTTONS ON THE INDEX PAGE*/
+/*Styling for smaller device*/
+@media (max-width: 500px) {
+  .indexNav {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-row-gap: 10%;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 25%;
+  }
 }
 
-.aboutMe-Image { grid-area: aboutMe-Image; }
+/*Styling for larger device*/
+@media (min-width: 500px) {
+  .indexNav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5%;
+    grid-row-gap: 0px;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 25%;
+  }
+}
 
-.aboutMe-Title { grid-area: aboutMe-Title; }
+/*Styling for buttons on the index page*/
+.indexButton {
+  border-radius: 5px;
+  border-width: 5px;
+  border-color: #69696B;
+  background: none;
+  padding: 10px;
+  transition: 0.5s;
+}
 
-.aboutMe-Description { grid-area: aboutMe-Descritption; padding: 5%}
+/*Hover effects for the buttons on the index page*/
+.indexButton:hover {
+  background-color: #9A9591;
+  border-color: #9A9591;
+  transition: 0.5s;
+  text-decoration-color: aquamarine;
+  color: #ffcf00;
+}
 
 
 /*THE TABS ON THE EDUCATION AND EXPERIENCE PAGE*/
-.educationAndExperience-grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: " . " " . ";
-}
 
 /*THE EDUCATION GRID*/
-/*University*/
-.education-grid-container-uni {
+.education-grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: 40% 15% 30% 15%;
+  grid-template-rows: auto;
   grid-template-areas:
-  "Subject Grade subjectLevel Year";
+  "Subject Credits subjectLevel Year";
 }
 
 /*Styling for mobile*/
 @media (max-width:750px){
-  .education-grid-container-uni {
+  .education-grid-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
-    grid-template-areas: 
-    "Subject Grade" 
-    "subjectLevel Year";
-  }
-}
-
-
-.education-Subject-uni { grid-area: Subject; }
-
-.education-Grade-uni { grid-area: Grade; }
-
-.education-subjectLevel-uni { grid-area: subjectLevel; }
-
-.education-Year-uni { grid-area: Year; }
-
-
-
-/*College*/
-
-.education-grid-container-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-  "Subject Credits Endorsement subjectLevel Year";
-}
-
-/*Styling for mobile*/
-@media (max-width:750px){
-  .education-grid-container-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
     grid-template-areas:
-    "Subject Subject"
-    "Credits Endorsement" 
-    "subjectLevel Year";
+    "Subject"
+    "Year"
+    "Credits"
+    "subjectLevel";
   }
 }
 
-.education-Subject-col { grid-area: Subject; }
+.education-Subject { grid-area: Subject; }
 
-.education-Endorsement-col { grid-area: Endorsement; }
+.education-Credits { grid-area: Credits; }
 
-.education-Credits-col { grid-area: Credits; }
+.education-Year { grid-area: Year; }
 
-.education-Year-col { grid-area: Year; }
-
-.education-subjectLevel-col { grid-area: subjectLevel; }
+.education-subjectLevel { grid-area: subjectLevel; }
 
 
 
 /*THE EXPERIENCE GRID*/
-.experience-examples-grid-container {
+.examples-grid-container {
   display: grid;
     padding: 5%;
   grid-template-columns: 1fr 1fr;
@@ -313,8 +364,18 @@ button {
   grid-template-areas: "name image" "year image" "languages image" "link image" "description image";
 }
 
+/*Rounds only the top corners. called for the first instance of the experience and education div*/
+.roundTop {
+  border-radius: 20px 20px 0 0;
+}
+
+/*Rounds only the bottom corners. called for the first instance of the experience div*/
+.roundBottom {
+  border-radius: 0 0 20px 20px;
+}
+
 @media (max-width: 750px) {
-  .experience-examples-grid-container {
+  .examples-grid-container {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -322,20 +383,20 @@ button {
   }
 }
 
-.experience-examples-image { grid-area: image;}
+.examples-image { grid-area: image;}
 
-.experience-examples-name { grid-area: name;}
+.examples-name { grid-area: name; }
 
-.experience-examples-year { grid-area: year;}
+.examples-year { grid-area: year;}
 
-.experience-examples-language {grid-area: languages;}
+.examples-language {grid-area: languages;}
 
-.experience-examples-link { grid-area: link;}
+.examples-link { grid-area: link;}
 
-.experience-examples-description { grid-area: description;}
+.examples-description { grid-area: description;}
 
 @media (max-width: 750px) {
-  .experience-examples-name, .experience-examples-year, .experience-examples-language, .experience-examples-link {
+  .examples-name, .examples-year, .examples-language, .examples-link {
     text-align: center;
   }
 }
@@ -343,6 +404,8 @@ button {
 /* Position the image container (needed to position the left and right arrows) */
 .slideshowContainer {
   position: relative;
+  width: var(--width);
+  margin: auto;
 }
 
 /* Hide the images by default */
@@ -355,22 +418,28 @@ button {
 .next {
   cursor: pointer;
   position: absolute;
-  top: 40%;
+  bottom: 0;
   width: auto;
   padding: 16px;
-  margin-top: -50px;
-  color: white;
+  color: orange;
   font-weight: bold;
-  font-size: 20px;
-  border-radius: 0 3px 3px 0;
+  font-size: 30px;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Round specific parts of the buttons*/
+.roundBottomLeft {
+  border-radius: 0 0 0 10px;
+}
+
+.roundBottomRight {
+  border-radius: 0 0 10px 0;
 }
 
 /* Position the "next button" to the right */
 .next {
   right: 0;
-  border-radius: 3px 0 0 3px;
 }
 
 /* On hover, add a black background color with a little bit see-through */
@@ -381,7 +450,7 @@ button {
 
 /* Number text (1/3 etc) */
 .slideProgress {
-  color: #f2f2f2;
+  color: red;
   font-size: 20px;
   padding: 0px;
   position: relative;
