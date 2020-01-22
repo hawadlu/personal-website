@@ -203,7 +203,7 @@ require("Connect.php");
                 </p>
             </div>
             <div class="examples-link" onload="addUrl(<?php echo $ExamplesOutput['Link'];?>)">
-                <p>
+                <p class="alignTextLeft">
                     <?php
                     //Only displays if there is a link to display
                     if ($ExamplesOutput['Link'] != '0') {
@@ -219,7 +219,7 @@ require("Connect.php");
                     ?>
 
                 </p>
-                <p>
+                <p class="alignTextLeft">
                     <?php
                     //Only displays if there is a link to display and the repo is no private
                     if ($ExamplesOutput['github'] != '0') {
