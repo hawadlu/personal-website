@@ -50,10 +50,11 @@
                         $count += 1;
                     }
 
-                    //Load the filepath for the primary images
-                    $primaryImage = $ExamplesOutput['name'];
-                    $directoryName = "images/examples/" . $ExamplesOutput['name'];
-                    $primaryImage = $primaryImage . ".png";
+                    $directoryName = "images/examples/" . str_replace(" ", "", $ExamplesOutput['name']);
+
+                    $files = scandir($directoryName);
+                    $primaryImage = $files[2];
+                    echo $primaryImage;
 
                     if (!file_exists($directoryName . "/" . $primaryImage)) {
                         //If the image does not exist, this is the default file path.
