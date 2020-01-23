@@ -11,7 +11,7 @@
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 
-        <link rel="shortcut icon" href="images/favicon/Favicon (16x16).ico" type="image/x-icon">
+        <link rel="shortcut icon" href="images/favicon/favicon.png" type="image/x-icon">
         <title>Luke Hawinkels</title>
     </head>
 </html>
