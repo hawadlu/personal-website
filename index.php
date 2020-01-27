@@ -15,7 +15,7 @@
                 overlay.show();
                 overlay.appendTo(document.body);
                 $('.popup').show();
-                $('.close').click(function(){
+                $('.closeNewItemModal').click(function(){
                     $('.popup').hide();
                     overlay.appendTo(document.body).remove();
                     return false;
