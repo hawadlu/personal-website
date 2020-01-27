@@ -1,4 +1,5 @@
 <html lang="English">
+<!--TODO add play around functionality with reset-->
     <!--Pulls in the head and other required pages-->
     <?php
         require("head.php");
@@ -54,7 +55,6 @@
 
                     $files = scandir($directoryName);
                     $primaryImage = $files[2];
-                    echo $primaryImage;
 
                     if (!file_exists($directoryName . "/" . $primaryImage)) {
                         //If the image does not exist, this is the default file path.

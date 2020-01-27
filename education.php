@@ -1,4 +1,5 @@
 <html lang="English">
+<!--TODO add play around functionality with reset-->
     <!--Pulls in the head and other required pages-->
     <?php
         require("head.php");
