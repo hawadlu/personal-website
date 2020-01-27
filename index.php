@@ -30,7 +30,7 @@
         </script>
 
         <!--Creates the cookie privacy popup-->
-        <div class='popup'>
+        <div class='popup rounded'>
             <div class='cnt223'>
                 <!--The text and other information displayed in the cookie popup-->
                 <h1 style="color: black;">

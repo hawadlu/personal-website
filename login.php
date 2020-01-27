@@ -1,16 +1,15 @@
 <html lang="English">
     <?php
-        //Start the session
+        //Redirect to the edit page if already logged in
         session_start();
+        if (isset($_SESSION['loggedin'])) {
+            header('Location: edit.php');
+            exit();
+        }
+
         require("connect.php");
         require("head.php");
         require("header.php");
-
-        // Now we check if the data from the login form was submitted, isset() will check if the data exists.
-        //        if ( !isset($_POST['username'], $_POST['password']) ) {
-        //            // Could not get the data that should have been sent.
-        //            die ('Please fill both the username and password field!');
-        //        }
     ?>
 
     <!--Disable scrolling-->
