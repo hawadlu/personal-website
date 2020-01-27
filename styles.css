@@ -547,3 +547,29 @@ button {
   cursor: pointer;
 }
 
+/*LOGIN*/
+.login {
+  display: grid;
+  position: absolute;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  width: 50%;
+  margin: 150px 25% 75px;
+}
+
+@media (max-width: 600px) {
+  .login {
+    width: 90%;
+    margin: 150px 5% 75px;
+  }
+}
+
+.loginBox {
+  border-radius: 10px;
+  width: 75%;
+  height: 40px;
+  opacity: 80%;
+}
+
