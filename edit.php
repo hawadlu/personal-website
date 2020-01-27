@@ -57,7 +57,7 @@ if (!isset($_SESSION['loggedin'])) {
                         );
 
                         $file_array = reArrayFiles($_FILES['userFiles']);
-                        pre_r($file_array);
+                        //pre_r($file_array);
 
                         for ($i = 0; $i < count($file_array); $i++) {
                             //Check for errors
@@ -84,15 +84,25 @@ if (!isset($_SESSION['loggedin'])) {
                                     <?php
                                 } else {
                                     //File uploaded successfully
-                                    //Move the file from the temporary directory to the intended directory
-                                    move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
+                                    //Check if the file already exists in the directory
+                                    if (!file_exists("images/" . $file_array[$i]["name"])) {
+                                        //Move the file from the temporary directory to the intended directory
+                                        move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
 
-                                    //Print a success message
-                                    ?>
-                                    <div class="alert alert-success">
-                                        <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]]?>
-                                    </div>
-                                    <?php
+                                        //Print a success message
+                                        ?>
+                                        <div class="alert alert-success">
+                                            <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]]?>
+                                        </div>
+                                        <?php
+                                    } else {
+                                        //Print message stating that the file already exists
+                                        ?>
+                                        <div class="alert alert-danger">
+                                            <?php echo $file_array[$i]["name"] . " already exists"; ?>
+                                        </div>
+                                        <?php
+                                    }
                                 }
                             }
                         }
