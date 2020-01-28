@@ -170,7 +170,7 @@ if (!isset($_SESSION['loggedin'])) {
     </script>
     <!--Called last so that it renders at the top-->
     <?php
-        //require("header.php");;
+        require("header.php");;
         //Pull information from the footer page
         require("footer.php");
     ?>

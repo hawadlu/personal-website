@@ -1,11 +1,7 @@
 <html lang="English">
     <?php
-    require("head.php");
-    require("header.php");
-
-    //Code controlling the cookie notification
     //Checks to see if the cookie privacy policy has been loaded within the last 10 minutes. If not it displays it.
-    if ($_COOKIE["CookiePolicy"] != 1) {
+    if (!isset($_COOKIE["CookiePolicy"]) && $_COOKIE["CookiePolicy"] != 1) {
         setcookie("CookiePolicy", 1, time() + 600);
         ?>
         <script type="text/javascript" src="https://code.jquery.com/jquery-1.8.2.js"></script>
@@ -15,7 +11,7 @@
                 overlay.show();
                 overlay.appendTo(document.body);
                 $('.popup').show();
-                $('.closeNewItemModal').click(function(){
+                $('.close').click(function(){
                     $('.popup').hide();
                     overlay.appendTo(document.body).remove();
                     return false;
@@ -28,7 +24,8 @@
                 });
             });
         </script>
-
+        <!--Allows the website to scale for mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!--Creates the cookie privacy popup-->
         <div class='popup rounded'>
             <div class='cnt223'>
@@ -36,20 +33,23 @@
                 <h1 style="color: black;">
                     <div style="text-align: center;">
                         Important Notice
-                    </div
-                    ></h1>
-                <p class="alignTextLeft">
-                    This website uses cookies. Click <a class="onHover" href="privacyPolicy.php">here</a> to view our privacy and cookie policies. By continuing to use this website you consent to the use of cookies and data.
+                    </div>
+                </h1>
+                <p>
+                    Our website collects data and uses cookies. Click <a class = "onHover" href="privacyPolicy.php">here</a> to view our privacy and cookie policies. By continuing to use this website you consent to the use of cookies and data.
                     <br/>
                     <br/>
-                    <a href='' class='onHover'>Close</a>
+                    <a href='' class='close onHover'>Close</a>
                 </p>
             </div>
         </div>
         <?php
     }
-    ?>
 
+    require("head.php");
+    require("header.php");
+
+    ?>
 
     <!--Disable scrolling-->
     <body class="background-img">
