@@ -160,7 +160,7 @@ button {
 /*THE HEADER*/
 .header {
   width: 100%;
-  opacity: var(--headerOpacity);
+  opacity: 100%;
   background-color: #9A9591;
   color: white;
   font-family: Raleway ;
@@ -177,7 +177,7 @@ button {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: ". . .";
-  opacity: var(--navOpacity);
+  opacity: 100%;
 }
 
 /*The nav hover effect*/
