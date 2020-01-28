@@ -52,14 +52,19 @@ require("connect.php");
 
             $directoryName = "images/examples/" . str_replace(" ", "", $ExamplesOutput['name']);
 
-            $files = scandir($directoryName);
-            $primaryImage = $files[2];
+            //Avoid errors if the file or folder does not exist
+            if (file_exists($directoryName)) {
+                $files = scandir($directoryName);
+                $primaryImage = $files[2];
 
-            if (!file_exists($directoryName . "/" . $primaryImage)) {
-                //If the image does not exist, this is the default file path.
-                $primaryImage = "images/examples/no image.png";
+                if (!file_exists($directoryName . "/" . $primaryImage)) {
+                    //If the image does not exist, this is the default file path.
+                    $primaryImage = "images/examples/no image.png";
+                } else {
+                    $primaryImage = $directoryName . "/" . $primaryImage;
+                }
             } else {
-                $primaryImage = $directoryName . "/" . $primaryImage;
+                $primaryImage = "images/examples/no image.png";
             }
 
             //Get the number of other files in the directory
