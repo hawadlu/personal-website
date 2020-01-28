@@ -1,6 +1,4 @@
-<html lang="English">
-    <?php
-        //Redirect to the edit page if already logged in
+<?php
         session_start();
         if (isset($_SESSION['loggedin'])) {
             header('Location: edit.php');
@@ -13,6 +11,7 @@
     ?>
 
     <!--Disable scrolling-->
+    <html lang="English">
     <body class="background-img">
         <div style="text-align: center;">
             <form action="authenticate.php" method="post">
