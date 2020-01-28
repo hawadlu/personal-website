@@ -22,6 +22,52 @@ if (!isset($_SESSION['loggedin'])) {
                 Hello <?php echo $_SESSION['name']; ?>
             </p>
 
+            <!--The edit tabs-->
+            <div class="edit-tabs">
+                <div class="Education">
+                    <!--Make button grey by default-->
+                        <button id = "showEducation" class="indexButton" style="display: block; border: none; border-radius: 0; background-color: #D3D3D3" onclick="showElement('editEducation')">Education</button>
+                </div>
+                <div class="Projects">
+                    <button id = "showProjects" class="indexButton" style="display: block; border: none; border-radius: 0;" onclick="showElement('editProjects')">Projects</button>
+                </div>
+            </div>
+
+            <!--The div that contains the education edit. Shown by default-->
+            <div id = "editEducation" style="display: block">
+                <p>
+                    Hello
+                </p>
+            </div>
+
+            <!--The div that contains the projects edit-->
+            <div id = "editProjects" style="display: none">
+                <p>
+                    Bye
+                </p>
+            </div>
+
+            <!--Javascript to control what is shown-->
+            <script>
+                function showElement(id) {
+                    //Hide the relevant elements
+                    if (id === "editEducation") {
+                        document.getElementById("showProjects").style.backgroundColor = null;
+                        document.getElementById("showEducation").style.backgroundColor = "#D3D3D3";
+                        hideElement('editProjects');
+                    } else if (id === 'editProjects') {
+                        hideElement('editEducation');
+                        document.getElementById("showEducation").style.backgroundColor = null;
+                        document.getElementById("showProjects").style.backgroundColor = "#D3D3D3";
+                    }
+                    document.getElementById(id).style.display = "block";
+                }
+
+                function hideElement(id) {
+                    document.getElementById(id).style.display = "none";
+                }
+            </script>
+
             <!-- Trigger/Open The Modal -->
             <button id="newItemButton">Create new item</button>
 

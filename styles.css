@@ -443,6 +443,18 @@ button {
   }
 }
 
+/*GRID THAT HOLDS THE EDIT TABS*/
+.edit-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "Education Projects";
+}
+
+.Education { grid-area: Education; }
+
+.Projects { grid-area: Projects; }
+
 /* Position the image container (needed to position the left and right arrows) */
 .slideshowContainer {
   position: relative;
