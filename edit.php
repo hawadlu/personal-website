@@ -45,6 +45,12 @@ require("connect.php");
         <!--The div that contains the education edit. Shown by default-->
         <div id="editEducation" style="display: block">
             <?php
+            //Perform the query to get the grades. Done here so that it is not repeated every time
+            $dropdownQuery = $con->prepare("SELECT `Grade`.`grade` FROM `Grade` ");
+            $dropdownQuery->execute();
+            $dropdownQuery->bind_result($grade);
+            $dropdownQuery->store_result();
+
             //The query which shows the education history
             $educationQuery = ("SELECT `Education`.`uniqueKey`, `Education`.`subject`, `codeExtension`.`codeExtension`, `Education`.`credits`, `Grade`.`grade`, `Institution`.`institution`, `relevantYear`.`relevantYear`, `subjectCode`.`code`, `subjectLevel`.`subjectLevel`
 FROM `Education`
@@ -316,16 +322,22 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                     //Display credits or grade
                                     if ($EducationOutput['grade'] != null) {
                                         //University. Display dropdown
-                                        ?>
-                                        <!--Todo create query to auto populate the dropdown-->
+                                                                                ?>
                                         <select required>
                                             <option selected value = "<?php echo $EducationOutput['grade']; ?>">
                                                 <?php echo $EducationOutput['grade'];?>
                                             </option>
-                                            <option value="volvo">Volvo</option>
-                                            <option value="saab">Saab</option>
-                                            <option value="mercedes">Mercedes</option>
-                                            <option value="audi">Audi</option>
+                                            <?php
+                                            //populate the dropdowns
+                                            while($row=$dropdownQuery->fetch()) {
+                                                //Only display if not null and not equal to the current grade
+                                                if ($grade != null && $grade != $EducationOutput['grade']) {
+                                                    ?>
+                                                    <option value="<?php echo $grade; ?>"><?php echo $grade; ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                         <?php
                                     } else {
