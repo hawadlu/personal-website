@@ -285,6 +285,7 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
 
                         ?>
                         <!--This form is used to update the records-->
+                        <!--Todo add styling for mobile-->
                         <form method="post">
                             <div class="add-grid-container">
                                 <div class="add-Institution">
