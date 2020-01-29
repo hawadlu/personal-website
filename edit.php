@@ -22,6 +22,8 @@ require("connect.php");
     <div>
         <p>
             Hello <?php echo $_SESSION['name']; ?>
+            <br>
+            Be aware that you may have to scroll down to the desired record while editing
         </p>
 
         <!--The edit tabs-->
@@ -80,82 +82,83 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                         $classHeader = "";
                         $classContent = "";
                         if ($count == 0) {
-                        $classHeader = "roundTop";
+                            $classHeader = "roundTop";
                         } else {
-                        $classHeader = "";
+                            $classHeader = "";
                         }
 
                         if ($count == $recordCount - 1) {
-                        $classContent = "education-grid-container-edit roundBottom";
+                            $classContent = "education-grid-container-edit roundBottom";
                         } else {
-                        $classContent = "education-grid-container-edit";
+                            $classContent = "education-grid-container-edit";
                         }
 
                         //Calculate the appropriate colour
                         if ($count % 2 == 0) {
-                        //even
-                        $colour = '#F7F7F7';
+                            //even
+                            $colour = '#F7F7F7';
                         } else {
-                        //odd
-                        $colour = 'white';
+                            //odd
+                            $colour = 'white';
                         }
 
                         $count += 1;
 
                         //Checking for a new institution
                         if ($EducationOutput['institution'] != $institution) {
-                        //Reset the institution
-                        $institution = $EducationOutput['institution'];
-                        ?>
-                        <div style="background-color: #D3D3D3; text-align: center" class="<?php echo $classHeader; ?>">
-                            <h1>
-                                <?php
-                                echo $EducationOutput['institution'];
-                                ?>
-                            </h1>
+                            //Reset the institution
+                            $institution = $EducationOutput['institution'];
+                            ?>
+                            <div style="background-color: #D3D3D3; text-align: center"
+                                 class="<?php echo $classHeader; ?>">
+                                <h1>
+                                    <?php
+                                    echo $EducationOutput['institution'];
+                                    ?>
+                                </h1>
 
-                            <!--Display the column titles-->
-                            <div class="education-Titles-Large-Edit">
-                                <div>
-                                    <p class="alignTextLeft">
-                                        Update
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="alignTextLeft">
-                                        Code
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="alignTextLeft">
-                                        Subject
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="alignTextLeft">
-                                        <!--Determine weather the results are NCEA or Not-->
-                                        <?php
-                                        if ($institution == "Tawa College") {
-                                            echo "Credits";
-                                        } else {
-                                            echo "Grade";
-                                        }
-                                        ?>
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="alignTextLeft">
-                                        Subject Level
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="alignTextLeft">
-                                        Year
-                                    </p>
+                                <!--Display the column titles-->
+                                <div class="education-Titles-Large-Edit">
+                                    <div>
+                                        <p class="alignTextLeft">
+                                            Update
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="alignTextLeft">
+                                            Code
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="alignTextLeft">
+                                            Subject
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="alignTextLeft">
+                                            <!--Determine weather the results are NCEA or Not-->
+                                            <?php
+                                            if ($institution == "Tawa College") {
+                                                echo "Credits";
+                                            } else {
+                                                echo "Grade";
+                                            }
+                                            ?>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="alignTextLeft">
+                                            Subject Level
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="alignTextLeft">
+                                            Year
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <?php
+                            <?php
                         }
 
                         //Printing the education information
@@ -163,7 +166,8 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                         <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
                             <!--The update button-->
                             <div class="education-Update">
-                                <input name="updateRecord<?php echo $EducationOutput['uniqueKey'];?>" value="Update" type="submit">
+                                <input name="updateRecord<?php echo $EducationOutput['uniqueKey']; ?>" value="Update"
+                                       type="submit">
                             </div>
 
                             <!--Display the title on a small screen-->
@@ -278,6 +282,66 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                         echo $key;
                         unset($_POST['updateRecord' . $EducationOutput['uniqueKey']]);
                         unset($_POST['uniqueKey']);
+
+                        ?>
+                        <!--This form is used to update the records-->
+                        <form method="post">
+                            <div class="add-grid-container">
+                                <div class="add-Institution">
+                                    <input class="textInput" type="text" name="institution"
+                                           value="<?php echo $institution; ?>" required>
+                                </div>
+                                <div class="add-Subject">
+                                    <input class="textInput" type="text" name="subject"
+                                           value="<?php echo $EducationOutput['subject']; ?>" required>
+                                </div>
+                                <div class="add-Subject-Year">
+                                    <input class="textInput" type="number" name="subject-Year"
+                                           value="<?php echo $EducationOutput['relevantYear']; ?>" required>
+                                </div>
+                                <div class="add-Subject-Level">
+                                    <input class="textInput" type="text" name="subject-Level"
+                                           value="<?php echo $EducationOutput['subjectLevel']; ?>" required>
+                                </div>
+                                <div class="add-Code">
+                                    <input class="textInput" type="text" name="code"
+                                           value="<?php echo $EducationOutput['code']; ?>" required>
+                                </div>
+                                <div class="add-Code-Extension">
+                                    <input class="textInput" type="number" name="code-Extension" value="<?php echo $EducationOutput['codeExtension']; ?> " required>
+                                </div>
+                                <div class="add-Grade">
+                                    <?php
+                                    //Display credits or grade
+                                    if ($EducationOutput['grade'] != null) {
+                                        //University. Display dropdown
+                                        ?>
+                                        <!--Todo create query to auto populate the dropdown-->
+                                        <select required>
+                                            <option selected value = "<?php echo $EducationOutput['grade']; ?>">
+                                                <?php echo $EducationOutput['grade'];?>
+                                            </option>
+                                            <option value="volvo">Volvo</option>
+                                            <option value="saab">Saab</option>
+                                            <option value="mercedes">Mercedes</option>
+                                            <option value="audi">Audi</option>
+                                        </select>
+                                        <?php
+                                    } else {
+                                        //College. Display text box
+                                        ?>
+                                        <input class=textInput" type="number" name="credits"
+                                               value = "<?php echo $EducationOutput['credits']; ?>">
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div class="save-Record">
+                                    <input class = "indexButton" type = "submit" name = "submit" value = "submit">
+                                </div>
+                            </div>
+                        </form>
+                        <?php
                     }
                 }
             }

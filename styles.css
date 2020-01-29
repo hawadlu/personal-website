@@ -52,6 +52,13 @@ a {
   margin: 0;
 }
 
+/*Style input text*/
+.textInput {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
 /* VARIOUS BG IMAGE SIZES*/
 /*Too small for any image*/
 @media (max-width: 320px) {
@@ -450,8 +457,30 @@ button {
   .subjectLevelTitle-Edit {grid-area: subjectLevelTitle; display: block}
 }
 
+/*GRID THAT CONTAINS ALL OF THE EDIT FIELDS*/
+.add-grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "add-Institution add-Subject add-Subject-Year add-Subject-Level"
+  "add-Code add-Code-Extension add-Grade save-Record";
+}
 
+.add-Institution { grid-area: add-Institution; }
 
+.add-Subject { grid-area: add-Subject; }
+
+.add-Subject-Year { grid-area: add-Subject-Year; }
+
+.add-Subject-Level { grid-area: add-Subject-Level; }
+
+.add-Code { grid-area: add-Code; }
+
+.add-Code-Extension { grid-area: add-Code-Extension; }
+
+.add-Grade { grid-area: add-Grade; }
+
+.save-Record { grid-area: save-Record; }
 
 
 /*THE EXPERIENCE GRID*/
@@ -501,7 +530,6 @@ button {
   }
 }
 
-/*THE MODAL WHICH HOLDS INFORMATION USED TO UPDATE RECORDS*/
 
 
 /*GRID THAT HOLDS THE EDIT TABS*/
