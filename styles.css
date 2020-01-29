@@ -334,8 +334,6 @@ button {
 }
 
 
-/*THE TABS ON THE EDUCATION AND EXPERIENCE PAGE*/
-
 /*THE EDUCATION GRID*/
 .education-grid-container {
   display: grid;
@@ -392,6 +390,66 @@ button {
   .subjectLevelTitle {grid-area: subjectLevelTitle; display: block}
 }
 
+/*THE EDUCATION GRID STYLED TO ALLOW EDITING */
+.education-grid-container-edit {
+  display: grid;
+  grid-template-columns: 10% 10% 40% 7.5% 22.5% 10%;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+          "update Code Subject Credits subjectLevel Year"
+          "edit edit edit edit edit edit";
+}
+
+.education-Titles-Large-Edit {
+  display: none;
+}
+
+/*Only display on large enough screens*/
+@media (min-width: 750px) {
+  .education-Titles-Large-Edit {
+    display: grid;
+    grid-template-columns: 10% 10% 40% 7.5% 22.5% 10%;
+    grid-template-rows: auto;
+  }
+}
+
+/*Styling for mobile*/
+.education-Edit { grid-area: edit; }
+.education-Update {grid-area: update; }
+.education-Code-Edit { grid-area: Code; }
+.education-Subject-Edit { grid-area: Subject; }
+.education-Credits-Edit { grid-area: Credits; }
+.education-Year-Edit { grid-area: Year; }
+.education-subjectLevel { grid-area: subjectLevel; }
+.codeTitle-Edit {display: none;}
+.subjectTitle-Edit {display: none;}
+.yearTitle-Edit {display: none;}
+.creditsTitle-Edit {display: none;}
+.subjectLevelTitle-Edit {display: none;}
+
+@media (max-width:750px){
+  .education-grid-container-edit {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: grid;
+    grid-template-columns: 75px auto;
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-areas:
+            "codeTitle Code"
+            "subjectTitle Subject"
+            "yearTitle Year"
+            "creditsTitle Credits"
+            "subjectLevelTitle subjectLevel"
+            "update update";
+  }
+
+  .codeTitle-Edit {grid-area: codeTitle; display: block}
+  .subjectTitle-Edit {grid-area: subjectTitle; display: block}
+  .yearTitle-Edit {grid-area: yearTitle; display: block}
+  .creditsTitle-Edit {grid-area: creditsTitle; display: block}
+  .subjectLevelTitle-Edit {grid-area: subjectLevelTitle; display: block}
+}
+
 
 
 
@@ -442,6 +500,9 @@ button {
     text-align: center;
   }
 }
+
+/*THE MODAL WHICH HOLDS INFORMATION USED TO UPDATE RECORDS*/
+
 
 /*GRID THAT HOLDS THE EDIT TABS*/
 .edit-tabs {
