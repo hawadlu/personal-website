@@ -1,6 +1,5 @@
 <?php
-    if (!isset($_COOKIE["CookiePolicy"])) {
-        if ($_COOKIE["CookiePolicy"] != 1) {
+    if (!isset($_COOKIE["CookiePolicy"]) || $_COOKIE["CookiePolicy"] != 1) {
             setcookie("CookiePolicy", 1, time() + 600);
             ?>
             <script type="text/javascript" src="https://code.jquery.com/jquery-1.8.2.js"></script>
@@ -25,7 +24,6 @@
             </script>
 
             <?php
-        }
     }
 
     require("head.php");
