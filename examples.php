@@ -257,21 +257,19 @@ require("connect.php");
                     <p class="alignTextLeft">
                         <?php
                         //Only displays if there is a link to display and the repo is no private
-                        if ($github != '0') {
+                        if ($github != null) {
                             ?>
                             GitHub:
                             <?php
-                            if ($privateRepo != 0) {
+                            if ($privateRepo == 1) {
+                                echo "Sorry. This one has to be kept secret.";
+                            } else {
                                 ?>
                                 <a class="pageLink" href="<?php echo $github; ?>">
                                     <?php
                                     echo $github;
                                     ?>
                                 </a>
-                                <?php
-                            } else {
-                                ?>
-                                Sorry. This one has to be kept secret.
                                 <?php
                             }
                         }
