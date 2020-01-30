@@ -8,14 +8,16 @@ require("connect.php");
 <div class="page-grid-container">
     <?php
     //The query which shows the education history
-    $experienceQuery = ("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `Examples`.`exampleYearFK`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`Link`, `Examples`.`github`, `Examples`.`privateRepo`
+    $experienceQuery = $con->prepare("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`link`, `Examples`.`github`, `Examples`.`privateRepo`
             FROM `Examples` 
             LEFT JOIN `relevantYear` ON `Examples`.`exampleYearFK` = `relevantYear`.`relevantYearPK`
             ORDER BY `relevantYear`.`relevantYear` DESC
             ");
+    $experienceQuery -> execute();
+    $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github, $privateRepo);
+    $experienceQuery->store_result();
+    $recordCount = $experienceQuery->num_rows();
 
-    $examplesResult = mysqli_query($con, $experienceQuery);
-    $recordCount = mysqli_num_rows($examplesResult);
     $count = 0;
 
     //Display a message if there are no records returned
@@ -28,7 +30,7 @@ require("connect.php");
         </div>
         <?php
     } else {
-        while ($ExamplesOutput = mysqli_fetch_array($examplesResult)) {
+        while ($row=$experienceQuery->fetch()) {
             //Calculates if any rounding of the examples div is required
             $class = "";
             if ($count == 0) {
@@ -50,7 +52,7 @@ require("connect.php");
                 $count += 1;
             }
 
-            $directoryName = "images/examples/" . str_replace(" ", "", $ExamplesOutput['name']);
+            $directoryName = "images/examples/" . str_replace(" ", "", $name);
 
             //Avoid errors if the file or folder does not exist
             if (file_exists($directoryName)) {
@@ -138,7 +140,7 @@ require("connect.php");
                 <div class="examples-name">
                     <h1>
                         <?php
-                        echo $ExamplesOutput['name'];
+                        echo $name;
                         ?>
                     </h1>
                 </div>
@@ -146,87 +148,91 @@ require("connect.php");
                     <p class="alignTextLeft">
                         Year:
                         <?php
-                        echo $ExamplesOutput['relevantYear'];
+                        echo $relevantYear;
                         ?>
                     </p>
                 </div>
                 <div class="examples-language">
                     <?php
-                    $key = $ExamplesOutput['uniqueKey'];
+                    $key = $uniqueKey;
 
-                    //Running queries to get the languages
-                    $LanguageOneQuery = ("SELECT Languages.language
+                    //Define queries to get the languages
+                    $LangOneQuery = $con->prepare("SELECT Languages.language
                             FROM Examples
                             LEFT JOIN Languages ON Examples.languageOneFK = Languages.languagePK
                             WHERE Examples.uniqueKey LIKE $key
                             ");
 
-                    $LanguageOneResult = mysqli_query($con, $LanguageOneQuery);
-                    $LanguageOneOutput = mysqli_fetch_row($LanguageOneResult);
-                    $LanguageOne = implode(" ", $LanguageOneOutput);
-
-                    $LanguageTwoQuery = ("SELECT Languages.language
+                    $LangTwoQuery = $con->prepare("SELECT Languages.language
                             FROM Examples
                             LEFT JOIN Languages ON Examples.languageTwoFK = Languages.languagePK
                             WHERE Examples.uniqueKey LIKE $key
                             ");
 
-                    $LanguageTwoResult = mysqli_query($con, $LanguageTwoQuery);
-                    $LanguageTwoOutput = mysqli_fetch_row($LanguageTwoResult);
-                    $LanguageTwo = implode(" ", $LanguageTwoOutput);
-
-
-                    $LanguageThreeQuery = ("SELECT Languages.language
+                    $LangThreeQuery = $con->prepare("SELECT Languages.language
                             FROM Examples
                             LEFT JOIN Languages ON Examples.languageThreeFK = Languages.languagePK
                             WHERE Examples.uniqueKey LIKE $key
                             ");
 
-                    $LanguageThreeResult = mysqli_query($con, $LanguageThreeQuery);
-                    $LanguageThreeOutput = mysqli_fetch_row($LanguageThreeResult);
-                    $LanguageThree = implode(" ", $LanguageThreeOutput);
-
-
-                    $LanguageFourQuery = ("SELECT Languages.language
+                    $LangFourQuery = $con->prepare("SELECT Languages.language
                             FROM Examples
                             LEFT JOIN Languages ON Examples.languageFourFK = Languages.languagePK
                             WHERE Examples.uniqueKey LIKE $key
                             ");
 
-                    $LanguageFourResult = mysqli_query($con, $LanguageFourQuery);
-                    $LanguageFourOutput = mysqli_fetch_row($LanguageFourResult);
-                    $LanguageFour = implode(" ", $LanguageFourOutput);
-
-
-                    $LanguageFiveQuery = ("SELECT Languages.language
+                    $LangFiveQuery = $con->prepare("SELECT Languages.language
                             FROM Examples
                             LEFT JOIN Languages ON Examples.languageFiveFK = Languages.languagePK
                             WHERE Examples.uniqueKey LIKE $key
                             ");
 
-                    $LanguageFiveResult = mysqli_query($con, $LanguageFiveQuery);
-                    $LanguageFiveOutput = mysqli_fetch_row($LanguageFiveResult);
-                    $LanguageFive = implode(" ", $LanguageFiveOutput);
+                    //Execute each query
+                    $LangOneQuery -> execute();
+                    $LangOneQuery -> bind_result($langOne);
+                    $LangOneQuery -> store_result();
+                    $LangOneQuery -> fetch();
+
+                    $LangTwoQuery -> execute();
+                    $LangTwoQuery -> bind_result($langTwo);
+                    $LangTwoQuery -> store_result();
+                    $LangTwoQuery -> fetch();
+
+                    $LangThreeQuery -> execute();
+                    $LangThreeQuery -> bind_result($langThree);
+                    $LangThreeQuery -> store_result();
+                    $LangThreeQuery -> fetch();
+
+                    $LangFourQuery -> execute();
+                    $LangFourQuery -> bind_result($langFour);
+                    $LangFourQuery -> store_result();
+                    $LangFourQuery -> fetch();
+
+                    $LangFiveQuery -> execute();
+                    $LangFiveQuery -> bind_result($langFive);
+                    $LangFiveQuery -> store_result();
+                    $LangFiveQuery -> fetch();
+
 
 
                     ?>
                     <p class="alignTextLeft">
                         Language(s):
                         <?php
-                        if ($LanguageOne != 'NA') {
-                            echo $LanguageOne;
+                        if ($langOne != 'NA') {
+                            echo $langOne;
                         }
-                        if ($LanguageTwo != 'NA') {
-                            echo(', ' . $LanguageTwo);
+                        if ($langTwo != 'NA') {
+                            echo(', ' . $langTwo);
                         }
-                        if ($LanguageThree != 'NA') {
-                            echo(', ' . $LanguageThree);
+                        if ($langThree != 'NA') {
+                            echo(', ' . $langThree);
                         }
-                        if ($LanguageFour != 'NA') {
-                            echo(', ' . $LanguageFour);
+                        if ($langFour != 'NA') {
+                            echo(', ' . $langFour);
                         }
-                        if ($LanguageFive != 'NA') {
-                            echo(', ' . $LanguageFive);
+                        if ($langFive != 'NA') {
+                            echo(', ' . $langFive);
                         }
                         ?>
                     </p>
@@ -235,12 +241,12 @@ require("connect.php");
                     <p class="alignTextLeft">
                         <?php
                         //Only displays if there is a link to display
-                        if ($ExamplesOutput['Link'] != '0') {
+                        if ($link != '0') {
                             ?>
                             Link:
-                            <a class="pageLink" href="<?php echo $ExamplesOutput['Link']; ?>">
+                            <a class="pageLink" href="<?php echo $link; ?>">
                                 <?php
-                                echo $ExamplesOutput['Link'];
+                                echo $link;
                                 ?>
                             </a>
                             <?php
@@ -251,15 +257,15 @@ require("connect.php");
                     <p class="alignTextLeft">
                         <?php
                         //Only displays if there is a link to display and the repo is no private
-                        if ($ExamplesOutput['github'] != '0') {
+                        if ($github != '0') {
                             ?>
                             GitHub:
                             <?php
-                            if ($ExamplesOutput['privateRepo'] != 0) {
+                            if ($privateRepo != 0) {
                                 ?>
-                                <a class="pageLink" href="<?php echo $ExamplesOutput['github']; ?>">
+                                <a class="pageLink" href="<?php echo $github; ?>">
                                     <?php
-                                    echo $ExamplesOutput['github'];
+                                    echo $github;
                                     ?>
                                 </a>
                                 <?php
@@ -275,7 +281,7 @@ require("connect.php");
                 <div class="examples-description alignTextLeft">
                     <p>
                         <?php
-                        echo $ExamplesOutput['examplesDescription'];
+                        echo $examplesDescription;
                         ?>
                     </p>
                 </div>

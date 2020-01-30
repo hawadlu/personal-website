@@ -46,26 +46,29 @@ require("connect.php");
         <div id="editEducation" style="display: block">
             <?php
             //Perform the query to get the grades. Done here so that it is not repeated every time
-            $dropdownQuery = $con->prepare("SELECT `Grade`.`grade` FROM `Grade` ");
-            $dropdownQuery->execute();
-            $dropdownQuery->bind_result($grade);
-            $dropdownQuery->store_result();
+            $dropdownGradeQuery = $con->prepare("SELECT `Grade`.`grade` FROM `Grade` ");
+            $dropdownGradeQuery->execute();
+            $dropdownGradeQuery->bind_result($dropdownGrade);
+            $dropdownGradeQuery->store_result();
 
             //The query which shows the education history
-            $educationQuery = ("SELECT `Education`.`uniqueKey`, `Education`.`subject`, `codeExtension`.`codeExtension`, `Education`.`credits`, `Grade`.`grade`, `Institution`.`institution`, `relevantYear`.`relevantYear`, `subjectCode`.`code`, `subjectLevel`.`subjectLevel`
-FROM `Education`
-LEFT JOIN `codeExtension` ON `Education`.`codeExtensionFK` = `codeExtension`.`codeExtensionPK`
-LEFT JOIN `Grade` ON `Education`.`gradeFk` = `Grade`.`gradePK`
-LEFT JOIN `Institution` ON `Education`.`institutionFK` = `Institution`.`institutionPK`
-LEFT JOIN `relevantYear` ON `Education`.`classYearFK` = `relevantYear`.`relevantYearPK`
-LEFT JOIN `subjectCode` ON `Education`.`codeFK` = `subjectCode`.`codePK`
-LEFT JOIN `subjectLevel` ON `Education`.`subjectLevelFK` = `subjectLevel`.`subjectLevelPK`
-ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `Education`.`credits` DESC, `Grade`.`grade` ASC,`subjectCode`.`code` ASC");
+            $educationQuery = $con->prepare("SELECT `Education`.`uniqueKey`, `Education`.`subject`, `codeExtension`.`codeExtension`, `Education`.`credits`, `Grade`.`grade`, `Institution`.`institution`, `relevantYear`.`relevantYear`, `subjectCode`.`code`, `subjectLevel`.`subjectLevel`
+            FROM `Education`
+            LEFT JOIN `codeExtension` ON `Education`.`codeExtensionFK` = `codeExtension`.`codeExtensionPK`
+            LEFT JOIN `Grade` ON `Education`.`gradeFk` = `Grade`.`gradePK`
+            LEFT JOIN `Institution` ON `Education`.`institutionFK` = `Institution`.`institutionPK`
+            LEFT JOIN `relevantYear` ON `Education`.`classYearFK` = `relevantYear`.`relevantYearPK`
+            LEFT JOIN `subjectCode` ON `Education`.`codeFK` = `subjectCode`.`codePK`
+            LEFT JOIN `subjectLevel` ON `Education`.`subjectLevelFK` = `subjectLevel`.`subjectLevelPK`
+            ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `Education`.`credits` DESC, `Grade`.`grade` ASC,`subjectCode`.`code` ASC;");
+            $educationQuery -> execute();
+            $educationQuery->bind_result($uniqueKey, $subject, $codeExtension, $credits, $grade, $institution, $relevantYear, $code, $subjectLevel);
+            $educationQuery->store_result();
+            $recordCount = $educationQuery->num_rows();
+            $currentInstitution = "";
 
-            $educationResult = mysqli_query($con, $educationQuery);
-            $institution = "";
-            $recordCount = mysqli_num_rows($educationResult);
             $count = 0;
+            echo $recordCount;
 
             //Display a message if there are no records returned
             if ($recordCount == 0) {
@@ -77,12 +80,12 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                 </div>
                 <?php
             } else {
-                while ($EducationOutput = mysqli_fetch_array($educationResult)) {
+                while ($row=$educationQuery->fetch()) {
                     ?>
                     <!-- Update form-->
                     <form method="post">
                         <!--The record id-->
-                        <input type="hidden" name="uniqueKey" value="<?php echo $EducationOutput['uniqueKey']; ?>">
+                        <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey; ?>">
                         <?php
                         //Calculates if any rounding of the examples div is required
                         $classHeader = "";
@@ -111,15 +114,15 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                         $count += 1;
 
                         //Checking for a new institution
-                        if ($EducationOutput['institution'] != $institution) {
+                        if ($institution != $currentInstitution) {
                             //Reset the institution
-                            $institution = $EducationOutput['institution'];
+                            $currentInstitution = $institution;
                             ?>
                             <div style="background-color: #D3D3D3; text-align: center"
                                  class="<?php echo $classHeader; ?>">
                                 <h1>
                                     <?php
-                                    echo $EducationOutput['institution'];
+                                    echo $institution;
                                     ?>
                                 </h1>
 
@@ -144,7 +147,7 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                         <p class="alignTextLeft">
                                             <!--Determine weather the results are NCEA or Not-->
                                             <?php
-                                            if ($institution == "Tawa College") {
+                                            if ($grade == null) {
                                                 echo "Credits";
                                             } else {
                                                 echo "Grade";
@@ -172,7 +175,7 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                         <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
                             <!--The update button-->
                             <div class="education-Update">
-                                <input name="updateRecord<?php echo $EducationOutput['uniqueKey']; ?>" value="Update"
+                                <input name="updateRecord<?php echo $uniqueKey; ?>" value="Update"
                                        type="submit">
                             </div>
 
@@ -188,10 +191,10 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                         <?php
                                         //Add the code extension if possible
                                         $extension = "";
-                                        if ($EducationOutput['codeExtension'] != null) {
-                                            $extension = $EducationOutput['codeExtension'];
+                                        if ($codeExtension != null) {
+                                            $extension = $codeExtension;
                                         }
-                                        echo $EducationOutput['code'] . $extension;
+                                        echo $code . $extension;
                                         ?>
                                     </p>
                                 </div>
@@ -206,7 +209,7 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                 <div style="text-align: center;">
                                     <p class="alignTextLeft">
                                         <?php
-                                        echo $EducationOutput['subject'];
+                                        echo $subject;
                                         ?>
                                     </p>
                                 </div>
@@ -216,7 +219,7 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                 <p class="alignTextLeft">
                                     <!--Determine weather the results are NCEA or Not-->
                                     <?php
-                                    if ($institution == "Tawa College") {
+                                    if ($grade == null) {
                                         echo "Credits:";
                                     } else {
                                         echo "Grade:";
@@ -229,10 +232,10 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                     <p class="alignTextLeft">
                                         <?php
                                         //Checking if NCEA or uni results should be displayed
-                                        if ($EducationOutput['grade'] != null) {
-                                            echo $EducationOutput['grade'];
-                                        } elseif ($EducationOutput['grade'] == null) {
-                                            echo $EducationOutput['credits'];
+                                        if ($grade != null) {
+                                            echo $grade;
+                                        } else {
+                                            echo $credits;
                                         }
                                         ?>
                                     </p>
@@ -248,8 +251,8 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                 <div style="text-align: center;">
                                     <p class="alignTextLeft">
                                         <?php
-                                        if ($EducationOutput['subjectLevel'] != null) {
-                                            echo $EducationOutput['subjectLevel'];
+                                        if ($subjectLevel != null) {
+                                            echo $subjectLevel;
                                         } else {
                                             echo "Not applicable";
                                         }
@@ -267,8 +270,8 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                 <div style="text-align: center;">
                                     <p class="alignTextLeft">
                                         <?php
-                                        if ($EducationOutput['relevantYear'] != null) {
-                                            echo $EducationOutput['relevantYear'];
+                                        if ($relevantYear != null) {
+                                            echo $relevantYear;
                                         } else {
                                             echo "Not applicable";
                                         }
@@ -281,12 +284,12 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                     <?php
 
                     //Run the update script
-                    if (isset($_POST['updateRecord' . $EducationOutput['uniqueKey']])) {
+                    if (isset($_POST['updateRecord' . $uniqueKey])) {
                         echo "updating";
-                        echo $_POST['updateRecord' . $EducationOutput['uniqueKey']];
+                        echo $_POST['updateRecord' . $uniqueKey];
                         $key = $_POST['uniqueKey'];
                         echo $key;
-                        unset($_POST['updateRecord' . $EducationOutput['uniqueKey']]);
+                        unset($_POST['updateRecord' . $uniqueKey]);
                         unset($_POST['uniqueKey']);
 
                         ?>
@@ -300,40 +303,41 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                 </div>
                                 <div class="add-Subject">
                                     <input class="textInput" type="text" name="subject"
-                                           value="<?php echo $EducationOutput['subject']; ?>" required>
+                                           value="<?php echo $subject; ?>" required>
                                 </div>
                                 <div class="add-Subject-Year">
                                     <input class="textInput" type="number" name="subject-Year"
-                                           value="<?php echo $EducationOutput['relevantYear']; ?>" required>
+                                           value="<?php echo $relevantYear; ?>" required>
                                 </div>
                                 <div class="add-Subject-Level">
                                     <input class="textInput" type="text" name="subject-Level"
-                                           value="<?php echo $EducationOutput['subjectLevel']; ?>" required>
+                                           value="<?php echo $subjectLevel; ?>" required>
                                 </div>
                                 <div class="add-Code">
                                     <input class="textInput" type="text" name="code"
-                                           value="<?php echo $EducationOutput['code']; ?>" required>
+                                           value="<?php echo $code; ?>" required>
                                 </div>
                                 <div class="add-Code-Extension">
-                                    <input class="textInput" type="number" name="code-Extension" value="<?php echo $EducationOutput['codeExtension']; ?> " required>
+                                    <input class="textInput" type="text" name="code-Extension"
+                                           value="<?php echo $codeExtension; ?> " required>
                                 </div>
                                 <div class="add-Grade">
                                     <?php
                                     //Display credits or grade
-                                    if ($EducationOutput['grade'] != null) {
+                                    if ($grade != null) {
                                         //University. Display dropdown
-                                                                                ?>
+                                        ?>
                                         <select required>
-                                            <option selected value = "<?php echo $EducationOutput['grade']; ?>">
-                                                <?php echo $EducationOutput['grade'];?>
+                                            <option selected value = "<?php echo $grade; ?>">
+                                                <?php echo $grade;?>
                                             </option>
                                             <?php
-                                            //populate the dropdowns
-                                            while($row=$dropdownQuery->fetch()) {
+                                            //populate the drop downs
+                                            while($row=$dropdownGradeQuery->fetch()) {
                                                 //Only display if not null and not equal to the current grade
-                                                if ($grade != null && $grade != $EducationOutput['grade']) {
+                                                if ($dropdownGrade != null && $dropdownGrade != $grade) {
                                                     ?>
-                                                    <option value="<?php echo $grade; ?>"><?php echo $grade; ?></option>
+                                                    <option value="<?php echo $dropdownGrade; ?>"><?php echo $dropdownGrade; ?></option>
                                                     <?php
                                                 }
                                             }
@@ -344,7 +348,7 @@ ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `
                                         //College. Display text box
                                         ?>
                                         <input class=textInput" type="number" name="credits"
-                                               value = "<?php echo $EducationOutput['credits']; ?>">
+                                               value = "<?php echo $credits; ?>">
                                         <?php
                                     }
                                     ?>
