@@ -8,10 +8,11 @@ require("connect.php");
 <div class="page-grid-container">
     <?php
     //The query which shows the education history
-    $experienceQuery = $con->prepare("SELECT `Examples`.`uniqueKey`, `Examples`.`name`, `relevantYear`.`relevantYear`, `Examples`.`examplesDescription`, `Examples`.`link`, `Examples`.`github`, `Examples`.`privateRepo`
-            FROM `Examples` 
-            LEFT JOIN `relevantYear` ON `Examples`.`exampleYearFK` = `relevantYear`.`relevantYearPK`
-            ORDER BY `relevantYear`.`relevantYear` DESC
+    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, relevantYear.relevantYear, examples.examplesDescription, 
+            examples.link, examples.github, examples.privateRepo
+            FROM examples 
+            LEFT JOIN relevantYear ON examples.exampleYearFK = relevantYear.relevantYearPK
+            ORDER BY relevantYear.relevantYear DESC
             ");
     $experienceQuery -> execute();
     $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github, $privateRepo);
@@ -157,34 +158,34 @@ require("connect.php");
                     $key = $uniqueKey;
 
                     //Define queries to get the languages
-                    $LangOneQuery = $con->prepare("SELECT Languages.language
-                            FROM Examples
-                            LEFT JOIN Languages ON Examples.languageOneFK = Languages.languagePK
-                            WHERE Examples.uniqueKey LIKE $key
+                    $LangOneQuery = $con->prepare("SELECT languages.language
+                            FROM examples
+                            LEFT JOIN languages ON examples.languageOneFK = languages.languagePK
+                            WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangTwoQuery = $con->prepare("SELECT Languages.language
-                            FROM Examples
-                            LEFT JOIN Languages ON Examples.languageTwoFK = Languages.languagePK
-                            WHERE Examples.uniqueKey LIKE $key
+                    $LangTwoQuery = $con->prepare("SELECT languages.language
+                            FROM examples
+                            LEFT JOIN languages ON examples.languageTwoFK = languages.languagePK
+                            WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangThreeQuery = $con->prepare("SELECT Languages.language
-                            FROM Examples
-                            LEFT JOIN Languages ON Examples.languageThreeFK = Languages.languagePK
-                            WHERE Examples.uniqueKey LIKE $key
+                    $LangThreeQuery = $con->prepare("SELECT languages.language
+                            FROM examples
+                            LEFT JOIN languages ON examples.languageThreeFK = languages.languagePK
+                            WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangFourQuery = $con->prepare("SELECT Languages.language
-                            FROM Examples
-                            LEFT JOIN Languages ON Examples.languageFourFK = Languages.languagePK
-                            WHERE Examples.uniqueKey LIKE $key
+                    $LangFourQuery = $con->prepare("SELECT languages.language
+                            FROM examples
+                            LEFT JOIN languages ON examples.languageFourFK = languages.languagePK
+                            WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangFiveQuery = $con->prepare("SELECT Languages.language
-                            FROM Examples
-                            LEFT JOIN Languages ON Examples.languageFiveFK = Languages.languagePK
-                            WHERE Examples.uniqueKey LIKE $key
+                    $LangFiveQuery = $con->prepare("SELECT languages.language
+                            FROM examples
+                            LEFT JOIN languages ON examples.languageFiveFK = languages.languagePK
+                            WHERE examples.uniqueKey LIKE $key
                             ");
 
                     //Execute each query

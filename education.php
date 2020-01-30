@@ -13,15 +13,16 @@ require("connect.php");
     $currentInstitution = '';
 
     //The query which shows the education history
-    $educationQuery = $con->prepare("SELECT `Education`.`uniqueKey`, `Education`.`subject`, `codeExtension`.`codeExtension`, `Education`.`credits`, `Grade`.`grade`, `Institution`.`institution`, `relevantYear`.`relevantYear`, `subjectCode`.`code`, `subjectLevel`.`subjectLevel`
-            FROM `Education`
-            LEFT JOIN `codeExtension` ON `Education`.`codeExtensionFK` = `codeExtension`.`codeExtensionPK`
-            LEFT JOIN `Grade` ON `Education`.`gradeFk` = `Grade`.`gradePK`
-            LEFT JOIN `Institution` ON `Education`.`institutionFK` = `Institution`.`institutionPK`
-            LEFT JOIN `relevantYear` ON `Education`.`classYearFK` = `relevantYear`.`relevantYearPK`
-            LEFT JOIN `subjectCode` ON `Education`.`codeFK` = `subjectCode`.`codePK`
-            LEFT JOIN `subjectLevel` ON `Education`.`subjectLevelFK` = `subjectLevel`.`subjectLevelPK`
-            ORDER BY `Education`.`institutionFK` DESC, `relevantYear`.`relevantYear` DESC, `Education`.`credits` DESC, `Grade`.`grade` ASC,`subjectCode`.`code` ASC;");
+    $educationQuery = $con->prepare("SELECT education.uniqueKey, education.subject, codeExtension.codeExtension, education.credits, 
+            grade.grade, institution.institution, relevantYear.relevantYear, subjectCode.code, subjectLevel.subjectLevel
+            FROM education
+            LEFT JOIN codeExtension ON education.codeExtensionFK = codeExtension.codeExtensionPK
+            LEFT JOIN grade ON education.gradeFk = grade.gradePK
+            LEFT JOIN institution ON education.institutionFK = institution.institutionPK
+            LEFT JOIN relevantYear ON education.classYearFK = relevantYear.relevantYearPK
+            LEFT JOIN subjectCode ON education.codeFK = subjectCode.codePK
+            LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK
+            ORDER BY education.institutionFK DESC, relevantYear.relevantYear DESC, education.credits DESC, grade.grade ASC,subjectCode.code ASC;");
     $educationQuery -> execute();
     $educationQuery->bind_result($uniqueKey, $subject, $codeExtension, $credits, $grade, $institution, $relevantYear, $code, $subjectLevel);
     $educationQuery->store_result();
@@ -163,7 +164,7 @@ require("connect.php");
                         if ($grade == null) {
                             echo "Credits:";
                         } else {
-                            echo "Grade:";
+                            echo "grade:";
                         }
                         ?>
                     </p>
