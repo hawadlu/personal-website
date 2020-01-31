@@ -13,16 +13,17 @@ require("connect.php");
     $currentInstitution = '';
 
     //The query which shows the education history
-    $educationQuery = $con->prepare("SELECT education.uniqueKey, education.subject, codeExtension.codeExtension, education.credits, 
-            grade.grade, institution.institution, relevantYear.relevantYear, subjectCode.code, subjectLevel.subjectLevel
-            FROM education
-            LEFT JOIN codeExtension ON education.codeExtensionFK = codeExtension.codeExtensionPK
-            LEFT JOIN grade ON education.gradeFk = grade.gradePK
-            LEFT JOIN institution ON education.institutionFK = institution.institutionPK
-            LEFT JOIN relevantYear ON education.classYearFK = relevantYear.relevantYearPK
-            LEFT JOIN subjectCode ON education.codeFK = subjectCode.codePK
-            LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK
-            ORDER BY education.institutionFK DESC, relevantYear.relevantYear DESC, education.credits DESC, grade.grade ASC,subjectCode.code ASC;");
+    $educationQuery = $con->prepare("SELECT education.uniqueKey, education.subject, codeExtension.codeExtension, credits.credits, grade.grade, institution.institution, 
+    year.year, subjectCode.subjectCode, subjectLevel.subjectLevel
+    FROM education 
+    LEFT JOIN credits ON education.creditsFK = credits.creditsPK 
+    LEFT JOIN codeExtension ON education.codeExtensionFK = codeExtension.codeExtensionPK 
+    LEFT JOIN grade ON education.gradeFk = grade.gradePK 
+    LEFT JOIN institution ON education.institutionFK = institution.institutionPK 
+    LEFT JOIN year ON education.yearFK = year.yearPK 
+    LEFT JOIN subjectCode ON education.codeFK = subjectCode.subjectCodePK
+     LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK 
+     ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.grade ASC,subjectCode.subjectCode ASC");
     $educationQuery -> execute();
     $educationQuery->bind_result($uniqueKey, $subject, $codeExtension, $credits, $grade, $institution, $relevantYear, $code, $subjectLevel);
     $educationQuery->store_result();

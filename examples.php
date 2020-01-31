@@ -8,12 +8,8 @@ require("connect.php");
 <div class="page-grid-container">
     <?php
     //The query which shows the education history
-    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, relevantYear.relevantYear, examples.examplesDescription, 
-            examples.link, examples.github, examples.privateRepo
-            FROM examples 
-            LEFT JOIN relevantYear ON examples.exampleYearFK = relevantYear.relevantYearPK
-            ORDER BY relevantYear.relevantYear DESC
-            ");
+    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.examplesDescription, 
+examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
     $experienceQuery -> execute();
     $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github, $privateRepo);
     $experienceQuery->store_result();
@@ -158,31 +154,31 @@ require("connect.php");
                     $key = $uniqueKey;
 
                     //Define queries to get the languages
-                    $LangOneQuery = $con->prepare("SELECT languages.language
+                    $LangOneQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageOneFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangTwoQuery = $con->prepare("SELECT languages.language
+                    $LangTwoQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageTwoFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangThreeQuery = $con->prepare("SELECT languages.language
+                    $LangThreeQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageThreeFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangFourQuery = $con->prepare("SELECT languages.language
+                    $LangFourQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageFourFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                    $LangFiveQuery = $con->prepare("SELECT languages.language
+                    $LangFiveQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageFiveFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
@@ -220,21 +216,23 @@ require("connect.php");
                     <p class="alignTextLeft">
                         Language(s):
                         <?php
-                        if ($langOne != 'NA') {
-                            echo $langOne;
+                        $languages = "";
+                        if ($langOne != null) {
+                            $languages = $languages . $langOne;
                         }
-                        if ($langTwo != 'NA') {
-                            echo(', ' . $langTwo);
+                        if ($langTwo != null) {
+                            $languages = $languages . ", " . $langTwo;
                         }
-                        if ($langThree != 'NA') {
-                            echo(', ' . $langThree);
+                        if ($langThree != null) {
+                            $languages = $languages . ", " . $langThree;
                         }
-                        if ($langFour != 'NA') {
-                            echo(', ' . $langFour);
+                        if ($langFour != null) {
+                            $languages = $languages . ", " . $langFour;
                         }
-                        if ($langFive != 'NA') {
-                            echo(', ' . $langFive);
+                        if ($langFive != null) {
+                            $languages = $languages . ", " . $langFive;
                         }
+                        echo $languages;
                         ?>
                     </p>
                 </div>
