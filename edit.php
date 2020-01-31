@@ -53,23 +53,24 @@ require("connect.php");
 
             //The query which shows the education history
             $educationQuery = $con->prepare("SELECT education.uniqueKey, education.subject, codeExtension.codeExtension, credits.credits, grade.grade, institution.institution, 
-    year.year, subjectCode.subjectCode, subjectLevel.subjectLevel
-    FROM education 
-    LEFT JOIN credits ON education.creditsFK = credits.creditsPK 
-    LEFT JOIN codeExtension ON education.codeExtensionFK = codeExtension.codeExtensionPK 
-    LEFT JOIN grade ON education.gradeFk = grade.gradePK 
-    LEFT JOIN institution ON education.institutionFK = institution.institutionPK 
-    LEFT JOIN year ON education.yearFK = year.yearPK 
-    LEFT JOIN subjectCode ON education.codeFK = subjectCode.subjectCodePK
-     LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK 
-     ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.grade ASC,subjectCode.subjectCode ASC");
-            $educationQuery -> execute();
+            year.year, subjectCode.subjectCode, subjectLevel.subjectLevel
+            FROM education 
+            LEFT JOIN credits ON education.creditsFK = credits.creditsPK 
+            LEFT JOIN codeExtension ON education.codeExtensionFK = codeExtension.codeExtensionPK 
+            LEFT JOIN grade ON education.gradeFk = grade.gradePK 
+            LEFT JOIN institution ON education.institutionFK = institution.institutionPK 
+            LEFT JOIN year ON education.yearFK = year.yearPK 
+            LEFT JOIN subjectCode ON education.codeFK = subjectCode.subjectCodePK
+            LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK 
+            ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.grade ASC,subjectCode.subjectCode ASC");
+            $educationQuery->execute();
             $educationQuery->bind_result($uniqueKey, $subject, $codeExtension, $credits, $grade, $institution, $relevantYear, $code, $subjectLevel);
             $educationQuery->store_result();
             $recordCount = $educationQuery->num_rows();
             $currentInstitution = "";
 
             $count = 0;
+            $isNumeric = "true"; //Used to tell if a grade is parley numeric when updating the records
 
             //Display a message if there are no records returned
             if ($recordCount == 0) {
@@ -81,7 +82,7 @@ require("connect.php");
                 </div>
                 <?php
             } else {
-                while ($row=$educationQuery->fetch()) {
+                while ($row = $educationQuery->fetch()) {
                     ?>
                     <!-- Update form-->
                     <form method="post">
@@ -327,19 +328,22 @@ require("connect.php");
                                 <div class="add-Grade">
 
                                     <input class=textInput" type="text" name="grade"
-                                           value = "<?php if ($credits != null) {
+                                           value="<?php if ($credits != null) {
                                                echo $credits;
+                                               $isNumeric = "false"; //Non numeric grade
                                            } else {
                                                echo $grade;
-                                           }?>">
+                                               $isNumeric = "true"; //numeric grade
+                                           } ?>
+                                    ">
 
                                 </div>
                                 <div class="save-Record">
                                     <!--Tell process.php which type of query to execute-->
-                                    <input name = "uniqueKey" value = "<?php echo $uniqueKey;?>" type = "hidden">
-                                    <input name = "qryType" value="educationUpdate" type="hidden">
-                                    <input name="submitUpdate<?php $uniqueKey;?>" value="Update"
-                                           type="submit">
+                                    <input name = "uniqueKey" value = "<?php echo $uniqueKey; ?>" type = "hidden">
+                                    <input name = "gradeType" value = "<?php echo $isNumeric; ?>" type = "hidden">
+                                    <input name = "qryType" value = "educationUpdate" type = "hidden">
+                                    <input name = "submitUpdate<?php $uniqueKey; ?>" value = "Update" type = "submit">
                                 </div>
                             </div>
                         </form>
