@@ -21,7 +21,7 @@ require("connect.php");
     LEFT JOIN grade ON education.gradeFk = grade.gradePK 
     LEFT JOIN institution ON education.institutionFK = institution.institutionPK 
     LEFT JOIN year ON education.yearFK = year.yearPK 
-    LEFT JOIN subjectCode ON education.codeFK = subjectCode.subjectCodePK
+    LEFT JOIN subjectCode ON education.subjectCodeFK = subjectCode.subjectCodePK
      LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK 
      ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.grade ASC,subjectCode.subjectCode ASC");
     $educationQuery -> execute();

@@ -60,7 +60,7 @@ require("connect.php");
             LEFT JOIN grade ON education.gradeFk = grade.gradePK 
             LEFT JOIN institution ON education.institutionFK = institution.institutionPK 
             LEFT JOIN year ON education.yearFK = year.yearPK 
-            LEFT JOIN subjectCode ON education.codeFK = subjectCode.subjectCodePK
+            LEFT JOIN subjectCode ON education.subjectCodeFK = subjectCode.subjectCodePK
             LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK 
             ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.grade ASC,subjectCode.subjectCode ASC");
             $educationQuery->execute();
@@ -302,40 +302,39 @@ require("connect.php");
                         <form method="post" action="process.php">
                             <div class="add-grid-container">
                                 <div class="add-Institution">
-                                    <input class="textInput" type="text" name="institution"
-                                           value="<?php echo $institution; ?>" required>
+                                    <input class="textInput" type="text" name="institution" value="<?php echo $institution;?>" required autocomplete="on">
                                 </div>
                                 <div class="add-Subject">
-                                    <input class="textInput" type="text" name="subject"
-                                           value="<?php echo $subject; ?>" required>
+                                    <input class="textInput" type="text" name="subject" value="<?php echo $subject; ?>" required>
                                 </div>
                                 <div class="add-Subject-Year">
-                                    <input class="textInput" type="number" name="subject-Year"
-                                           value="<?php echo $relevantYear; ?>" required>
+                                    <input class="textInput" type="number" name="subject-Year" value="<?php echo $relevantYear; ?>" required>
                                 </div>
                                 <div class="add-Subject-Level">
-                                    <input class="textInput" type="text" name="subject-Level"
-                                           value="<?php echo $subjectLevel; ?>" required>
+                                    <input class="textInput" type="text" name="subject-Level" value="<?php echo $subjectLevel; ?>" required>
                                 </div>
                                 <div class="add-Code">
-                                    <input class="textInput" type="text" name="code"
-                                           value="<?php echo $code; ?>" required>
+                                    <input class="textInput" type="text" name="code" value="<?php echo $code; ?>" required>
                                 </div>
                                 <div class="add-Code-Extension">
-                                    <input class="textInput" type="text" name="code-Extension"
-                                           value="<?php echo $codeExtension; ?> " required>
+                                    <input class="textInput" type="text" name="code-Extension" value="<?php echo $codeExtension; ?> " required>
                                 </div>
                                 <div class="add-Grade">
 
+                                    <?php
+                                    //Determine the type of grade to be displayed
+                                    $displayGrade = null;
+                                    if ($credits != 0) {
+                                        $displayGrade = $credits;
+                                        $isNumeric = false;
+                                    } else {
+                                        $displayGrade = $grade;
+                                        $isNumeric = true;
+                                    }
+                                    ?>
+
                                     <input class=textInput" type="text" name="grade"
-                                           value="<?php if ($credits != null) {
-                                               echo $credits;
-                                               $isNumeric = "false"; //Non numeric grade
-                                           } else {
-                                               echo $grade;
-                                               $isNumeric = "true"; //numeric grade
-                                           } ?>
-                                    ">
+                                           value="<?php echo $displayGrade;?>">
 
                                 </div>
                                 <div class="save-Record">
@@ -412,14 +411,14 @@ require("connect.php");
         </script>
 
         <!-- Trigger/Open The Modal -->
-        <button id="newItemButton">Create new item</button>
+        <button id="newProjectButton">Create new item</button>
 
-        <!-- The Modal -->
-        <div id="newItemModal" class="newItemModal">
+        <!-- The new project Modal -->
+        <div id="newProjectModal" class="newProjectModal">
 
             <!-- Modal content -->
-            <div class="newItemModalContent">
-                <span class="closeNewItemModal">&times;</span>
+            <div class="newProjectModalContent">
+                <span class="closeNewProjectModal">&times;</span>
                 <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image-->
                 <!--Upload files. Allow up to five-->
                 <form action="" method="post" enctype="multipart/form-data">
@@ -534,13 +533,13 @@ require("connect.php");
 <script>
     //Code used to control the new item modal
     // Get the modal
-    var modal = document.getElementById("newItemModal");
+    var modal = document.getElementById("newProjectModal");
 
     // Get the button that opens the modal
-    var btn = document.getElementById("newItemButton");
+    var btn = document.getElementById("newProjectButton");
 
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("closeNewItemModal")[0];
+    var span = document.getElementsByClassName("closeNewProjectModal")[0];
 
     // When the user clicks on the button, open the modal
     btn.onclick = function () {

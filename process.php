@@ -54,6 +54,7 @@ if (isset($_POST['submitUpdate'])) {
 
         $gradeUpdate = false; //Tracks if a grade has been updated
 
+        //Iterate over each field to see if it already exists in the database
         for ($i = 0; $i < sizeof($tablesToCheck); $i++) {
             //perform a query to check if the record exists
             ?><br><br><?php
@@ -92,20 +93,7 @@ if (isset($_POST['submitUpdate'])) {
                 $newRecordQuery->execute();
 
                 ?><br><?php
-                //Get the new foreign key
-                $foreignKeyQuery = "SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . "." . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'";
-                echo $foreignKeyQuery;
-                $foreignKeyQuery = $con->prepare($foreignKeyQuery);
-                $foreignKeyQuery->execute();
-                $foreignKeyQuery->bind_result($primary, $val);
-                $foreignKeyQuery->store_result();
-                $key = "";
-                while ($row=$foreignKeyQuery->fetch()) {
-                    ?><br><?php
-                    $key = $primary;
-                }
-                echo $key;
-                ?><br><?php
+                $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
 
                 //Insert the new foreign key
                 $updateFKQuery = "UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " .  $_POST['uniqueKey'];
@@ -114,34 +102,71 @@ if (isset($_POST['submitUpdate'])) {
                 $updateFKQuery->execute();
                 ?><br><?php
 
-            }
-            //Resetting the grade/credits only runs when grades are updates
-            if ($tablesToCheck[$i] == "grade" || $tablesToCheck[$i] == "credits" && $gradeUpdate) {
+            } else {
+                //Updating the the record to the new values
+                ?><br><?php
+                echo "Record already exists. Updating fields for " . $tablesToCheck[$i];
+                ?><br><?php
+
+                //Get the new foreign key
+                $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
+
+                //Update the foreign key in the primary table
+                $updateFKQuery = "UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " .  $_POST['uniqueKey'];
+                ?><br><?php
+                echo "Update FK query: " . $updateFKQuery;
+                $updateFKQuery = $con->prepare($updateFKQuery);
+                $updateFKQuery->execute();
+                ?><br><?php
+
+                //Update the grade/credits foreign keys
                 $gradeUpdateQuery = "";
-                //NOTE 'gradeType' refers to the previously stored grade. Not the updated one
-                //Convert to numeric
-                echo "Type: " . $_POST['gradeType'] . " Stored val: " . $tablesToCheck[5];
-                if ($_POST['gradeType'] == "false" && $tablesToCheck[5] == "credits") {
-                    echo "Apply conversion. Non numeric to numeric";
+                if ($tablesToCheck[$i] == "credits") {
+                    echo "Hello credits";
                     $gradeUpdateQuery = "UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'];
-                    echo $gradeUpdateQuery;
-                    //Convert to non numeric
-                } else if ($_POST['gradeType'] == "true" && $tablesToCheck[5] == "grade") {
-                    echo "Apply conversion. Numeric to non numeric";
+                } else if ($tablesToCheck[$i] == "grade") {
+                    echo "Hello grade";
                     $gradeUpdateQuery = "UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'];
-                    echo $gradeUpdateQuery;
                 }
 
-                $gradeUpdateQuery = $con->prepare($gradeUpdateQuery);
-                $gradeUpdateQuery->execute();
+                if ($gradeUpdateQuery != "") {
+                    ?><br><?php
+                    echo $gradeUpdateQuery;
+                    $gradeUpdateQuery = $con->prepare($gradeUpdateQuery);
+                    $gradeUpdateQuery->execute();
+                }
+
             }
-
-
         }
     }
 
 }
 
+//Function that executes a query and returns the foreign key
+function getFK($table, $value, $con) {
+    $primary = null;
+    $val = null;
+    $foreignKeyQuery = "SELECT * FROM " . $table . " WHERE " . $table . "." . $table . " = '" . $value . "'";
+    echo $foreignKeyQuery;
+    $foreignKeyQuery = $con->prepare($foreignKeyQuery);
+    $foreignKeyQuery->execute();
+    $foreignKeyQuery->bind_result($primary, $val);
+    $foreignKeyQuery->store_result();
+    $key = "";
+    while ($row=$foreignKeyQuery->fetch()) {
+        ?><br><?php
+        $key = $primary;
+    }
+    echo "FK: " . $key;
+    return $key;
+}
+
+//Manual redirect.
+?>
+<p>
+    Click <a href="edit.php">here</a> to go back to the edit page.
+</p>
+<?php
 
 //redirect back to the previous page
 //header("Location: edit.php");
