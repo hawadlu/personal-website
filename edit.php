@@ -2,7 +2,6 @@
 // We need to use sessions, so you should always start sessions using the below code.
 session_start();
 //Todo add a function that allows the user to play around with their own items without having to log in. Use cookies and store info in the browser or PHP session variables
-// If the user is not logged in redirect to the login page...
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
     exit();
@@ -15,6 +14,33 @@ if (!isset($_SESSION['loggedin'])) {
 <?php
 require("head.php");
 require("connect.php");
+
+//Todo only run this if logged in
+//Run several php queries to get arrays of each field
+$institutionArray = getArray("SELECT institution.institution FROM institution WHERE institution != ''", $con);
+$subjectArray = getArray("SELECT DISTINCT subject FROM education", $con);
+$yearArray = getArray("SELECT year.year FROM year WHERE year != ''", $con);
+$subjectLevelArray = getArray("SELECT subjectLevel.subjectLevel FROM subjectLevel WHERE subjectLevel != ''", $con);
+$codeArray = getArray("SELECT subjectCode.subjectCode FROM subjectCode WHERE subjectCode != ''", $con);
+$extensionArray = getArray("SELECT codeExtension.codeExtension FROM codeExtension WHERE codeExtension != ''", $con);
+$gradeArray = getArray("SELECT grade.grade FROM grade WHERE grade != ''", $con);
+
+
+function getArray($query, $con)
+{
+    $value = null;
+    $query = $con->prepare($query);
+    $query->execute();
+    $query->bind_result($value);
+    $query->store_result();
+
+    $array = [];
+
+    while ($row = $query->fetch()) {
+        array_push($array, $value);
+    }
+    return $array;
+}
 
 ?>
 <body class="background-img">
@@ -46,125 +72,126 @@ require("connect.php");
                         </button>
                     </div>
                     <div class="Projects">
-                        <button id="addProjectTab" class="indexButton" style="display: block; border: none; border-radius: 0;"
+                        <button id="addProjectTab" class="indexButton"
+                                style="display: block; border: none; border-radius: 0;"
                                 onclick="showElement('addProject')">Projects
                         </button>
                     </div>
                 </div>
 
-                    <div id = "addEducation" style="display: block">
-                        <p>
-                            Add education
-                        </p>
-                    </div>
-                    <div id = "addProject" style="display: none">
-                        <p>
-                            Add project
-                        </p>
-                        <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image. when using cookies-->
-                        <!--Upload files. Allow up to five-->
-                        <form action="" method="post" enctype="multipart/form-data">
-                            Select image to upload:
-                            <input type="file" name="userFiles[]" id="" multiple="">
-                            <input type="submit" value="Upload" name="submit">
-                        </form>
+                <div id="addEducation" style="display: block">
+                    <p>
+                        Add education
+                    </p>
+                </div>
+                <div id="addProject" style="display: none">
+                    <p>
+                        Add project
+                    </p>
+                    <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image. when using cookies-->
+                    <!--Upload files. Allow up to five-->
+                    <form action="" method="post" enctype="multipart/form-data">
+                        Select image to upload:
+                        <input type="file" name="userFiles[]" id="" multiple="">
+                        <input type="submit" value="Upload" name="submit">
+                    </form>
 
-                        <!--Uploading the files-->
-                        <?php
-                        //Check the upload files form has been submitted
-                        if (isset($_FILES['userFiles'])) {
+                    <!--Uploading the files-->
+                    <?php
+                    //Check the upload files form has been submitted
+                    if (isset($_FILES['userFiles'])) {
 //useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
 //Array of possible file upload errors
-                            $phpFileUploadErrors = array(
-                                0 => "The file uploaded successfully",
-                                1 => "The file exceeds the maximum file size defined in php.ini",
-                                2 => "The file exceeds the maximum file size defines in the HTML form",
-                                3 => "The uploaded file was only partially uploaded",
-                                4 => "No file was uploaded",
-                                6 => "Missing a temporary folder",
-                                7 => "Filed to write file to the disc",
-                                8 => "A php extension stopped the file from uploading"
-                            );
+                        $phpFileUploadErrors = array(
+                            0 => "The file uploaded successfully",
+                            1 => "The file exceeds the maximum file size defined in php.ini",
+                            2 => "The file exceeds the maximum file size defines in the HTML form",
+                            3 => "The uploaded file was only partially uploaded",
+                            4 => "No file was uploaded",
+                            6 => "Missing a temporary folder",
+                            7 => "Filed to write file to the disc",
+                            8 => "A php extension stopped the file from uploading"
+                        );
 
-                            $file_array = reArrayFiles($_FILES['userFiles']);
+                        $file_array = reArrayFiles($_FILES['userFiles']);
 //pre_r($file_array);
 
-                            for ($i = 0; $i < count($file_array); $i++) {
+                        for ($i = 0; $i < count($file_array); $i++) {
 //Check for errors
-                                if ($file_array[$i]['error']) {
-                                    ?>
-                                    <div class="alert alert-danger">
-                                        <?php echo $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']]; ?>
-                                    </div>
-                                    <?php
+                            if ($file_array[$i]['error']) {
+                                ?>
+                                <div class="alert alert-danger">
+                                    <?php echo $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']]; ?>
+                                </div>
+                                <?php
 
 //Check for extensions errors
-                                } else {
+                            } else {
 //Allowable file types
-                                    $extensions = array("jpg", "png", "gif", "jpeg");
-                                    $file_ext = explode(".", $file_array[$i]["name"]);
-                                    $file_ext = end($file_ext);
+                                $extensions = array("jpg", "png", "gif", "jpeg");
+                                $file_ext = explode(".", $file_array[$i]["name"]);
+                                $file_ext = end($file_ext);
 
 //Check if the extension is acceptable
-                                    if (!in_array($file_ext, $extensions)) {
+                                if (!in_array($file_ext, $extensions)) {
+                                    ?>
+                                    <div class="alert alert-danger">
+                                        <?php echo $file_array[$i]["name"] . " Invalid file extension!"; ?>
+                                    </div>
+                                    <?php
+                                } else {
+//File uploaded successfully
+//Check if the file already exists in the directory
+                                    if (!file_exists("images/" . $file_array[$i]["name"])) {
+//Move the file from the temporary directory to the intended directory
+                                        move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
+
+//Print a success message
                                         ?>
-                                        <div class="alert alert-danger">
-                                            <?php echo $file_array[$i]["name"] . " Invalid file extension!"; ?>
+                                        <div class="alert alert-success">
+                                            <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]] ?>
                                         </div>
                                         <?php
                                     } else {
-//File uploaded successfully
-//Check if the file already exists in the directory
-                                        if (!file_exists("images/" . $file_array[$i]["name"])) {
-//Move the file from the temporary directory to the intended directory
-                                            move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
-
-//Print a success message
-                                            ?>
-                                            <div class="alert alert-success">
-                                                <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]] ?>
-                                            </div>
-                                            <?php
-                                        } else {
 //Print message stating that the file already exists
-                                            ?>
-                                            <div class="alert alert-danger">
-                                                <?php echo $file_array[$i]["name"] . " already exists"; ?>
-                                            </div>
-                                            <?php
-                                        }
+                                        ?>
+                                        <div class="alert alert-danger">
+                                            <?php echo $file_array[$i]["name"] . " already exists"; ?>
+                                        </div>
+                                        <?php
                                     }
                                 }
                             }
                         }
+                    }
 
-                        //Converts $_FILES to a cleaner array when uploading multiple files
-                        function reArrayFiles($file_post)
-                        {
-                            $file_ary = array();
-                            $file_count = count($file_post['name']);
-                            $file_keys = array_keys($file_post);
+                    //Converts $_FILES to a cleaner array when uploading multiple files
+                    function reArrayFiles($file_post)
+                    {
+                        $file_ary = array();
+                        $file_count = count($file_post['name']);
+                        $file_keys = array_keys($file_post);
 
-                            for ($i = 0; $i < $file_count; $i++) {
-                                foreach ($file_keys as $key) {
-                                    $file_ary[$i][$key] = $file_post[$key][$i];
-                                }
+                        for ($i = 0; $i < $file_count; $i++) {
+                            foreach ($file_keys as $key) {
+                                $file_ary[$i][$key] = $file_post[$key][$i];
                             }
-
-                            return $file_ary;
                         }
 
-                        //Same as print_r surrounded with <pre></pre> HTML tags for better array readability
-                        function pre_r($array)
-                        {
-                            echo '<pre>';
-                            print_r($array);
-                            echo '</pre>';
-                        }
+                        return $file_ary;
+                    }
+
+                    //Same as print_r surrounded with <pre></pre> HTML tags for better array readability
+                    function pre_r($array)
+                    {
+                        echo '<pre>';
+                        print_r($array);
+                        echo '</pre>';
+                    }
 
 
-                        ?>
-                    </div>
+                    ?>
+                </div>
             </div>
 
         </div>
@@ -356,7 +383,7 @@ require("connect.php");
                                     <p class="alignTextLeft">
                                         <?php
                                         echo $subject;
-                                        ?>±
+                                        ?>
                                     </p>
                                 </div>
                             </div>
@@ -443,50 +470,58 @@ require("connect.php");
                         <!--Todo add styling for mobile-->
                         <!--Todo add autocomplete functionality?-->
                         <!--Todo consider making this part its own page-->
-                        <form method="post" action="process.php">
+                        <form autocomplete="off" method="post" action="process.php">
                             <div class="add-grid-container">
-                                <div class="add-Institution">
-                                    <input class="textInput" type="text" name="institution" value="<?php echo $institution;?>" required autocomplete="on">
+                                <div class="add-Institution autocomplete">
+                                    <input id="institution" class="textInput" type="text"
+                                           name="institution" value="<?php echo $institution; ?>" required>
                                 </div>
-                                <div class="add-Subject">
-                                    <input class="textInput" type="text" name="subject" value="<?php echo $subject; ?>" required>
+                                <div class="add-Subject autocomplete">
+                                    <input id="subject" class="textInput" type="text" name="subject"
+                                           value="<?php echo $subject; ?>" required>
                                 </div>
-                                <div class="add-Subject-Year">
-                                    <input class="textInput" type="number" name="subject-Year" value="<?php echo $relevantYear; ?>" required>
+                                <div class="add-Subject-Year autocomplete">
+                                    <input id="year" class="textInput" type="number" name="subject-Year"
+                                           value="<?php echo $relevantYear; ?>" required>
                                 </div>
-                                <div class="add-Subject-Level">
-                                    <input class="textInput" type="text" name="subject-Level" value="<?php echo $subjectLevel; ?>" required>
+                                <div class="add-Subject-Level autocomplete">
+                                    <input id="subjectLevel" class="textInput" type="text" name="subject-Level"
+                                           value="<?php echo $subjectLevel; ?>" required>
                                 </div>
-                                <div class="add-Code">
-                                    <input class="textInput" type="text" name="code" value="<?php echo $code; ?>" required>
+                                <div class="add-Cod autocomplete">
+                                    <input id="code" class="textInput" type="text" name="code"
+                                           value="<?php echo $code; ?>" required>
                                 </div>
-                                <div class="add-Code-Extension">
-                                    <input class="textInput" type="text" name="code-Extension" value="<?php echo $codeExtension; ?> " required>
+                                <div class="add-Code-Extension autocomplete">
+                                    <input id="extension" class="textInput" type="text" name="code-Extension"
+                                           value="<?php echo $codeExtension; ?> " required>
                                 </div>
-                                <div class="add-Grade">
+                                <div class="add-Grade autocomplete">
 
                                     <?php
                                     //Determine the type of grade to be displayed
                                     $displayGrade = null;
                                     if ($credits != 0) {
-                                        $displayGrade = $credits;
+                                        ?>
+                                        <input class=textInput" type="number" name="grade"
+                                               value="<?php echo $credits; ?>">
+                                        <?php
                                         $isNumeric = false;
                                     } else {
-                                        $displayGrade = $grade;
-                                        $isNumeric = true;
+                                        ?>
+                                        <input id="grade" class=textInput" type="text" name="grade"
+                                               value="<?php echo $grade; ?>">
+                                        <?php
                                     }
                                     ?>
-
-                                    <input class=textInput" type="text" name="grade"
-                                           value="<?php echo $displayGrade;?>">
 
                                 </div>
                                 <div class="save-Record">
                                     <!--Tell process.php which type of query to execute-->
-                                    <input name = "uniqueKey" value = "<?php echo $uniqueKey; ?>" type = "hidden">
-                                    <input name = "gradeType" value = "<?php echo $isNumeric; ?>" type = "hidden">
-                                    <input name = "qryType" value = "educationUpdate" type = "hidden">
-                                    <input name = "submitUpdate<?php $uniqueKey; ?>" value = "Update" type = "submit">
+                                    <input name="uniqueKey" value="<?php echo $uniqueKey; ?>" type="hidden">
+                                    <input name="gradeType" value="<?php echo $isNumeric; ?>" type="hidden">
+                                    <input name="qryType" value="educationUpdate" type="hidden">
+                                    <input name="submitUpdate<?php $uniqueKey; ?>" value="Update" type="submit">
                                 </div>
                             </div>
                         </form>
@@ -560,10 +595,144 @@ require("connect.php");
         document.getElementById(id).style.display = "block";
     }
 
-        //Hide the relevant element
-        function hideElement(id) {
-            document.getElementById(id).style.display = "none";
+    //Hide the relevant element
+    function hideElement(id) {
+        document.getElementById(id).style.display = "none";
+    }
+
+
+    //Autocomplete code
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function (e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) {
+                return false;
+            }
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+                /*check if the item starts with the same letters as the text field value:*/
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function (e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function (e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
         }
+
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+    }
+
+    //Arrays containing relevant autocomplete material
+    var institutions = <?php echo json_encode($institutionArray);?>;
+    var subjects = <?php echo json_encode($subjectArray);?>;
+    var years = convertArrayToString(<?php echo json_encode($yearArray);?>);
+    var subjectLevels = <?php echo json_encode($subjectLevelArray);?>;
+    var subjectCodes = <?php echo json_encode($codeArray);?>;
+    var codeExtensions = convertArrayToString(<?php echo json_encode($extensionArray);?>);
+    var grades = <?php echo json_encode($gradeArray);?>;
+
+
+    /*initiate the autocomplete function on the "each" element, and pass along the countries array as possible autocomplete values:*/
+    autocomplete(document.getElementById("institution"), institutions);
+    autocomplete(document.getElementById("subject"), subjects);
+    autocomplete(document.getElementById("year"), years);
+    autocomplete(document.getElementById("subjectLevel"), subjectLevels);
+    autocomplete(document.getElementById("code"), subjectCodes);
+    autocomplete(document.getElementById("extension"), codeExtensions);
+    autocomplete(document.getElementById("grade"), grades);
+
+
+    //Convert array to string
+    function convertArrayToString(array) {
+        for (var i = 0; i < array.length; i++) {
+            array[i] = String(array[i]);
+        }
+        return array;
+    }
 
 </script>
 <!--Called last so that it renders at the top-->
