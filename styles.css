@@ -530,6 +530,9 @@ button {
   }
 }
 
+/*THE ADD RECORD DIVS*/
+
+
 
 
 /*GRID THAT HOLDS THE EDIT TABS*/
@@ -676,7 +679,7 @@ button {
 
 /*THE MODAL USED TO CREATE NEW ITEMS*/
 /* The Modal (background) */
-.newProjectModal {
+.newItemModal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -690,7 +693,7 @@ button {
 }
 
 /* Modal Content/Box */
-.newProjectModalContent {
+.newItemModalContent {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -699,15 +702,15 @@ button {
 }
 
 /* The Close Button */
-.closeNewProjectModal {
+.closeNewModal {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-.closeNewProjectModal:hover,
-.closeNewProjectModal:focus {
+.closeNewModal:hover,
+.closeNewModal:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;

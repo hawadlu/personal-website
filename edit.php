@@ -26,17 +26,160 @@ require("connect.php");
             Be aware that you may have to scroll down to the desired record while editing
         </p>
 
+        <!--Button for adding new items-->
+        <!-- Trigger/Open The Modal -->
+        <button id="newProjectButton">Create New Item</button>
+
+        <!-- The new project Modal -->
+        <div id="newProjectModal" class="newItemModal">
+
+            <!-- Modal content -->
+            <div class="newItemModalContent">
+                <span class="closeNewProjectModal">&times;</span>
+                <!--Load tabs based on the record being entered-->
+                <div class="edit-tabs">
+                    <div class="Education">
+                        <!--Make button grey by default-->
+                        <button id="addEducationTab" class="indexButton"
+                                style="display: block; border: none; border-radius: 0; background-color: #D3D3D3"
+                                onclick="showElement('addEducation')">Education
+                        </button>
+                    </div>
+                    <div class="Projects">
+                        <button id="addProjectTab" class="indexButton" style="display: block; border: none; border-radius: 0;"
+                                onclick="showElement('addProject')">Projects
+                        </button>
+                    </div>
+                </div>
+
+                    <div id = "addEducation" style="display: block">
+                        <p>
+                            Add education
+                        </p>
+                    </div>
+                    <div id = "addProject" style="display: none">
+                        <p>
+                            Add project
+                        </p>
+                        <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image. when using cookies-->
+                        <!--Upload files. Allow up to five-->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            Select image to upload:
+                            <input type="file" name="userFiles[]" id="" multiple="">
+                            <input type="submit" value="Upload" name="submit">
+                        </form>
+
+                        <!--Uploading the files-->
+                        <?php
+                        //Check the upload files form has been submitted
+                        if (isset($_FILES['userFiles'])) {
+//useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
+//Array of possible file upload errors
+                            $phpFileUploadErrors = array(
+                                0 => "The file uploaded successfully",
+                                1 => "The file exceeds the maximum file size defined in php.ini",
+                                2 => "The file exceeds the maximum file size defines in the HTML form",
+                                3 => "The uploaded file was only partially uploaded",
+                                4 => "No file was uploaded",
+                                6 => "Missing a temporary folder",
+                                7 => "Filed to write file to the disc",
+                                8 => "A php extension stopped the file from uploading"
+                            );
+
+                            $file_array = reArrayFiles($_FILES['userFiles']);
+//pre_r($file_array);
+
+                            for ($i = 0; $i < count($file_array); $i++) {
+//Check for errors
+                                if ($file_array[$i]['error']) {
+                                    ?>
+                                    <div class="alert alert-danger">
+                                        <?php echo $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']]; ?>
+                                    </div>
+                                    <?php
+
+//Check for extensions errors
+                                } else {
+//Allowable file types
+                                    $extensions = array("jpg", "png", "gif", "jpeg");
+                                    $file_ext = explode(".", $file_array[$i]["name"]);
+                                    $file_ext = end($file_ext);
+
+//Check if the extension is acceptable
+                                    if (!in_array($file_ext, $extensions)) {
+                                        ?>
+                                        <div class="alert alert-danger">
+                                            <?php echo $file_array[$i]["name"] . " Invalid file extension!"; ?>
+                                        </div>
+                                        <?php
+                                    } else {
+//File uploaded successfully
+//Check if the file already exists in the directory
+                                        if (!file_exists("images/" . $file_array[$i]["name"])) {
+//Move the file from the temporary directory to the intended directory
+                                            move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
+
+//Print a success message
+                                            ?>
+                                            <div class="alert alert-success">
+                                                <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]] ?>
+                                            </div>
+                                            <?php
+                                        } else {
+//Print message stating that the file already exists
+                                            ?>
+                                            <div class="alert alert-danger">
+                                                <?php echo $file_array[$i]["name"] . " already exists"; ?>
+                                            </div>
+                                            <?php
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //Converts $_FILES to a cleaner array when uploading multiple files
+                        function reArrayFiles($file_post)
+                        {
+                            $file_ary = array();
+                            $file_count = count($file_post['name']);
+                            $file_keys = array_keys($file_post);
+
+                            for ($i = 0; $i < $file_count; $i++) {
+                                foreach ($file_keys as $key) {
+                                    $file_ary[$i][$key] = $file_post[$key][$i];
+                                }
+                            }
+
+                            return $file_ary;
+                        }
+
+                        //Same as print_r surrounded with <pre></pre> HTML tags for better array readability
+                        function pre_r($array)
+                        {
+                            echo '<pre>';
+                            print_r($array);
+                            echo '</pre>';
+                        }
+
+
+                        ?>
+                    </div>
+            </div>
+
+        </div>
+
         <!--The edit tabs-->
         <div class="edit-tabs">
             <div class="Education">
                 <!--Make button grey by default-->
-                <button id="showEducation" class="indexButton"
+                <button id="educationTab" class="indexButton"
                         style="display: block; border: none; border-radius: 0; background-color: #D3D3D3"
                         onclick="showElement('editEducation')">Education
                 </button>
             </div>
             <div class="Projects">
-                <button id="showProjects" class="indexButton" style="display: block; border: none; border-radius: 0;"
+                <button id="projectTab" class="indexButton" style="display: block; border: none; border-radius: 0;"
                         onclick="showElement('editProjects')">Projects
                 </button>
             </div>
@@ -44,6 +187,7 @@ require("connect.php");
 
         <!--The div that contains the education edit. Shown by default-->
         <div id="editEducation" style="display: block">
+
             <?php
             //Perform the query to get the grades. Done here so that it is not repeated every time
             $dropdownGradeQuery = $con->prepare("SELECT grade.grade FROM grade ");
@@ -212,7 +356,7 @@ require("connect.php");
                                     <p class="alignTextLeft">
                                         <?php
                                         echo $subject;
-                                        ?>
+                                        ?>±
                                     </p>
                                 </div>
                             </div>
@@ -356,174 +500,8 @@ require("connect.php");
         <!--The div that contains the projects edit-->
         <div id="editProjects" style="display: none">
             <p>
-                Bye
+                Projects
             </p>
-        </div>
-
-        <!--Javascript to control what is shown-->
-        <script>
-            var elements = [];
-
-            function showElement(id) {
-//Hide the relevant elements
-                if (id === "editEducation") {
-                    document.getElementById("showProjects").style.backgroundColor = null;
-                    document.getElementById("showEducation").style.backgroundColor = "#D3D3D3";
-                    hideElement('editProjects');
-                } else if (id === 'editProjects') {
-                    hideElement('editEducation');
-                    document.getElementById("showEducation").style.backgroundColor = null;
-                    document.getElementById("showProjects").style.backgroundColor = "#D3D3D3";
-                }
-                document.getElementById(id).style.display = "block";
-            }
-
-            function hideElement(id) {
-                document.getElementById(id).style.display = "none";
-            }
-
-
-            // Get the modal
-            var modal = document.getElementById("myModal");
-
-            // Get the button that opens the modal
-            var btn = document.getElementById("myBtn");
-
-            // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
-
-            // When the user clicks on the button, open the modal
-            btn.onclick = function () {
-                modal.style.display = "block";
-            }
-
-            // When the user clicks on <span> (x), close the modal
-            span.onclick = function () {
-                modal.style.display = "none";
-            }
-
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        </script>
-
-        <!-- Trigger/Open The Modal -->
-        <button id="newProjectButton">Create new item</button>
-
-        <!-- The new project Modal -->
-        <div id="newProjectModal" class="newProjectModal">
-
-            <!-- Modal content -->
-            <div class="newProjectModalContent">
-                <span class="closeNewProjectModal">&times;</span>
-                <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image-->
-                <!--Upload files. Allow up to five-->
-                <form action="" method="post" enctype="multipart/form-data">
-                    Select image to upload:
-                    <input type="file" name="userFiles[]" id="" multiple="">
-                    <input type="submit" value="Upload" name="submit">
-                </form>
-
-                <!--Uploading the files-->
-                <?php
-                //Check the upload files form has been submitted
-                if (isset($_FILES['userFiles'])) {
-//useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
-//Array of possible file upload errors
-                    $phpFileUploadErrors = array(
-                        0 => "The file uploaded successfully",
-                        1 => "The file exceeds the maximum file size defined in php.ini",
-                        2 => "The file exceeds the maximum file size defines in the HTML form",
-                        3 => "The uploaded file was only partially uploaded",
-                        4 => "No file was uploaded",
-                        6 => "Missing a temporary folder",
-                        7 => "Filed to write file to the disc",
-                        8 => "A php extension stopped the file from uploading"
-                    );
-
-                    $file_array = reArrayFiles($_FILES['userFiles']);
-//pre_r($file_array);
-
-                    for ($i = 0; $i < count($file_array); $i++) {
-//Check for errors
-                        if ($file_array[$i]['error']) {
-                            ?>
-                            <div class="alert alert-danger">
-                                <?php echo $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']]; ?>
-                            </div>
-                            <?php
-
-//Check for extensions errors
-                        } else {
-//Allowable file types
-                            $extensions = array("jpg", "png", "gif", "jpeg");
-                            $file_ext = explode(".", $file_array[$i]["name"]);
-                            $file_ext = end($file_ext);
-
-//Check if the extension is acceptable
-                            if (!in_array($file_ext, $extensions)) {
-                                ?>
-                                <div class="alert alert-danger">
-                                    <?php echo $file_array[$i]["name"] . " Invalid file extension!"; ?>
-                                </div>
-                                <?php
-                            } else {
-//File uploaded successfully
-//Check if the file already exists in the directory
-                                if (!file_exists("images/" . $file_array[$i]["name"])) {
-//Move the file from the temporary directory to the intended directory
-                                    move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
-
-//Print a success message
-                                    ?>
-                                    <div class="alert alert-success">
-                                        <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]] ?>
-                                    </div>
-                                    <?php
-                                } else {
-//Print message stating that the file already exists
-                                    ?>
-                                    <div class="alert alert-danger">
-                                        <?php echo $file_array[$i]["name"] . " already exists"; ?>
-                                    </div>
-                                    <?php
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //Converts $_FILES to a cleaner array when uploading multiple files
-                function reArrayFiles($file_post)
-                {
-                    $file_ary = array();
-                    $file_count = count($file_post['name']);
-                    $file_keys = array_keys($file_post);
-
-                    for ($i = 0; $i < $file_count; $i++) {
-                        foreach ($file_keys as $key) {
-                            $file_ary[$i][$key] = $file_post[$key][$i];
-                        }
-                    }
-
-                    return $file_ary;
-                }
-
-                //Same as print_r surrounded with <pre></pre> HTML tags for better array readability
-                function pre_r($array)
-                {
-                    echo '<pre>';
-                    print_r($array);
-                    echo '</pre>';
-                }
-
-
-                ?>
-            </div>
-
         </div>
 
         <a href="logout.php">Logout</a>
@@ -533,30 +511,60 @@ require("connect.php");
 <script>
     //Code used to control the new item modal
     // Get the modal
-    var modal = document.getElementById("newProjectModal");
+    var itemModal = document.getElementById("newProjectModal");
 
     // Get the button that opens the modal
-    var btn = document.getElementById("newProjectButton");
+    var itemButton = document.getElementById("newProjectButton");
 
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("closeNewProjectModal")[0];
+    var itemSpan = document.getElementsByClassName("closeNewProjectModal")[0];
 
     // When the user clicks on the button, open the modal
-    btn.onclick = function () {
-        modal.style.display = "block";
+    itemButton.onclick = function () {
+        itemModal.style.display = "block";
     }
 
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        modal.style.display = "none";
+    itemSpan.onclick = function () {
+        itemModal.style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == itemModal) {
+            itemModal.style.display = "none";
         }
     }
+
+
+    function showElement(id) {
+        //Show the relevant element
+        if (id === "addEducation") {
+            document.getElementById("addProjectTab").style.backgroundColor = null;
+            document.getElementById("addEducationTab").style.backgroundColor = "#D3D3D3";
+            hideElement('addProject');
+        } else if (id === 'addProject') {
+            document.getElementById("addEducationTab").style.backgroundColor = null;
+            document.getElementById("addProjectTab").style.backgroundColor = "#D3D3D3";
+            hideElement('addEducation');
+        } else if (id === "editEducation") {
+            document.getElementById("projectTab").style.backgroundColor = null;
+            document.getElementById("educationTab").style.backgroundColor = "#D3D3D3";
+            hideElement('editProjects');
+        } else if (id === 'editProjects') {
+            document.getElementById("educationTab").style.backgroundColor = null;
+            document.getElementById("projectTab").style.backgroundColor = "#D3D3D3";
+            hideElement('editEducation');
+        }
+
+        document.getElementById(id).style.display = "block";
+    }
+
+        //Hide the relevant element
+        function hideElement(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
 </script>
 <!--Called last so that it renders at the top-->
 <?php
