@@ -1,3 +1,4 @@
+<!--TODO CREATE CONSISTENT VARIABLE NAMES ACROSS ALL PAGES-->
 <?php
     if (!isset($_COOKIE["CookiePolicy"]) || $_COOKIE["CookiePolicy"] != 1) {
             setcookie("CookiePolicy", 1, time() + 600);

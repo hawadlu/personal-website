@@ -1,9 +1,6 @@
 <?php
 //TODO make sure that adding grades works properly in all cases.
-
-
-
-
+//TODO add delete ability. When deleting records delete all Foreign keys that are not used by another record
 
 //Check if the user is logged in
 session_start();
@@ -14,9 +11,12 @@ if (!isset($_SESSION['loggedin'])) {
 
 require("connect.php");
 
+//Table names from the DB
+$tablesToCheck = ['institution', 'subjectLevel', 'year', 'subjectCode', 'codeExtension', 'grade'];
+
 //Check which type of query should be executed
 echo var_dump($_POST);
-if (isset($_POST['submitUpdate'])) {
+if (isset($_POST['submitEducationUpdate'])) {
     echo "Update record.";
 
     //Get the query type
@@ -25,54 +25,43 @@ if (isset($_POST['submitUpdate'])) {
 
     //Create the update education query
     if ($qryType == "educationUpdate") {
-        //Get the variables
-//        echo $_POST['institution'];
-//        echo $_POST['subject'];
-//        echo $_POST['subject-Year'];
-//        echo $_POST['subject-Level'];
-//        echo $_POST['code'];
-//        echo $_POST['code-Extension'];
-//        echo $_POST['uniqueKey'];
-//        echo "Grade type: " . $_POST['gradeType'];
-
-
         //Todo check if the things that the user entered are in the database. Add if they are not
-        //Todo add statement to add grades in the required manner. NCEA vs Uni
         //Todo add statement to return errors and success messages. use an error div to display them. Probably as a cookie that is displayed when the user is redirected.
-        //Check if the entered parameters exist in the database. Grades do not need to be checked as they are selected from a dropdown
-        $tablesToCheck = ['institution', 'subjectCode', 'codeExtension', 'subjectLevel', 'year', 'grade'];
+
+        //Values that will be inserted into the DB
         $valuesToCheck = [ $_POST['institution'],  $_POST['code'], $_POST['code-Extension'], $_POST['subject-Level'], $_POST['subject-Year'], $_POST['grade']];
 
+
         //Change grade to credits if required
-        if (is_numeric($_POST['grade']) && $tablesToCheck[5] == 'grade') {
-            $tablesToCheck[5] = "credits";
-            $valuesToCheck[5] = (int) $_POST['grade'];
-            //Updates from credits to grade
-        } elseif (!is_numeric($_POST['grade']) && $tablesToCheck[5] == 'credits') {
+        //todo check if credits and grade have been posted. Auto choose which one to use.
+        echo "Grade: " . $_POST['grade'];
+        echo "Credits: " . $_POST['credits'];
+
+        //Change the grade to be updated in required
+        if ($_POST['grade'] != "") {
             $tablesToCheck[5] = "grade";
+        } else if ($_POST['credits'] != "") {
+            $tablesToCheck[5] = "credits";
+            $valuesToCheck[5] = $_POST['credits'];
+        } else {
+            die("There was an error. Invalid grade input");
         }
+
+
+        ?><br><?php
+
+        echo "Tables to check: " . $tablesToCheck[0] . " " . $tablesToCheck[1] . " " .
+            $tablesToCheck[2] . " " . $tablesToCheck[3] . " " . $tablesToCheck[4]. " " . $tablesToCheck[5];
 
         $gradeUpdate = false; //Tracks if a grade has been updated
 
         //Iterate over each field to see if it already exists in the database
         for ($i = 0; $i < sizeof($tablesToCheck); $i++) {
             //perform a query to check if the record exists
-            ?><br><br><?php
-            $queryString = "SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'";
-            echo $queryString;
-            $query = $con->prepare($queryString);
-            $query->execute();
-            $query->bind_result($key, $result);
-            $query->store_result();
-            $recordCount = $query->num_rows();
-
-            //Print for debugging
             ?><br><?php
-            echo "Count: " . $recordCount;
-            while ($row=$query->fetch()) {
-                ?><br><?php
-                echo $result;
-            }
+            echo "Looking for records";
+            ?><br><?php
+            $recordCount = recordExists("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
 
             //Insert a new record if required
             if ($recordCount == 0) {
@@ -83,24 +72,16 @@ if (isset($_POST['submitUpdate'])) {
 
                 echo "Inserting new statement: ";
                     ?><br><?php
-                    $newRecordQuery = "INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") 
-                    VALUES (NULL, '" . $valuesToCheck[$i] . "')";
+                    newRecord("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") 
+                    VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
 
-                echo $newRecordQuery;
-
-                //execute the query
-                $newRecordQuery = $con->prepare($newRecordQuery);
-                $newRecordQuery->execute();
-
+                ?><br><?php
+                echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
                 ?><br><?php
                 $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
 
                 //Insert the new foreign key
-                $updateFKQuery = "UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " .  $_POST['uniqueKey'];
-                echo $updateFKQuery;
-                $updateFKQuery = $con->prepare($updateFKQuery);
-                $updateFKQuery->execute();
-                ?><br><?php
+                updateFK("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " .  $_POST['uniqueKey'], $con);
 
             } else {
                 //Updating the the record to the new values
@@ -109,31 +90,20 @@ if (isset($_POST['submitUpdate'])) {
                 ?><br><?php
 
                 //Get the new foreign key
+                echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheck[$i];
+                ?><br><?php
                 $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
 
                 //Update the foreign key in the primary table
-                $updateFKQuery = "UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " .  $_POST['uniqueKey'];
-                ?><br><?php
-                echo "Update FK query: " . $updateFKQuery;
-                $updateFKQuery = $con->prepare($updateFKQuery);
-                $updateFKQuery->execute();
-                ?><br><?php
+                updateFK("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " .  $_POST['uniqueKey'], $con);
 
                 //Update the grade/credits foreign keys
-                $gradeUpdateQuery = "";
                 if ($tablesToCheck[$i] == "credits") {
                     echo "Hello credits";
-                    $gradeUpdateQuery = "UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'];
+                    updateGrade("UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
                 } else if ($tablesToCheck[$i] == "grade") {
                     echo "Hello grade";
-                    $gradeUpdateQuery = "UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'];
-                }
-
-                if ($gradeUpdateQuery != "") {
-                    ?><br><?php
-                    echo $gradeUpdateQuery;
-                    $gradeUpdateQuery = $con->prepare($gradeUpdateQuery);
-                    $gradeUpdateQuery->execute();
+                    updateGrade("UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
                 }
 
             }
@@ -142,12 +112,173 @@ if (isset($_POST['submitUpdate'])) {
 
 }
 
+//Creating new records
+//Todo make sure that users cannot create duplicate records.
+if(isset($_POST["newEducationRecord"])) {
+    echo "New Record";
+    ?><br><?php
+    echo $_POST['newInstitution'];?><br><?php
+    echo $_POST['newSubject'];?><br><?php
+    echo $_POST['newSubjectYear'];?><br><?php
+    echo $_POST['newSubjectLevel'];?><br><?php
+    echo $_POST['newCode'];?><br><?php
+    echo $_POST['newCodeExtension'];?><br><?php
+    echo $_POST['newCredits'];?><br><?php
+    echo $_POST['newGrade'];?><br><?php
+
+    //Values that will be inserted into the database
+    $valuesToCheck = [ $_POST['newInstitution'], $_POST['newSubjectLevel'], $_POST['newSubjectYear'],  $_POST['newCode'], $_POST['newCodeExtension'], $_POST['newGrade']];
+    $foreignKeys = [];
+
+    //Used when inserting the grade and credits foreign keys
+    $gradeFK = 0;
+    $creditsFK = 0;
+
+    //Update the grade to be inserted if required
+    if ($_POST['newGrade'] != "") {
+        $tablesToCheck[5] = "grade";
+    } else if ($_POST['newCredits'] != "") {
+        $tablesToCheck[5] = "credits";
+        $valuesToCheck[5] = $_POST['newCredits'];
+    } else {
+        die("There was an error. Invalid grade input");
+    }
+
+    ?><br><?php
+    echo print_r($valuesToCheck);
+    ?><br><?php
+    echo print_r($tablesToCheck);
+    ?><br><?php
+
+
+    //This code iterates over each table looking for the corresponding foreign key. If it cannot find it is added to the DB
+    for ($i = 0; $i < sizeof($tablesToCheck); $i++) {
+        //perform a query to check if the record exists
+        ?><br><?php
+        echo "Looking for records";
+        ?><br><?php
+        $recordCount = recordExists("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
+
+        //The record does not exist. Create a new record
+        if ($recordCount == 0) {
+            ?><br><?php
+            echo "New Record required for value " . $valuesToCheck[$i];
+            ?><br><?php
+
+            //Create the new record
+            echo "Inserting new statement: ";
+            ?><br><?php
+            newRecord("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
+
+
+            ?><br><?php
+            echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
+            ?><br><?php
+
+            //Save the foreign key
+            $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
+            array_push($foreignKeys, $key);
+
+            //Update the grade/credits FK if required
+            if ($tablesToCheck[$i] == "grade") {
+                $gradeFK = $key;
+            } else if ($tablesToCheck[$i] == "credits") {
+                $creditsFK = $key;
+            }
+
+        //The record already exists
+        } else {
+            ?><br><?php
+            echo "Record already exists. Updating fields for " . $tablesToCheck[$i];
+            ?><br><?php
+
+            //Get the new foreign key
+            echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheck[$i];
+            ?><br><?php
+
+            //Save the foreign key
+            $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
+            array_push($foreignKeys, $key);
+
+            //Update the grade/credits FK if required
+            if ($tablesToCheck[$i] == "grade") {
+                $gradeFK = $key;
+            } else if ($tablesToCheck[$i] == "credits") {
+                $creditsFK = $key;
+            }
+        }
+    }
+
+    ?><br><?php
+    echo "Foreign keys: " . print_r($foreignKeys);
+
+    //Create the new record
+    echo "grade: " . $gradeFK;
+    ?><br><?php
+
+
+    newRecord("INSERT INTO education (uniqueKey, institutionFK, subject, gradeFk, subjectLevelFK, yearFK, subjectCodeFK, creditsFK, codeExtensionFK) 
+                VALUES (NULL, " . $foreignKeys[0] . ", '" . $_POST['newSubject'] . "', " . $gradeFK . ", " . $foreignKeys[1] . ", 
+" . $foreignKeys[2] . ", " . $foreignKeys[3] . ", " . $creditsFK . ", " . $foreignKeys[4] . ")", $con);
+
+
+
+}
+
+//function to update the grades
+function updateGrade($query, $con) {
+    ?><br><?php
+    echo $query;
+    $query = $con->prepare($query);
+    $query->execute();
+}
+
+//Creates a new records
+function newRecord($query, $con){
+    echo $query;
+
+    //execute the query
+    $newRecordQuery = $con->prepare($query);
+    $newRecordQuery->execute();
+}
+
+//Checks if a record exists in a linked table. Returns the number of records
+function recordExists($query, $con) {
+    echo $query;
+    $key = "";
+    $result = "";
+    $query = $con->prepare($query);
+    $query->execute();
+    $query->bind_result($key, $result);
+    $query->store_result();
+    $recordCount = $query->num_rows();
+
+    //Print for debugging
+    ?><br><?php
+    echo "Count: " . $recordCount;
+    while ($row=$query->fetch()) {
+        ?><br><?php
+        echo $result;
+    }
+    return $recordCount;
+}
+
+//Updates the specified foreign key
+function updateFK($query, $con) {
+    echo $query;
+    $query = $con->prepare($query);
+    $query->execute();
+    ?><br><?php
+}
+
 //Function that executes a query and returns the foreign key
 function getFK($table, $value, $con) {
+    echo "Value: " . $value;
+    ?><br><?php
     $primary = null;
     $val = null;
     $foreignKeyQuery = "SELECT * FROM " . $table . " WHERE " . $table . "." . $table . " = '" . $value . "'";
-    echo $foreignKeyQuery;
+    echo "FK QUERY: " . $foreignKeyQuery;
     $foreignKeyQuery = $con->prepare($foreignKeyQuery);
     $foreignKeyQuery->execute();
     $foreignKeyQuery->bind_result($primary, $val);
@@ -157,7 +288,9 @@ function getFK($table, $value, $con) {
         ?><br><?php
         $key = $primary;
     }
+    ?><br><?php
     echo "FK: " . $key;
+    ?><br><?php
     return $key;
 }
 
