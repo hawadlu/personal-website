@@ -29,7 +29,7 @@ if (isset($_POST['submitEducationUpdate'])) {
         //Todo add statement to return errors and success messages. use an error div to display them. Probably as a cookie that is displayed when the user is redirected.
 
         //Values that will be inserted into the DB
-        $valuesToCheck = [ $_POST['institution'],  $_POST['code'], $_POST['code-Extension'], $_POST['subject-Level'], $_POST['subject-Year'], $_POST['grade']];
+        $valuesToCheck = [ $_POST['institution'], $_POST['subject-Level'], $_POST['subject-Year'],  $_POST['code'], $_POST['code-Extension'], $_POST['grade']];
 
 
         //Change grade to credits if required
@@ -108,6 +108,10 @@ if (isset($_POST['submitEducationUpdate'])) {
 
             }
         }
+
+        //Update the record name
+        ?><br><?php
+        updateTableValue('education', 'subject', $_POST['subject'], 'uniqueKey', $_POST['uniqueKey'], $con);
     }
 
 }
@@ -223,6 +227,15 @@ if(isset($_POST["newEducationRecord"])) {
 
 
 
+}
+
+//Updates the specified value in the specified table
+function updateTableValue($table, $column, $value, $conditionalColumn, $key, $con) {
+    $query = "UPDATE " . $table . " SET " . $column . " = '" . $value . "' WHERE " . $conditionalColumn . " = " . $key;
+    echo "Update column query: " . $query;
+
+    $query = $con->prepare($query);
+    $query->execute();
 }
 
 //function to update the grades
