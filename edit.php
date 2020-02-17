@@ -882,7 +882,7 @@ require("footer.php");
 //Show any error messages if required
 if ($errorMessage != null) {
     ?>
-    <div class="alert alert-danger" style="position: absolute">
+    <div class="alert alert-danger" style="position: fixed">
         <strong>Operation failed!</strong> <?php echo $errorMessage;?>
     </div>
     <?
