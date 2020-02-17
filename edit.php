@@ -613,7 +613,6 @@ function getArray($query, $con)
                                 <div class="save-Record">
                                     <!--Tell process.php which type of query to execute-->
                                     <input name="uniqueKey" value="<?php echo $uniqueKey; ?>" type="hidden">
-                                    <input name="qryType" value="educationUpdate" type="hidden">
                                     <input name="submitEducationUpdate<?php $uniqueKey; ?>" value="Update" type="submit">
                                 </div>
                             </div>
