@@ -14,35 +14,52 @@ require("connect.php");
 //Table names from the DB
 $tablesToCheck = ['institution', 'subjectLevel', 'year', 'subjectCode', 'codeExtension', 'grade'];
 
+//Used when looking for duplicate records
+$tableColumns = ['institutionFk', 'subject', 'gradeFK', 'subjectLevelFK', 'yearFK', 'subjectCodeFK', 'creditsFk', 'codeExtensionFK'];
+
 //Check which type of query should be executed
 echo var_dump($_POST);
 if (isset($_POST['submitEducationUpdate'])) {
+    //Variables for each posted value. Spaces stripped appropriately
+    $postedInstitution = $_POST['institution'];
+    $postedSubject = $_POST['subject'];
+    $postedSubjectYear = stripSpaces($_POST['subjectYear']);
+    $postedSubjectLevel = $_POST['subjectLevel'];
+    $postedCode = stripSpaces($_POST['code']);
+    $postedCodeExtension = stripSpaces($_POST['codeExtension']);
+    $postedCredits = stripSpaces($_POST['credits']);
+    $postedGrade = stripSpaces($_POST['grade']);
+
     echo "Update record.";
 
-    //Get the query type
-    $qryType = $_POST['qryType'];
-    $query = "";
+    //Error check all the values. Include each value, the field name and a flag of the expected type in the array.
+    findInvalid('education',
+        [[$postedInstitution, 'institution', 'string'],
+            [$postedSubject, 'subject', 'string'],
+            [$postedSubjectYear, 'subjectYear', 'int'],
+            [$postedSubjectLevel, 'subjectLevel', 'string'],
+            [$postedCode, 'subjectCode', 'string'],
+            [$postedCodeExtension, 'codeExtension', 'int'],
+            [$postedCredits, 'credits', 'int'],
+            [$postedGrade, 'grade', 'string']]);
+
 
     //Todo add statement to return errors and success messages. use an error div to display them. Probably as a cookie that is displayed when the user is redirected.
 
     //Values that will be inserted into the DB
-    $valuesToCheck = [$_POST['institution'], $_POST['subject-Level'], $_POST['subject-Year'], $_POST['code'], $_POST['code-Extension'], $_POST['grade']];
-
-    //Used when looking for duplicate records
-    $tableColumns = ['institutionFk', 'subject', 'gradeFK', 'subjectLevelFK', 'yearFK', 'subjectCodeFK', 'creditsFk', 'codeExtensionFK'];
-
+    $valuesToCheck = [$postedInstitution, $postedSubjectLevel, $postedSubjectYear, $postedCode, $postedCodeExtension, $postedGrade];
 
     //Change grade to credits if required
     //todo check if credits and grade have been posted. Auto choose which one to use.
-    echo "Grade: " . $_POST['grade'];
-    echo "Credits: " . $_POST['credits'];
+    echo "Grade: " . $postedGrade;
+    echo "Credits: " . $postedCredits;
 
     //Change the grade to be updated in required
-    if ($_POST['grade'] != "") {
+    if ($postedGrade != "") {
         $tablesToCheck[5] = "grade";
-    } else if ($_POST['credits'] != "") {
+    } else if ($postedCredits != "") {
         $tablesToCheck[5] = "credits";
-        $valuesToCheck[5] = $_POST['credits'];
+        $valuesToCheck[5] = $postedCredits;
     } else {
         die("There was an error. Invalid grade input");
     }
@@ -120,13 +137,13 @@ if (isset($_POST['submitEducationUpdate'])) {
     }
 
     //Look for duplicates
-    $values = [$foreignKeys[0], $_POST['subject'], $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
+    $values = [$foreignKeys[0], $postedSubject, $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
     if (!findDuplicate('education', $tableColumns, $values, $con)) {
         echo "No duplicates found";
 
         //Update the record name
         ?><br><?php
-        updateTableValue('education', 'subject', $_POST['subject'], 'uniqueKey', $_POST['uniqueKey'], $con);
+        updateTableValue('education', 'subject', $postedSubject, 'uniqueKey', $_POST['uniqueKey'], $con);
     } else {
         echo "Duplicates found!";
         //todo return an error message
@@ -138,17 +155,28 @@ if (isset($_POST['submitEducationUpdate'])) {
 if (isset($_POST["newEducationRecord"])) {
     echo "New Record";
     ?><br><?php
-    echo $_POST['newInstitution']; ?><br><?php
-    echo $_POST['newSubject']; ?><br><?php
-    echo $_POST['newSubjectYear']; ?><br><?php
-    echo $_POST['newSubjectLevel']; ?><br><?php
-    echo $_POST['newCode']; ?><br><?php
-    echo $_POST['newCodeExtension']; ?><br><?php
-    echo $_POST['newCredits']; ?><br><?php
-    echo $_POST['newGrade']; ?><br><?php
+
+    //Set variables for the posted values
+    $postedNewInstitution = $_POST['newInstitution'];
+    $postedNewSubject = $_POST['newSubject'];
+    $postedNewSubjectYear = stripSpaces($_POST['newSubjectYear']);
+    $postedNewSubjectLevel = $_POST['newSubjectLevel'];
+    $postedNewCode = stripSpaces($_POST['newCode']);
+    $postedNewCodeExtension = stripSpaces($_POST['newCodeExtension']);
+    $postedNewCredits = stripSpaces($_POST['newCredits']);
+    $postedNewGrade = stripSpaces($_POST['newGrade']);
+
+    echo $postedNewInstitution; ?><br><?php
+    echo $postedNewSubject; ?><br><?php
+    echo $postedNewSubjectYear; ?><br><?php
+    echo $postedNewSubjectLevel; ?><br><?php
+    echo $postedNewCode; ?><br><?php
+    echo $postedNewCodeExtension; ?><br><?php
+    echo $postedNewCredits; ?><br><?php
+    echo $postedNewGrade; ?><br><?php
 
     //Values that will be inserted into the database
-    $valuesToCheck = [$_POST['newInstitution'], $_POST['newSubjectLevel'], $_POST['newSubjectYear'], $_POST['newCode'], $_POST['newCodeExtension'], $_POST['newGrade']];
+    $valuesToCheck = [$postedNewInstitution, $postedNewSubjectLevel, $postedNewSubjectYear, $postedNewCode, $postedNewCodeExtension, $postedNewGrade];
     $foreignKeys = [];
 
     //Used when inserting the grade and credits foreign keys
@@ -156,11 +184,11 @@ if (isset($_POST["newEducationRecord"])) {
     $creditsFK = 0;
 
     //Update the grade to be inserted if required
-    if ($_POST['newGrade'] != "") {
+    if ($postedNewGrade != "") {
         $tablesToCheck[5] = "grade";
-    } else if ($_POST['newCredits'] != "") {
+    } else if ($postedNewCredits != "") {
         $tablesToCheck[5] = "credits";
-        $valuesToCheck[5] = $_POST['newCredits'];
+        $valuesToCheck[5] = $postedNewCredits;
     } else {
         die("There was an error. Invalid grade input");
     }
@@ -238,13 +266,13 @@ if (isset($_POST["newEducationRecord"])) {
     ?><br><?php
 
     //Check to see if a duplicate record exists
-    $values = [$foreignKeys[0], $_POST['newSubject'], $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
+    $values = [$foreignKeys[0], $postedNewSubject, $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
     if (!findDuplicate('education', $tableColumns, $values, $con)) {
         echo "No duplicates found";
 
         //Create the new record
         newRecord("INSERT INTO education (uniqueKey, institutionFK, subject, gradeFk, subjectLevelFK, yearFK, subjectCodeFK, creditsFK, codeExtensionFK)
-        VALUES (NULL, " . $foreignKeys[0] . ", '" . $_POST['newSubject'] . "', " . $gradeFK . ", " . $foreignKeys[1] . ",
+        VALUES (NULL, " . $foreignKeys[0] . ", '" . $postedNewSubject . "', " . $gradeFK . ", " . $foreignKeys[1] . ",
     " . $foreignKeys[2] . ", " . $foreignKeys[3] . ", " . $creditsFK . ", " . $foreignKeys[4] . ")", $con);
     } else {
         echo "Duplicates found!";
@@ -253,6 +281,179 @@ if (isset($_POST["newEducationRecord"])) {
 
 
 }
+
+//Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
+function findInvalid($type, $values) {
+    $gradeValid = false; //flag used to determine if the grade is valid
+    ?><br><?php
+    echo "Check invalid for type: " . $type;
+    ?><br><?php
+    echo "Check for values of array size: " . sizeof($values);
+    ?><br><?php
+    for ($i = 0; $i < sizeof($values); $i++) {
+        ?><br><?php
+        echo $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2];
+
+        //Look for illegal characters
+        if (containsIllegalCharacter($values[$i][0]) != null) {
+            ?><br><?php
+            die("Illegal character " . containsIllegalCharacter($values[$i][0]));
+
+            //Check to see if credits and grade are valid
+        } else if (($values[$i][1] == 'credits' || $values[$i][1] == 'grade') && !$gradeValid) {
+            ?><br><?php
+            echo "Looking at: " . $values[$i][1];
+            ?><br><?php
+
+            //Validating the grade and credits
+            //First check to see if both fields are empty
+            $creditsPos = findIn2dArray($values, 'credits');
+            $gradePos = findIn2dArray($values, 'grade');
+
+            echo "Credits at: " . $creditsPos . " empty = " . isEmpty($values[$creditsPos][0]);
+            ?><br><?php
+            echo "Grades at: " . $gradePos . " empty = " . isEmpty($values[$gradePos][0]);
+            ?><br><?php
+
+            //No grades have been entered
+            if (isEmpty($values[$creditsPos][0]) && isEmpty($values[$gradePos][0])) {
+                ?><br><?php
+                die("Grade cannot be empty!");
+
+                //Both grades have been entered
+            } else if (!isEmpty($values[$creditsPos][0]) && !isEmpty($values[$gradePos][0])) {
+                ?><br><?php
+                die("You can only enter one grade!");
+
+                //Check to see if the entered grades match the specified types
+            } else {
+                if ($values[$i][1] == 'credits' && !isEmpty($values[$i][0])) {
+                    //Check that the credits are numeric.
+                    if (!isType($values[$i][2], $values[$i][0])) {
+                        ?><br><?php
+                        die("Credits must be numeric");
+
+                        //Check for any decimal points
+                    } else if (strpos($values[$i][0], '.') !== false) {
+                        ?><br><?php
+                        die("Credits must be a whole number");
+
+                        //Look for negative numbers
+                    } else if ((int)$values[$i][0] < 0) {
+                        ?><br><?php
+                        die("Credits cannot be negative");
+
+                        //Look for numbers that are too high
+                    } else if ((int)$values[$i][0] > 50) {
+                        ?><br><?php
+                        die("That's too many credits!");
+                    } else {
+                        $gradeValid = true;
+                    }
+                } else if ($values[$i][1] == 'grade' && !isEmpty($values[$i][0])) {
+                    $gpaGrades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'E', 'F'];
+                    echo "Checking grade";
+                    //Check that the grades are not numeric
+                    if (!isType($values[$i][2], $values[$i][0])) {
+                        ?><br><?php
+                        die("Grades cannot be numeric");
+                    } else if (!isMemberOf($values[$i][0], $gpaGrades)) {
+                        ?><br><?php
+                        //Compile the error message
+                        $errorMsg = $gpaGrades[0];
+                        for ($i = 1; $i < sizeof($gpaGrades); $i++) {
+                            $errorMsg = $errorMsg . ", " . $gpaGrades[$i];
+                        }
+
+                        die("Gpa grades must be one of the following values: " . $errorMsg);
+                    } else {
+                        $gradeValid = true;
+                    }
+                }
+            }
+            //Test to see if the value is empty ignore if a valid grade has been entered
+        } else if (isEmpty($values[$i][0]) && !$gradeValid) {
+            ?><br><?php
+            die("You cannot have an empty value!");
+
+            //Look for values that do not match their specified type
+        } else if (!isType($values[$i][2], $values[$i][0])) {
+            ?><br><?php
+            die($values[$i][1] . " should be of type " . $values[$i][2]);
+        }
+    }
+}
+
+//Checks to see if a value is a member of the supplied values. returns true if it is.
+function isMemberOf($value, $parameters) {
+    for ($i = 0; $i < sizeof($parameters); $i++) {
+        if (strpos($parameters[$i], $value) !== false) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//Checks to see if a value is of the specified type. Returns true if it is, false otherwise
+function isType($type, $value) {
+    ?><br><?php
+    echo "Checking type: " . $type;
+
+    //Checking for strings that should be an int
+    if ($type == 'int') {
+        //Remove any spaces
+        if (is_numeric($value)) {
+            return true;
+        }
+
+        //checking for strings that should not be an int
+    } else if ($type == 'string') {
+        if (!is_numeric($value)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//Takes a value and checks if it contains any illegal characters mark of any kind. Returns the illegal character if it does, true if it does not
+function containsIllegalCharacter($value) {
+    //echo " Checking value " . $value . " for illegal characters";
+    $characters = ['“', '”', '"', '"', '‘', '’', "'", "'", '«', '»', '「', '」'];
+    for ($i = 0; $i < sizeof($characters); $i++) {
+        //Check if the character is contained in the value
+        if (strpos($value, $characters[$i]) !== false) {
+            //echo " contains: " . $characters[$i];
+            return $characters[$i];
+        }
+    }
+
+    //Return false
+    return null;
+}
+
+//Takes a value and checks to see if it is empty. Return true if it is
+function isEmpty($value) {
+    if (sizeof($value) == 0 || $value == "") {
+        return true;
+    }
+    return false;
+}
+
+//Takes a 2d array and returns the position of a specified value
+function findIn2dArray($array, $value) {
+    //Iterate over the primary array
+    for ($i = 0; $i < sizeof($array); $i++) {
+        //Iterate over the secondary array
+        for ($j = 0; $j < sizeof($array[$i]); $j++) {
+            if ($array[$i][$j] == $value) {
+                return $i;
+            }
+        }
+    }
+    return false;
+}
+
 
 //Updates the specified value in the specified table
 function updateTableValue($table, $column, $value, $conditionalColumn, $key, $con)
@@ -381,6 +582,11 @@ function getFK($table, $value, $con)
     echo "FK: " . $key;
     ?><br><?php
     return $key;
+}
+
+//Takes a value, strips the spaces and returns it
+function stripSpaces($value) {
+    return str_replace(' ', '', $value);
 }
 
 //Manual redirect.

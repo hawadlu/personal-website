@@ -536,11 +536,11 @@ function getArray($query, $con)
                                            value="<?php echo $subject; ?>" required>
                                 </div>
                                 <div class="add-Subject-Year autocomplete">
-                                    <input id="year" class="textInput" type="number" name="subject-Year"
+                                    <input id="year" class="textInput" type="number" name="subjectYear"
                                            value="<?php echo $relevantYear; ?>" required>
                                 </div>
                                 <div class="add-Subject-Level autocomplete">
-                                    <input id="subjectLevel" class="textInput" type="text" name="subject-Level"
+                                    <input id="subjectLevel" class="textInput" type="text" name="subjectLevel"
                                            value="<?php echo $subjectLevel; ?>" required>
                                 </div>
                                 <div class="add-Code autocomplete">
@@ -548,7 +548,7 @@ function getArray($query, $con)
                                            value="<?php echo $code; ?>" required>
                                 </div>
                                 <div class="add-Code-Extension autocomplete">
-                                    <input id="extension" class="textInput" type="text" name="code-Extension"
+                                    <input id="extension" class="textInput" type="text" name="codeExtension"
                                            value="<?php echo $codeExtension; ?> " required>
                                 </div>
                                 <div class="add-Grade">
