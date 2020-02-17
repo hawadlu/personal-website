@@ -332,7 +332,7 @@ function findInvalid($type, $values) {
                 //Both grades have been entered
             } else if (!isEmpty($values[$creditsPos][0]) && !isEmpty($values[$gradePos][0])) {
                 ?><br><?php
-                redirectWithError("You can only enter one credits/grade value. For credits: " . $values[$creditsPos][0] . " and grade: " . $values[$gradePos][0],  'edit.php');
+                redirectWithError("You can only enter one credits/grade value. For credits: " . $values[$creditsPos][0] . " and grade: " . $values[$gradePos][0], 'edit.php');
                 //die("You can only enter one grade!");
 
                 //Check to see if the entered grades match the specified types
@@ -341,25 +341,25 @@ function findInvalid($type, $values) {
                     //Check that the credits are numeric.
                     if (!isType($values[$i][2], $values[$i][0])) {
                         ?><br><?php
-                        redirectWithError("Credits must be numeric. For credits: " . $values[$creditsPos][0],  'edit.php');
+                        redirectWithError("Credits must be numeric. For credits: " . $values[$creditsPos][0], 'edit.php');
                         //die("Credits must be numeric");
 
                         //Check for any decimal points
                     } else if (strpos($values[$i][0], '.') !== false) {
                         ?><br><?php
-                        redirectWithError("Credits must be a whole number: For credits: " . $values[$creditsPos][0],  'edit.php');
+                        redirectWithError("Credits must be a whole number: For credits: " . $values[$creditsPos][0], 'edit.php');
                         //die("Credits must be a whole number");
 
                         //Look for negative numbers
                     } else if ((int)$values[$i][0] < 0) {
                         ?><br><?php
-                        redirectWithError("Credits cannot be negative. For credits: " . $values[$creditsPos][0],  'edit.php');
+                        redirectWithError("Credits cannot be negative. For credits: " . $values[$creditsPos][0], 'edit.php');
                         //die("Credits cannot be negative");
 
                         //Look for numbers that are too high
                     } else if ((int)$values[$i][0] > 50) {
                         ?><br><?php
-                        redirectWithError("Credits cannot be greater than 50. For value: " . $values[$creditsPos][0],  'edit.php');
+                        redirectWithError("Credits cannot be greater than 50. For value: " . $values[$creditsPos][0], 'edit.php');
                         //die("That's too many credits!");
                     } else {
                         $gradeValid = true;
@@ -370,7 +370,7 @@ function findInvalid($type, $values) {
                     //Check that the grades are not numeric
                     if (!isType($values[$i][2], $values[$i][0])) {
                         ?><br><?php
-                        redirectWithError("GPA cannot be numeric. For value: " . $values[$gradePos][0],  'edit.php');
+                        redirectWithError("GPA cannot be numeric. For value: " . $values[$gradePos][0], 'edit.php');
                         //die("Grades cannot be numeric");
                     } else if (!isMemberOf($values[$i][0], $gpaGrades)) {
                         ?><br><?php
@@ -379,13 +379,27 @@ function findInvalid($type, $values) {
                         for ($i = 1; $i < sizeof($gpaGrades); $i++) {
                             $errorMsg = $errorMsg . ", " . $gpaGrades[$i];
                         }
-                        redirectWithError("Invalid GPA. For value: " . $values[$gradePos][0] . ". GPA grades must be one of the following... " . $errorMsg,  'edit.php');
+                        redirectWithError("Invalid GPA. For value: " . $values[$gradePos][0] . ". GPA grades must be one of the following... " . $errorMsg, 'edit.php');
                         //die("Gpa grades must be one of the following values: " . $errorMsg);
                     } else {
                         $gradeValid = true;
                     }
                 }
             }
+
+            //Error checking the year
+        } else if ($values[$i][1] == 'subjectYear') {
+            echo "year check";
+            $currentYear = date('Y');
+            $enteredYear = $values[$i][0];
+            $yearDiff = abs($currentYear - $enteredYear);
+            //Check for years in the future
+            if ($enteredYear > $currentYear) {
+                redirectWithError("Can you see the future? The year " . $enteredYear . " is " . $yearDiff . " years from now.", 'edit.php');
+            } else if ($enteredYear < ($currentYear - 100)) {
+                redirectWithError("More than a lifetime ago. The year " . $enteredYear . " occurred " . $yearDiff . " years ago. Are you a time traveler?", 'edit.php');
+            }
+
             //Test to see if the value is empty ignore if a valid grade has been entered
         } else if (isEmpty($values[$i][0]) && !$gradeValid) {
             ?><br><?php
