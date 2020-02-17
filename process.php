@@ -32,16 +32,16 @@ if (isset($_POST['submitEducationUpdate'])) {
 
     echo "Update record.";
 
-    //Error check all the values. Include each value, the field name and a flag of the expected type in the array.
+    //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
     findInvalid('education',
-        [[$postedInstitution, 'institution', 'string'],
-            [$postedSubject, 'subject', 'string'],
-            [$postedSubjectYear, 'subjectYear', 'int'],
-            [$postedSubjectLevel, 'subjectLevel', 'string'],
-            [$postedCode, 'subjectCode', 'string'],
-            [$postedCodeExtension, 'codeExtension', 'int'],
-            [$postedCredits, 'credits', 'int'],
-            [$postedGrade, 'grade', 'string']]);
+        [[$postedInstitution, 'institution', 'string', 40],
+            [$postedSubject, 'subject', 'string', 100],
+            [$postedSubjectYear, 'subjectYear', 'int', 4],
+            [$postedSubjectLevel, 'subjectLevel', 'string', 20],
+            [$postedCode, 'subjectCode', 'string', 10],
+            [$postedCodeExtension, 'codeExtension', 'int', 4],
+            [$postedCredits, 'credits', 'int', 2],
+            [$postedGrade, 'grade', 'string', 2]]);
 
 
     //Todo add statement to return errors and success messages. use an error div to display them. Probably as a cookie that is displayed when the user is redirected.
@@ -294,12 +294,19 @@ function findInvalid($type, $values) {
         ?><br><?php
         echo $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2];
 
+        //Array used when checking the length of the string. Declared here to avoid multiple function calls
+        $checkLenArray = checkLength($values[$i][0], $values[$i][3]);
+
         //Look for illegal characters
         if (containsIllegalCharacter($values[$i][0]) != null) {
             ?><br><?php
 
             //Set the cookie and redirect
-            redirectWithError("Illegal character " . containsIllegalCharacter($values[$i][0]), 30, 'edit.php');
+            redirectWithError("Illegal character (" . containsIllegalCharacter($values[$i][0]) . "). For value: " . $values[$i][0], 'edit.php');
+
+            //Check to see if the string is shorter that the maximum length allowed
+        } else if ($checkLenArray[0] == false) {
+            redirectWithError("Input too large. For value: " . $checkLenArray[2] . "(" . $checkLenArray[1] . "). Max length for field " . $values[$i][1] . " is " . $values[$i][3], 'edit.php');
 
             //Check to see if credits and grade are valid
         } else if (($values[$i][1] == 'credits' || $values[$i][1] == 'grade') && !$gradeValid) {
@@ -320,12 +327,13 @@ function findInvalid($type, $values) {
             //No grades have been entered
             if (isEmpty($values[$creditsPos][0]) && isEmpty($values[$gradePos][0])) {
                 ?><br><?php
-                die("Grade cannot be empty!");
+                //die("Grade cannot be empty!");
 
                 //Both grades have been entered
             } else if (!isEmpty($values[$creditsPos][0]) && !isEmpty($values[$gradePos][0])) {
                 ?><br><?php
-                die("You can only enter one grade!");
+                redirectWithError("You can only enter one credits/grade value. For credits: " . $values[$creditsPos][0] . " and grade: " . $values[$gradePos][0],  'edit.php');
+                //die("You can only enter one grade!");
 
                 //Check to see if the entered grades match the specified types
             } else {
@@ -333,22 +341,26 @@ function findInvalid($type, $values) {
                     //Check that the credits are numeric.
                     if (!isType($values[$i][2], $values[$i][0])) {
                         ?><br><?php
-                        die("Credits must be numeric");
+                        redirectWithError("Credits must be numeric. For credits: " . $values[$creditsPos][0],  'edit.php');
+                        //die("Credits must be numeric");
 
                         //Check for any decimal points
                     } else if (strpos($values[$i][0], '.') !== false) {
                         ?><br><?php
-                        die("Credits must be a whole number");
+                        redirectWithError("Credits must be a whole number: For credits: " . $values[$creditsPos][0],  'edit.php');
+                        //die("Credits must be a whole number");
 
                         //Look for negative numbers
                     } else if ((int)$values[$i][0] < 0) {
                         ?><br><?php
-                        die("Credits cannot be negative");
+                        redirectWithError("Credits cannot be negative. For credits: " . $values[$creditsPos][0],  'edit.php');
+                        //die("Credits cannot be negative");
 
                         //Look for numbers that are too high
                     } else if ((int)$values[$i][0] > 50) {
                         ?><br><?php
-                        die("That's too many credits!");
+                        redirectWithError("Credits cannot be greater than 50. For value: " . $values[$creditsPos][0],  'edit.php');
+                        //die("That's too many credits!");
                     } else {
                         $gradeValid = true;
                     }
@@ -358,7 +370,8 @@ function findInvalid($type, $values) {
                     //Check that the grades are not numeric
                     if (!isType($values[$i][2], $values[$i][0])) {
                         ?><br><?php
-                        die("Grades cannot be numeric");
+                        redirectWithError("GPA cannot be numeric. For value: " . $values[$gradePos][0],  'edit.php');
+                        //die("Grades cannot be numeric");
                     } else if (!isMemberOf($values[$i][0], $gpaGrades)) {
                         ?><br><?php
                         //Compile the error message
@@ -366,8 +379,8 @@ function findInvalid($type, $values) {
                         for ($i = 1; $i < sizeof($gpaGrades); $i++) {
                             $errorMsg = $errorMsg . ", " . $gpaGrades[$i];
                         }
-
-                        die("Gpa grades must be one of the following values: " . $errorMsg);
+                        redirectWithError("Invalid GPA. For value: " . $values[$gradePos][0] . ". GPA grades must be one of the following... " . $errorMsg,  'edit.php');
+                        //die("Gpa grades must be one of the following values: " . $errorMsg);
                     } else {
                         $gradeValid = true;
                     }
@@ -376,11 +389,13 @@ function findInvalid($type, $values) {
             //Test to see if the value is empty ignore if a valid grade has been entered
         } else if (isEmpty($values[$i][0]) && !$gradeValid) {
             ?><br><?php
-            die("You cannot have an empty value!");
+            redirectWithError("Value cannot be empty. For field: " . $values[$i][1],  'edit.php');
+            //die("You cannot have an empty value!");
 
             //Look for values that do not match their specified type
         } else if (!isType($values[$i][2], $values[$i][0])) {
             ?><br><?php
+            redirectWithError("Invalid type. For value: " . $values[$i][0] . ". This value should be of type " . $values[$i][2],  'edit.php');
             die($values[$i][1] . " should be of type " . $values[$i][2]);
         }
     }
@@ -388,22 +403,20 @@ function findInvalid($type, $values) {
     die("Dead");
 }
 
-//Redirects the user to the specified page with an error cookie set. Expiry is measured in seconds
-function redirectWithError($cookieValue, $cookieExpiry, $redirectTo) {
+//Redirects the user to the specified page with an error cookie set.
+function redirectWithError($cookieValue, $redirectTo) {
     //Add a flag to the front of the cookie describing what it is
     $cookieValue = "ERROR: " . $cookieValue;
 
     //Set the cookie
     echo "Setting cookie with error " . $cookieValue;
     setcookie('errorMsg', $cookieValue);
-    if (isset($_COOKIE['errorMsg'])) {
-        ?><br><?php
-        echo "Value: " . $cookieValue;
+//    if (isset($_COOKIE['errorMsg'])) {
 //        ?><!--<br>--><?php
-//        die("cookie set");
-    } else {
-        die("The cookie is not set");
-    }
+//        echo "Value: " . $cookieValue;
+//    } else {
+//        die("The cookie is not set");
+//    }
 
     //Redirect
     header("location: " . $redirectTo);
@@ -411,6 +424,20 @@ function redirectWithError($cookieValue, $cookieExpiry, $redirectTo) {
     //Stop all execution
     exit();
 }
+
+//Checks the maximum length of a value. returns an array with a true/false flag, the values length and a shortened version of the value
+function checkLength($value, $maxLen) {
+    if (strlen($value) > $maxLen) {
+        return [false, strlen($value), trimString($value, $maxLen)];
+    }
+    return [true];
+}
+
+//shortens a value to 40 chars including (...). Returns the result.
+function trimString($value) {
+    return substr($value, 0, 37) . "...";
+}
+
 
 //Checks to see if a value is a member of the supplied values. returns true if it is.
 function isMemberOf($value, $parameters) {
