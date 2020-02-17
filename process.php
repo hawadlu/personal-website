@@ -297,7 +297,9 @@ function findInvalid($type, $values) {
         //Look for illegal characters
         if (containsIllegalCharacter($values[$i][0]) != null) {
             ?><br><?php
-            die("Illegal character " . containsIllegalCharacter($values[$i][0]));
+
+            //Set the cookie and redirect
+            redirectWithError("Illegal character " . containsIllegalCharacter($values[$i][0]), 30, 'edit.php');
 
             //Check to see if credits and grade are valid
         } else if (($values[$i][1] == 'credits' || $values[$i][1] == 'grade') && !$gradeValid) {
@@ -382,6 +384,32 @@ function findInvalid($type, $values) {
             die($values[$i][1] . " should be of type " . $values[$i][2]);
         }
     }
+
+    die("Dead");
+}
+
+//Redirects the user to the specified page with an error cookie set. Expiry is measured in seconds
+function redirectWithError($cookieValue, $cookieExpiry, $redirectTo) {
+    //Add a flag to the front of the cookie describing what it is
+    $cookieValue = "ERROR: " . $cookieValue;
+
+    //Set the cookie
+    echo "Setting cookie with error " . $cookieValue;
+    setcookie('errorMsg', $cookieValue);
+    if (isset($_COOKIE['errorMsg'])) {
+        ?><br><?php
+        echo "Value: " . $cookieValue;
+//        ?><!--<br>--><?php
+//        die("cookie set");
+    } else {
+        die("The cookie is not set");
+    }
+
+    //Redirect
+    header("location: " . $redirectTo);
+
+    //Stop all execution
+    exit();
 }
 
 //Checks to see if a value is a member of the supplied values. returns true if it is.

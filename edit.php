@@ -25,6 +25,18 @@ $codeArray = getArray("SELECT subjectCode.subjectCode FROM subjectCode WHERE sub
 $extensionArray = getArray("SELECT codeExtension.codeExtension FROM codeExtension WHERE codeExtension != ''", $con);
 $gradeArray = getArray("SELECT grade.grade FROM grade WHERE grade != ''", $con);
 
+//Check to see if an error message has been set
+$errorMessage = null;
+if (isset($_COOKIE['errorMsg'])) {
+    //Only output if the value is not a number
+    if (!is_numeric($_COOKIE['errorMsg'])) {
+        $errorMessage = $_COOKIE['errorMsg'];
+    }
+
+    //Delete the cookie
+    setcookie('errorMsg', time() - 3600);
+}
+
 
 function getArray($query, $con)
 {
@@ -866,5 +878,14 @@ function getArray($query, $con)
 require("header.php");;
 //Pull information from the footer page
 require("footer.php");
+
+//Show any error messages if required
+if ($errorMessage != null) {
+    ?>
+    <div class="alert alert-danger" style="position: absolute">
+        <strong>Operation failed!</strong> <?php echo $errorMessage;?>
+    </div>
+    <?
+}
 ?>
 </html>
