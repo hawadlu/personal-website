@@ -444,7 +444,7 @@ function getArray($query, $con)
                                 <button onclick="showUpdateDiv('updateRecord<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
                                 <!--Show the delete button-->
                                 <form method="post" action="process.php">
-                                    <input type="hidden" value="<?php echo $uniqueKey;?>" name = "key">
+                                    <input type="hidden" value="<?php echo $uniqueKey;?>" name = "uniqueKey">
                                     <input type="submit" value="Delete" name = "deleteRecord">
                                 </form>
                             </div>

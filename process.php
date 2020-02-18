@@ -1,6 +1,7 @@
 <?php
 //TODO make sure that adding grades works properly in all cases.
 //TODO add delete ability. When deleting records delete all Foreign keys that are not used by another record
+//Todo ensure that the unique keys cannot be tampered with wjen submitting forms. It could cause the wrong record to be edited
 
 //Check if the user is logged in
 session_start();
@@ -84,7 +85,7 @@ if (isset($_POST['submitEducationUpdate'])) {
         ?><br><?php
         echo "Looking for records";
         ?><br><?php
-        $recordCount = recordExists("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
+        $recordCount = recordExistsLinked("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
 
         //Insert a new record if required
         if ($recordCount == 0) {
@@ -95,7 +96,7 @@ if (isset($_POST['submitEducationUpdate'])) {
 
             echo "Inserting new statement: ";
             ?><br><?php
-            newRecord("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") 
+            runQuery("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") 
                     VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
 
             ?><br><?php
@@ -105,7 +106,7 @@ if (isset($_POST['submitEducationUpdate'])) {
             array_push($foreignKeys, $key);
 
             //Insert the new foreign key
-            updateFK("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
+            runQuery("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
 
         } else {
             //Updating the the record to the new values
@@ -120,16 +121,16 @@ if (isset($_POST['submitEducationUpdate'])) {
             array_push($foreignKeys, $key);
 
             //Update the foreign key in the primary table
-            updateFK("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
+            runQuery("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
 
             //Update the grade/credits foreign keys
             if ($tablesToCheck[$i] == "credits") {
                 echo "Hello credits";
-                updateGrade("UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
+                runQuery("UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
                 $creditsFK = $key;
             } else if ($tablesToCheck[$i] == "grade") {
                 echo "Hello grade";
-                updateGrade("UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
+                runQuery("UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
                 $gradeFK = $key;
             }
 
@@ -144,13 +145,7 @@ if (isset($_POST['submitEducationUpdate'])) {
         //Update the record name
         ?><br><?php
         updateTableValue('education', 'subject', $postedSubject, 'uniqueKey', $_POST['uniqueKey'], $con);
-    } else {
-        echo "Duplicates found!";
-
-        //todo clean all previous FK's that may have been created
-        redirectWithError('Cannot enter duplicate record', 'edit.php');
     }
-
     //The new record has successfully been updated. Send a success message
     redirectWithSuccess('Record updated', 'edit.php');
 
@@ -222,7 +217,7 @@ if (isset($_POST["newEducationRecord"])) {
         ?><br><?php
         echo "Looking for records";
         ?><br><?php
-        $recordCount = recordExists("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
+        $recordCount = recordExistsLinked("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
 
         //The record does not exist. Create a new record
         if ($recordCount == 0) {
@@ -233,7 +228,7 @@ if (isset($_POST["newEducationRecord"])) {
             //Create the new record
             echo "Inserting new statement: ";
             ?><br><?php
-            newRecord("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
+            runQuery("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
 
 
             ?><br><?php
@@ -287,7 +282,7 @@ if (isset($_POST["newEducationRecord"])) {
         echo "No duplicates found";
 
         //Create the new record
-        newRecord("INSERT INTO education (uniqueKey, institutionFK, subject, gradeFk, subjectLevelFK, yearFK, subjectCodeFK, creditsFK, codeExtensionFK)
+        runQuery("INSERT INTO education (uniqueKey, institutionFK, subject, gradeFk, subjectLevelFK, yearFK, subjectCodeFK, creditsFK, codeExtensionFK)
         VALUES (NULL, " . $foreignKeys[0] . ", '" . $postedNewSubject . "', " . $gradeFK . ", " . $foreignKeys[1] . ",
     " . $foreignKeys[2] . ", " . $foreignKeys[3] . ", " . $creditsFK . ", " . $foreignKeys[4] . ")", $con);
     } else {
@@ -302,7 +297,68 @@ if (isset($_POST["newEducationRecord"])) {
 
 }
 
-//
+//Deleting education records
+if (isset($_POST['deleteRecord'])) {
+    echo "Delete record";
+
+    //Perform a query to get the record to be deleted. This allows the foreign keys to be gathered so that their corresponding values can also be deleted if required
+    $getRecordQuery = "SELECT * 
+    FROM education
+    WHERE education.uniqueKey = " . $_POST['uniqueKey'];
+
+    ?><br><?php
+    echo "Query: " . $getRecordQuery;
+
+    $getRecordQuery = $con->prepare($getRecordQuery);
+    $getRecordQuery->execute();
+    $getRecordQuery->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK);
+    $getRecordQuery->store_result();
+
+    while ($row = $getRecordQuery->fetch()) {
+        ?><br><?php
+        echo "Unique Key: " . $uniqueKey;
+        ?><br><?php
+        echo "Institution FK: " . $institutionFK;
+        ?><br><?php
+        echo "Subject: " . $subject;
+        ?><br><?php
+        echo "Grade Fk: " . $gradeFK;
+        ?><br><?php
+        echo "Subject level Fk: " . $subjectLevelFK;
+        ?><br><?php
+        echo "Year Fk: " . $yearFk;
+        ?><br><?php
+        echo "Subject code Fk: " . $subjectCodeFK;
+        ?><br><?php
+        echo "Credits Fk: " . $creditsFK;
+        ?><br><?php
+        echo "Code extension Fk: " . $codeExtensionFK;
+
+        //Add all the values to an array for easy iteration
+        $tablesToCheck = ['institution', 'grade', 'subjectLevel', 'year', 'subjectCode', 'credits', 'codeExtension'];
+        $keysToCheck = [$institutionFK, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK];
+    }
+
+    //Check to see if the foreign keys are used anywhere else
+    for ($i = 0; $i < sizeof($keysToCheck); $i++) {
+        ?><br><?php
+        echo "Query: " . "SELECT * FROM education WHERE education." . $tablesToCheck[$i] . "FK = " . $keysToCheck[$i];
+        ?><br><?php
+        $recordCount = numTimesFkUsedEducation("SELECT * FROM education WHERE education." . $tablesToCheck[$i] . "FK = " . $keysToCheck[$i], $con);
+        echo "Record count: " . $recordCount;
+
+        //If the record count is one it is safe to delete from the linked table
+        if ($recordCount == 1) {
+            ?><br><?php
+            runQuery("DELETE FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . "PK = " . $keysToCheck[$i], $con);
+        }
+    }
+
+    //Delete the item in the education table
+    runQuery("DELETE FROM education WHERE education.uniqueKey = " . $uniqueKey, $con);
+
+}
+
 
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
 function findInvalid($type, $values) {
@@ -565,17 +621,8 @@ function updateTableValue($table, $column, $value, $conditionalColumn, $key, $co
     $query->execute();
 }
 
-//function to update the grades
-function updateGrade($query, $con)
-{
-    ?><br><?php
-    echo $query;
-    $query = $con->prepare($query);
-    $query->execute();
-}
-
-//Creates a new records
-function newRecord($query, $con)
+//Run a specified query
+function runQuery($query, $con)
 {
     echo $query;
 
@@ -584,9 +631,29 @@ function newRecord($query, $con)
     $newRecordQuery->execute();
 }
 
+//Executes and returns a query so that the variables can be stored and bound as required
+function runAndReturn($query, $con) {
+    $query = $con->prepare($query);
+    $query->execute();
+    return $query;
+}
+
+//Get the number of times that a foreign key is used in the education table
+function numTimesFkUsedEducation($query, $con) {
+    //Declare values
+    $uniqueKey = $institutionFK = $subject = $gradeFK = $subjectLevelFK = $yearFk = $subjectCodeFK = $creditsFK = $creditsFK = $codeExtensionFK = null;
+
+    $query = runAndReturn($query, $con);
+    $query->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK);
+    $query->store_result();
+    $recordCount = $query->num_rows();
+    return $recordCount;
+}
+
 //Checks if a record exists in a linked table. Returns the number of records
-function recordExists($query, $con)
+function recordExistsLinked($query, $con)
 {
+    ?><br><?php
     echo $query;
     $key = "";
     $result = "";
@@ -604,15 +671,6 @@ function recordExists($query, $con)
         echo $result;
     }
     return $recordCount;
-}
-
-//Updates the specified foreign key
-function updateFK($query, $con)
-{
-    echo $query;
-    $query = $con->prepare($query);
-    $query->execute();
-    ?><br><?php
 }
 
 //Looks for duplicate records in the given table. Takes a the table name. An array of fields and and array of values.
