@@ -7,7 +7,7 @@ require("connect.php");
 <body class=background-img>
 <div class="page-grid-container">
     <?php
-    //The query which shows the education history
+    //The query which shows the examples
     $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.examplesDescription, 
 examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
     $experienceQuery -> execute();
