@@ -147,7 +147,7 @@ function getArray($query, $con)
                         </div>
 
 
-                            <input name="newEducationRecord" value="Submit Record" type="submit">
+                        <input name="newEducationRecord" value="Submit Record" type="submit">
                     </form>
 
                 </div>
@@ -322,10 +322,6 @@ function getArray($query, $con)
             } else {
                 while ($row = $educationQuery->fetch()) {
                     ?>
-                    <!-- Update form-->
-                    <form method="post">
-                        <!--The record id-->
-                        <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey; ?>">
                         <?php
                         //Calculates if any rounding of the examples div is required
                         $classHeader = "";
@@ -415,8 +411,7 @@ function getArray($query, $con)
                         <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
                             <!--The update button-->
                             <div class="education-Update">
-                                <input name="updateRecord<?php echo $uniqueKey; ?>" value="Update"
-                                       type="submit">
+                                <button onclick="showUpdateDiv('updateRecord<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
                             </div>
 
                             <!--Display the title on a small screen-->
@@ -520,24 +515,12 @@ function getArray($query, $con)
                                 </div>
                             </div>
                         </div>
-                    </form>
-                    <?php
-
-                    //Run the update record script
-                    if (isset($_POST['updateRecord' . $uniqueKey])) {
-                        echo "updating";
-                        echo $_POST['updateRecord' . $uniqueKey];
-                        $key = $_POST['uniqueKey'];
-                        echo $key;
-                        unset($_POST['updateRecord' . $uniqueKey]);
-                        unset($_POST['uniqueKey']);
-
-                        ?>
                         <!--This form is used to update the records-->
                         <!--Todo add styling for mobile-->
                         <!--todo make it so that the user cannot enter both grades and credits-->
 
-                        <form autocomplete="off" method="post" action="process.php">
+                        <div id = "updateRecord<?php echo $uniqueKey;?>" style="display:none;">
+                            <form autocomplete="off" method="post" action="process.php">
                             <div class="add-grid-container">
                                 <div class="add-Institution autocomplete">
                                     <input id="institution" class="textInput" type="text"
@@ -565,30 +548,30 @@ function getArray($query, $con)
                                 </div>
                                 <div class="add-Grade">
                                     <!--Allow the user to select the type of grade. Set to the current grade type by default-->
-                                    <select onchange="showElement(this.value)">
+                                    <select onchange="showCreditsGpa(this.value)">
                                         <?php
-                                            //Set the default order
-                                            if ($credits != 0) {
-                                                $optionOne = "showCredits";
-                                                $optionTwo = "showGpa";
-                                                $displayValOne = "Credits";
-                                                $displayValTwo = "Gpa";
-                                                $displayDivCredits = "block";
-                                                $displayDivGpa = "none";
-                                                $requiredOne = "required";
-                                                $requiredTwo = "";
-                                            } else {
-                                                $optionOne = "showGpa";
-                                                $optionTwo = "showCredits";
-                                                $displayValOne = "Gpa";
-                                                $displayValTwo = "Credits";
-                                                $displayDivCredits = "none";
-                                                $displayDivGpa = "block";
-                                                $requiredOne = "";
-                                                $requiredTwo = "required";
-                                            }
+                                        //Set the default order
+                                        if ($credits != 0) {
+                                            $optionOne = "showCreditsDiv" . $uniqueKey;
+                                            $optionTwo = "showGpaDiv" . $uniqueKey;
+                                            $displayValOne = "Credits";
+                                            $displayValTwo = "Gpa";
+                                            $displayDivCredits = "block";
+                                            $displayDivGpa = "none";
+                                            $requiredOne = "required";
+                                            $requiredTwo = "";
+                                        } else {
+                                            $optionOne = "showGpaDiv" . $uniqueKey;
+                                            $optionTwo = "showCreditsDiv" . $uniqueKey;
+                                            $displayValOne = "Gpa";
+                                            $displayValTwo = "Credits";
+                                            $displayDivCredits = "none";
+                                            $displayDivGpa = "block";
+                                            $requiredOne = "";
+                                            $requiredTwo = "required";
+                                        }
                                         ?>
-                                        <option onclick="alert('Clicked')" value="<?php echo $optionOne;?>">
+                                        <option value="<?php echo $optionOne;?>">
                                             <?php echo $displayValOne;
                                             //Update the type of grade being submitted
                                             ?>
@@ -601,7 +584,7 @@ function getArray($query, $con)
                                         </option>
                                     </select>
 
-                                    <div id = "showCreditsDiv" style="display: <?php echo $displayDivCredits;?>">
+                                    <div id = "showCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
                                         <p>
                                             Credits
                                         </p>
@@ -611,12 +594,12 @@ function getArray($query, $con)
                                         $isNumeric = false;
                                         ?>
                                     </div>
-                                    <div id = "showGpaDiv" style="display: <?php echo $displayDivGpa;?>">
+                                    <div id = "showGpaDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivGpa;?>">
                                         <p>
                                             GPA
                                         </p>
                                         <div class="autocomplete">
-                                            <input id="gradeInput" class=textInput" type="text" name="grade"
+                                            <input id="gradeInput<?php echo $uniqueKey;?>" class=textInput" type="text" name="grade"
                                                    placeholder="<?php echo $grade; ?>" <?php echo $requiredTwo;?>>
                                         </div>
                                     </div>
@@ -625,12 +608,12 @@ function getArray($query, $con)
                                 <div class="save-Record">
                                     <!--Tell process.php which type of query to execute-->
                                     <input name="uniqueKey" value="<?php echo $uniqueKey; ?>" type="hidden">
-                                    <input name="submitEducationUpdate<?php $uniqueKey; ?>" value="Update" type="submit">
+                                    <input name="submitEducationUpdate<?php $uniqueKey; ?>" value="Submit" type="submit">
                                 </div>
                             </div>
                         </form>
+                        </div>
                         <?php
-                    }
                 }
             }
             ?>
@@ -678,6 +661,19 @@ function getArray($query, $con)
         }
     }
 
+    //Hides and shows the update div
+    function showUpdateDiv(divName, key) {
+        var x = document.getElementById(divName);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+
+        //Load the grade autocomplete
+        loadAutocompleteForGrades(key);
+    }
+
 
     function showElement(show) {
         //alert(show);
@@ -704,25 +700,32 @@ function getArray($query, $con)
         } else if (show == "showGpaInput") {
             document.getElementById("newGpaInput").style.display = "block";
             hideElement("newNceaInput");
-        } else if (show == "showGpa") {
-            document.getElementById("showGpaDiv").style.display = "block";
-            //Set the the required attribute
-            document.getElementById("gradeInput").required = true;
-            document.getElementById("creditsInput").required = false;
-            hideElement("showCreditsDiv");
-        } else if (show == "showCredits") {
-            document.getElementById("showCreditsDiv").style.display = "block";
-            document.getElementById("creditsInput").required = true;
-            document.getElementById("gradeInput").required = false;
-            hideElement("showGpaDiv");
         }
-
         document.getElementById(show).style.display = "block";
     }
 
     //Hide the relevant element
     function hideElement(id) {
         document.getElementById(id).style.display = "none";
+    }
+
+    function showCreditsGpa(show) {
+        var id = 0;
+        if (show.includes("Credits")) {
+            //isolate the id
+            id = show.substring("showCreditsDiv".length)
+
+            //Show and hide the relevant divs
+            document.getElementById("showCreditsDiv" + id ).style.display = 'block';
+            hideElement("showGpaDiv" + id);
+        } else if (show.includes("Gpa")) {
+            id = show.substring("showGpaDiv".length)
+
+            //Show and hide the relevant divs
+            document.getElementById("showGpaDiv" + id ).style.display = 'block';
+            hideElement("showCreditsDiv" + id);
+        }
+
     }
 
 
@@ -849,7 +852,6 @@ function getArray($query, $con)
     autocomplete(document.getElementById("subjectLevel"), subjectLevels);
     autocomplete(document.getElementById("code"), subjectCodes);
     autocomplete(document.getElementById("extension"), codeExtensions);
-    autocomplete(document.getElementById("gradeInput"), grades);
 
     //Load the autocompletes for new items
     function loadNewRecordAutocomplete() {
@@ -861,6 +863,11 @@ function getArray($query, $con)
         autocomplete(document.getElementById("newRecordCode"), subjectCodes);
         autocomplete(document.getElementById("newRecordCodeExtension"), codeExtensions);
         autocomplete(document.getElementById("newRecordGrade"), grades);
+    }
+
+    //Loads autocomplete for each of the grades
+    function loadAutocompleteForGrades(id) {
+        autocomplete(document.getElementById("gradeInput" + id), grades);
     }
 
     //Convert array to string
