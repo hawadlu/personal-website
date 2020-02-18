@@ -135,7 +135,7 @@ function getArray($query, $con)
                             <p>
                                 NCEA
                             </p>
-                            <input id = "newRecordCredits" class="textInput" type = "text" name = "newCredits" placeholder="Credits: e.g. 22">
+                            <input id = "newRecordCredits" class="textInput" type = "number" name = "newCredits" placeholder="Credits: e.g. 22">
                         </div>
                         <div id = "newGpaInput" style="display: none">
                             <p>
@@ -411,7 +411,13 @@ function getArray($query, $con)
                         <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
                             <!--The update button-->
                             <div class="education-Update">
+                                <!--Show the update div-->
                                 <button onclick="showUpdateDiv('updateRecord<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
+                                <!--Show the delete button-->
+                                <form method="post" action="process.php">
+                                    <input type="hidden" value="<?php echo $uniqueKey;?>" name = "key">
+                                    <input type="submit" value="Delete" name = "deleteRecord">
+                                </form>
                             </div>
 
                             <!--Display the title on a small screen-->
@@ -523,27 +529,27 @@ function getArray($query, $con)
                             <form autocomplete="off" method="post" action="process.php">
                             <div class="add-grid-container">
                                 <div class="add-Institution autocomplete">
-                                    <input id="institution" class="textInput" type="text"
+                                    <input id="updateInstitution<?php echo $uniqueKey;?>" class="textInput" type="text"
                                            name="institution" value="<?php echo $institution; ?>" required>
                                 </div>
                                 <div class="add-Subject autocomplete">
-                                    <input id="subject" class="textInput" type="text" name="subject"
+                                    <input id="updateSubject<?php echo $uniqueKey;?>" class="textInput" type="text" name="subject"
                                            value="<?php echo $subject; ?>" required>
                                 </div>
                                 <div class="add-Subject-Year autocomplete">
-                                    <input id="year" class="textInput" type="number" name="subjectYear"
+                                    <input id="updateYear<?php echo $uniqueKey;?>" class="textInput" type="number" name="subjectYear"
                                            value="<?php echo $relevantYear; ?>" required>
                                 </div>
                                 <div class="add-Subject-Level autocomplete">
-                                    <input id="subjectLevel" class="textInput" type="text" name="subjectLevel"
+                                    <input id="updateSubjectLevel<?php echo $uniqueKey;?>" class="textInput" type="text" name="subjectLevel"
                                            value="<?php echo $subjectLevel; ?>" required>
                                 </div>
                                 <div class="add-Code autocomplete">
-                                    <input id="code" class="textInput" type="text" name="code"
+                                    <input id="updateCode<?php echo $uniqueKey;?>" class="textInput" type="text" name="code"
                                            value="<?php echo $code; ?>" required>
                                 </div>
                                 <div class="add-Code-Extension autocomplete">
-                                    <input id="extension" class="textInput" type="text" name="codeExtension"
+                                    <input id="updateCodeExtension<?php echo $uniqueKey;?>" class="textInput" type="text" name="codeExtension"
                                            value="<?php echo $codeExtension; ?> " required>
                                 </div>
                                 <div class="add-Grade">
@@ -588,7 +594,7 @@ function getArray($query, $con)
                                         <p>
                                             Credits
                                         </p>
-                                        <input id = "creditsInput" class=textInput" type="number" name="credits"
+                                        <input id = "updateCredits" class=textInput" type="number" name="credits"
                                                placeholder="<?php echo $credits; ?>" <?php echo $requiredOne;?>>
                                         <?php
                                         $isNumeric = false;
@@ -599,7 +605,7 @@ function getArray($query, $con)
                                             GPA
                                         </p>
                                         <div class="autocomplete">
-                                            <input id="gradeInput<?php echo $uniqueKey;?>" class=textInput" type="text" name="grade"
+                                            <input id="updateGrade<?php echo $uniqueKey;?>" class=textInput" type="text" name="grade"
                                                    placeholder="<?php echo $grade; ?>" <?php echo $requiredTwo;?>>
                                         </div>
                                     </div>
@@ -670,8 +676,8 @@ function getArray($query, $con)
             x.style.display = "none";
         }
 
-        //Load the grade autocomplete
-        loadAutocompleteForGrades(key);
+        //Load the autocomplete
+        loadAutocompleteForUpdate(key);
     }
 
 
@@ -843,16 +849,6 @@ function getArray($query, $con)
     var codeExtensions = convertArrayToString(<?php echo json_encode($extensionArray);?>);
     var grades = <?php echo json_encode($gradeArray);?>;
 
-
-    /*initiate the autocomplete function on the "each" element, and pass along the countries array as possible autocomplete values:*/
-    //Autocomplete updating records
-    autocomplete(document.getElementById("institution"), institutions);
-    autocomplete(document.getElementById("subject"), subjects);
-    autocomplete(document.getElementById("year"), years);
-    autocomplete(document.getElementById("subjectLevel"), subjectLevels);
-    autocomplete(document.getElementById("code"), subjectCodes);
-    autocomplete(document.getElementById("extension"), codeExtensions);
-
     //Load the autocompletes for new items
     function loadNewRecordAutocomplete() {
         //Autocomplete for new records
@@ -866,8 +862,14 @@ function getArray($query, $con)
     }
 
     //Loads autocomplete for each of the grades
-    function loadAutocompleteForGrades(id) {
-        autocomplete(document.getElementById("gradeInput" + id), grades);
+    function loadAutocompleteForUpdate(id) {
+        autocomplete(document.getElementById("updateInstitution" + id), institutions);
+        autocomplete(document.getElementById("updateSubject" + id), subjects);
+        autocomplete(document.getElementById("updateYear" + id), years);
+        autocomplete(document.getElementById("updateSubjectLevel" + id), subjectLevels);
+        autocomplete(document.getElementById("updateCode" + id), subjectCodes);
+        autocomplete(document.getElementById("updateCodeExtension" + id), codeExtensions);
+        autocomplete(document.getElementById("updateGrade" + id), grades);
     }
 
     //Convert array to string
@@ -889,7 +891,7 @@ require("footer.php");
 //Show any error messages if required
 if ($errorMessage != null) {
     ?>
-    <div class="alert alert-danger" style="position: fixed">
+    <div class="alert alert-danger" style="width: 100%; position: fixed">
         <strong>Operation failed!</strong> <?php echo $errorMessage;?>
     </div>
     <?
