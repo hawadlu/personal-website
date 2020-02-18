@@ -121,30 +121,51 @@ function getArray($query, $con)
                         </div>
 
                         <!--Change the input type based on the type of grade the user wishes to enter-->
-                        <select onchange="showElement(this.value)">
-                            <option value = "showNceaInput">
-                                NCEA (number of credits)
+                        <select onchange="showCreditsGpa(this.value)">
+                            <?php
+                            //Set the default order
+                                $optionOne = "showNewCreditsDiv";
+                                $optionTwo = "showNewGpaDiv" ;
+                                $displayValOne = "Credits";
+                                $displayValTwo = "Gpa";
+                                $displayDivCredits = "block";
+                                $displayDivGpa = "none";
+                                $requiredOne = "required";
+                                $requiredTwo = "";
+                            ?>
+                            <option value="<?php echo $optionOne;?>">
+                                <?php echo $displayValOne;
+                                //Update the type of grade being submitted
+                                ?>
                             </option>
-                            <option value="showGpaInput">
-                                GPA (A+, B+, etc)
+                            <option value="<?php echo $optionTwo;?>">
+                                <?php
+                                //Update the type of grade being submitted
+                                echo $displayValTwo;
+                                ?>
                             </option>
                         </select>
 
-                        <!--todo make it so that the user cannot enter both grades and credits-->
-                        <div id = "newNceaInput" style="display: block">
+                        <div id = "showNewCreditsDiv" style="display: <?php echo $displayDivCredits;?>">
                             <p>
-                                NCEA
+                                Credits
                             </p>
-                            <input id = "newRecordCredits" class="textInput" type = "number" name = "newCredits" placeholder="Credits: e.g. 22">
+                            <input id = "newCredits" class=textInput" type="number" name="credits"
+                                   placeholder="Credits: e.g. 22" <?php echo $requiredOne;?>>
+                            <?php
+                            $isNumeric = false;
+                            ?>
                         </div>
-                        <div id = "newGpaInput" style="display: none">
+                        <div id = "showNewGpaDiv" style="display: <?php echo $displayDivGpa;?>">
                             <p>
                                 GPA
                             </p>
                             <div class="autocomplete">
-                                <input id = "newRecordGrade" class="textInput" type = "text" name = "newGrade" placeholder="Grade: e.g. A-">
+                                <input id="newRecordGpa" class=textInput" type="text" name="grade"
+                                       placeholder="Gpa: e.g. A-" <?php echo $requiredTwo;?>>
                             </div>
                         </div>
+                        
 
 
                         <input name="newEducationRecord" value="Submit Record" type="submit">
@@ -558,8 +579,8 @@ function getArray($query, $con)
                                         <?php
                                         //Set the default order
                                         if ($credits != 0) {
-                                            $optionOne = "showCreditsDiv" . $uniqueKey;
-                                            $optionTwo = "showGpaDiv" . $uniqueKey;
+                                            $optionOne = "showUpdateCreditsDiv" . $uniqueKey;
+                                            $optionTwo = "showUpdateGpaDiv" . $uniqueKey;
                                             $displayValOne = "Credits";
                                             $displayValTwo = "Gpa";
                                             $displayDivCredits = "block";
@@ -567,8 +588,8 @@ function getArray($query, $con)
                                             $requiredOne = "required";
                                             $requiredTwo = "";
                                         } else {
-                                            $optionOne = "showGpaDiv" . $uniqueKey;
-                                            $optionTwo = "showCreditsDiv" . $uniqueKey;
+                                            $optionOne = "showUpdateGpaDiv" . $uniqueKey;
+                                            $optionTwo = "showUpdateCreditsDiv" . $uniqueKey;
                                             $displayValOne = "Gpa";
                                             $displayValTwo = "Credits";
                                             $displayDivCredits = "none";
@@ -590,7 +611,7 @@ function getArray($query, $con)
                                         </option>
                                     </select>
 
-                                    <div id = "showCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
+                                    <div id = "showUpdateCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
                                         <p>
                                             Credits
                                         </p>
@@ -600,7 +621,7 @@ function getArray($query, $con)
                                         $isNumeric = false;
                                         ?>
                                     </div>
-                                    <div id = "showGpaDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivGpa;?>">
+                                    <div id = "showUpdateGpaDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivGpa;?>">
                                         <p>
                                             GPA
                                         </p>
@@ -717,19 +738,34 @@ function getArray($query, $con)
 
     function showCreditsGpa(show) {
         var id = 0;
-        if (show.includes("Credits")) {
-            //isolate the id
-            id = show.substring("showCreditsDiv".length)
+        //Change div for updating
+        if (show.includes("Update")) {
+            if (show.includes("Credits")) {
+                //isolate the id
+                id = show.substring("showUpdateCreditsDiv".length)
 
-            //Show and hide the relevant divs
-            document.getElementById("showCreditsDiv" + id ).style.display = 'block';
-            hideElement("showGpaDiv" + id);
-        } else if (show.includes("Gpa")) {
-            id = show.substring("showGpaDiv".length)
+                //Show and hide the relevant divs
+                document.getElementById("showUpdateCreditsDiv" + id).style.display = 'block';
+                hideElement("showUpdateGpaDiv" + id);
+            } else if (show.includes("Gpa")) {
+                id = show.substring("showUpdateGpaDiv".length)
 
-            //Show and hide the relevant divs
-            document.getElementById("showGpaDiv" + id ).style.display = 'block';
-            hideElement("showCreditsDiv" + id);
+                //Show and hide the relevant divs
+                document.getElementById("showUpdateGpaDiv" + id).style.display = 'block';
+                hideElement("showUpdateCreditsDiv" + id);
+            }
+
+        //Change div for new records
+        } else if (show.includes("New")) {
+            if (show.includes("Credits")) {
+                //Show and hide the relevant divs
+                document.getElementById("showNewCreditsDiv").style.display = 'block';
+                hideElement("showNewGpaDiv");
+            } else if (show.includes("Gpa")) {
+                //Show and hide the relevant divs
+                document.getElementById("showNewGpaDiv").style.display = 'block';
+                hideElement("showNewCreditsDiv");
+            }
         }
 
     }
@@ -858,7 +894,7 @@ function getArray($query, $con)
         autocomplete(document.getElementById("newRecordSubjectLevel"), subjectLevels);
         autocomplete(document.getElementById("newRecordCode"), subjectCodes);
         autocomplete(document.getElementById("newRecordCodeExtension"), codeExtensions);
-        autocomplete(document.getElementById("newRecordGrade"), grades);
+        autocomplete(document.getElementById("newRecordGpa"), grades);
     }
 
     //Loads autocomplete for each of the grades
