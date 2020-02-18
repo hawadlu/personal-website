@@ -37,6 +37,16 @@ if (isset($_COOKIE['errorMsg'])) {
     setcookie('errorMsg', time() - 3600);
 }
 
+$successMessage  = null;
+if (isset($_COOKIE['successMsg'])) {
+    //Only output if it is not a number
+    if (!is_numeric($_COOKIE['successMsg'])) {
+        $successMessage = $_COOKIE['successMsg'];
+    }
+
+    setcookie('successMsg', time() - 3600);
+}
+
 
 function getArray($query, $con)
 {
@@ -130,8 +140,6 @@ function getArray($query, $con)
                                 $displayValTwo = "Gpa";
                                 $displayDivCredits = "block";
                                 $displayDivGpa = "none";
-                                $requiredOne = "required";
-                                $requiredTwo = "";
                             ?>
                             <option value="<?php echo $optionOne;?>">
                                 <?php echo $displayValOne;
@@ -150,8 +158,8 @@ function getArray($query, $con)
                             <p>
                                 Credits
                             </p>
-                            <input id = "newCredits" class=textInput" type="number" name="credits"
-                                   placeholder="Credits: e.g. 22" <?php echo $requiredOne;?>>
+                            <input id = "newRecordCredits" class=textInput" type="number" name="newCredits"
+                                   placeholder="Credits: e.g. 22">
                             <?php
                             $isNumeric = false;
                             ?>
@@ -161,8 +169,8 @@ function getArray($query, $con)
                                 GPA
                             </p>
                             <div class="autocomplete">
-                                <input id="newRecordGpa" class=textInput" type="text" name="grade"
-                                       placeholder="Gpa: e.g. A-" <?php echo $requiredTwo;?>>
+                                <input id="newRecordGpa" class=textInput" type="text" name="newGpa"
+                                       placeholder="Gpa: e.g. A-">
                             </div>
                         </div>
                         
@@ -585,8 +593,6 @@ function getArray($query, $con)
                                             $displayValTwo = "Gpa";
                                             $displayDivCredits = "block";
                                             $displayDivGpa = "none";
-                                            $requiredOne = "required";
-                                            $requiredTwo = "";
                                         } else {
                                             $optionOne = "showUpdateGpaDiv" . $uniqueKey;
                                             $optionTwo = "showUpdateCreditsDiv" . $uniqueKey;
@@ -594,8 +600,6 @@ function getArray($query, $con)
                                             $displayValTwo = "Credits";
                                             $displayDivCredits = "none";
                                             $displayDivGpa = "block";
-                                            $requiredOne = "";
-                                            $requiredTwo = "required";
                                         }
                                         ?>
                                         <option value="<?php echo $optionOne;?>">
@@ -615,8 +619,8 @@ function getArray($query, $con)
                                         <p>
                                             Credits
                                         </p>
-                                        <input id = "updateCredits" class=textInput" type="number" name="credits"
-                                               placeholder="<?php echo $credits; ?>" <?php echo $requiredOne;?>>
+                                        <input id = "updateCredits<?php echo $uniqueKey;?>" class=textInput" type="number" name="credits"
+                                               placeholder="<?php echo $credits; ?>">
                                         <?php
                                         $isNumeric = false;
                                         ?>
@@ -626,8 +630,8 @@ function getArray($query, $con)
                                             GPA
                                         </p>
                                         <div class="autocomplete">
-                                            <input id="updateGrade<?php echo $uniqueKey;?>" class=textInput" type="text" name="grade"
-                                                   placeholder="<?php echo $grade; ?>" <?php echo $requiredTwo;?>>
+                                            <input id="updateGrade<?php echo $uniqueKey;?>" class=textInput" type="text" name="gpa"
+                                                   placeholder="<?php echo $grade; ?>">
                                         </div>
                                     </div>
 
@@ -736,7 +740,8 @@ function getArray($query, $con)
         document.getElementById(id).style.display = "none";
     }
 
-    function showCreditsGpa(show) {
+    //Takes a parent div and array of child inputs
+    function showCreditsGpa(show, childInputs) {
         var id = 0;
         //Change div for updating
         if (show.includes("Update")) {
@@ -747,6 +752,7 @@ function getArray($query, $con)
                 //Show and hide the relevant divs
                 document.getElementById("showUpdateCreditsDiv" + id).style.display = 'block';
                 hideElement("showUpdateGpaDiv" + id);
+
             } else if (show.includes("Gpa")) {
                 id = show.substring("showUpdateGpaDiv".length)
 
@@ -931,6 +937,15 @@ if ($errorMessage != null) {
         <strong>Operation failed!</strong> <?php echo $errorMessage;?>
     </div>
     <?
+}
+
+//Show any success messages if required
+if ($successMessage != null) {
+    ?>
+    <div class="alert alert-success" role="alert" style="width: 100%; position: fixed">
+        <?php echo $successMessage;?>
+    </div>
+    <?php
 }
 ?>
 </html>

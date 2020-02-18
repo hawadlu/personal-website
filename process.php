@@ -17,7 +17,7 @@ $tablesToCheck = ['institution', 'subjectLevel', 'year', 'subjectCode', 'codeExt
 //Used when looking for duplicate records
 $tableColumns = ['institutionFk', 'subject', 'gradeFK', 'subjectLevelFK', 'yearFK', 'subjectCodeFK', 'creditsFk', 'codeExtensionFK'];
 
-//Check which type of query should be executed
+//Updating education records
 echo var_dump($_POST);
 if (isset($_POST['submitEducationUpdate'])) {
     //Variables for each posted value. Spaces stripped appropriately
@@ -28,7 +28,7 @@ if (isset($_POST['submitEducationUpdate'])) {
     $postedCode = stripSpaces($_POST['code']);
     $postedCodeExtension = stripSpaces($_POST['codeExtension']);
     $postedCredits = stripSpaces($_POST['credits']);
-    $postedGrade = stripSpaces($_POST['grade']);
+    $postedGrade = stripSpaces($_POST['gpa']);
 
     echo "Update record.";
 
@@ -146,12 +146,17 @@ if (isset($_POST['submitEducationUpdate'])) {
         updateTableValue('education', 'subject', $postedSubject, 'uniqueKey', $_POST['uniqueKey'], $con);
     } else {
         echo "Duplicates found!";
-        //todo return an error message
+
+        //todo clean all previous FK's that may have been created
+        redirectWithError('Cannot enter duplicate record', 'edit.php');
     }
+
+    //The new record has successfully been updated. Send a success message
+    redirectWithSuccess('Record updated', 'edit.php');
 
 }
 
-//Creating new records
+//Creating new education records
 if (isset($_POST["newEducationRecord"])) {
     echo "New Record";
     ?><br><?php
@@ -161,22 +166,33 @@ if (isset($_POST["newEducationRecord"])) {
     $postedNewSubject = $_POST['newSubject'];
     $postedNewSubjectYear = stripSpaces($_POST['newSubjectYear']);
     $postedNewSubjectLevel = $_POST['newSubjectLevel'];
-    $postedNewCode = stripSpaces($_POST['newCode']);
+    $postedNewSubjectCode = stripSpaces($_POST['newCode']);
     $postedNewCodeExtension = stripSpaces($_POST['newCodeExtension']);
     $postedNewCredits = stripSpaces($_POST['newCredits']);
-    $postedNewGrade = stripSpaces($_POST['newGrade']);
+    $postedNewGrade = stripSpaces($_POST['newGpa']);
 
     echo $postedNewInstitution; ?><br><?php
     echo $postedNewSubject; ?><br><?php
     echo $postedNewSubjectYear; ?><br><?php
     echo $postedNewSubjectLevel; ?><br><?php
-    echo $postedNewCode; ?><br><?php
+    echo $postedNewSubjectCode; ?><br><?php
     echo $postedNewCodeExtension; ?><br><?php
     echo $postedNewCredits; ?><br><?php
     echo $postedNewGrade; ?><br><?php
 
+    //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
+    findInvalid('education',
+        [[$postedNewInstitution, 'institution', 'string', 40],
+            [$postedNewSubject, 'subject', 'string', 100],
+            [$postedNewSubjectYear, 'subjectYear', 'int', 4],
+            [$postedNewSubjectLevel, 'subjectLevel', 'string', 20],
+            [$postedNewSubjectCode, 'subjectCode', 'string', 10],
+            [$postedNewCodeExtension, 'codeExtension', 'int', 4],
+            [$postedNewCredits, 'credits', 'int', 2],
+            [$postedNewGrade, 'grade', 'string', 2]]);
+
     //Values that will be inserted into the database
-    $valuesToCheck = [$postedNewInstitution, $postedNewSubjectLevel, $postedNewSubjectYear, $postedNewCode, $postedNewCodeExtension, $postedNewGrade];
+    $valuesToCheck = [$postedNewInstitution, $postedNewSubjectLevel, $postedNewSubjectYear, $postedNewSubjectCode, $postedNewCodeExtension, $postedNewGrade];
     $foreignKeys = [];
 
     //Used when inserting the grade and credits foreign keys
@@ -276,11 +292,17 @@ if (isset($_POST["newEducationRecord"])) {
     " . $foreignKeys[2] . ", " . $foreignKeys[3] . ", " . $creditsFK . ", " . $foreignKeys[4] . ")", $con);
     } else {
         echo "Duplicates found!";
-        //todo return an error message
+
+        //todo clean all previous FK's that may have been created
+        redirectWithError('Cannot enter duplicate record', 'edit.php');
     }
 
+    //The new record has successfully been created. Send a success message
+    redirectWithSuccess('New record created', 'edit.php');
 
 }
+
+//
 
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
 function findInvalid($type, $values) {
@@ -327,6 +349,7 @@ function findInvalid($type, $values) {
             //No grades have been entered
             if (isEmpty($values[$creditsPos][0]) && isEmpty($values[$gradePos][0])) {
                 ?><br><?php
+                redirectWithError("You must fill in at least one type of grade", 'edit.php');
                 //die("Grade cannot be empty!");
 
                 //Both grades have been entered
@@ -388,16 +411,17 @@ function findInvalid($type, $values) {
             }
 
             //Error checking the year
-        } else if ($values[$i][1] == 'subjectYear') {
-            echo "year check";
+        } else if ($values[$i][1] == 'subjectYear' || $values[$i][1] == 'newSubjectYear') {
             $currentYear = date('Y');
             $enteredYear = $values[$i][0];
             $yearDiff = abs($currentYear - $enteredYear);
             //Check for years in the future
             if ($enteredYear > $currentYear) {
-                redirectWithError("Can you see the future? The year " . $enteredYear . " is " . $yearDiff . " years from now.", 'edit.php');
+                redirectWithError("Can you see the future? The year " . $enteredYear . " is " . $yearDiff . " year(s) from now.", 'edit.php');
+
+            //Check for years too far into the past
             } else if ($enteredYear < ($currentYear - 100)) {
-                redirectWithError("More than a lifetime ago. The year " . $enteredYear . " occurred " . $yearDiff . " years ago. Are you a time traveler?", 'edit.php');
+                redirectWithError("More than a lifetime ago. The year " . $enteredYear . " occurred " . $yearDiff . " year(s) ago. Are you a time traveler?", 'edit.php');
             }
 
             //Test to see if the value is empty ignore if a valid grade has been entered
@@ -413,8 +437,6 @@ function findInvalid($type, $values) {
             die($values[$i][1] . " should be of type " . $values[$i][2]);
         }
     }
-
-    die("Dead");
 }
 
 //Redirects the user to the specified page with an error cookie set.
@@ -422,15 +444,24 @@ function redirectWithError($cookieValue, $redirectTo) {
     //Add a flag to the front of the cookie describing what it is
     $cookieValue = "ERROR: " . $cookieValue;
 
+    echo "called redirect";
+
     //Set the cookie
-    echo "Setting cookie with error " . $cookieValue;
     setcookie('errorMsg', $cookieValue);
-//    if (isset($_COOKIE['errorMsg'])) {
-//        ?><!--<br>--><?php
-//        echo "Value: " . $cookieValue;
-//    } else {
-//        die("The cookie is not set");
-//    }
+
+    //Redirect
+    header("location: " . $redirectTo);
+
+    //Stop all execution
+    exit();
+}
+
+function redirectWithSuccess($cookieValue, $redirectTo) {
+    //Add a flag to the front of the cookie describing what it is
+    $cookieValue = "Success: " . $cookieValue;
+
+    //Set the cookie
+    setcookie('successMsg', $cookieValue);
 
     //Redirect
     header("location: " . $redirectTo);
