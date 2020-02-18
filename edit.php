@@ -196,6 +196,8 @@ function getArray($query, $con)
                     <?php
                     //Check the upload files form has been submitted
                     if (isset($_FILES['userFiles'])) {
+                        //todo moves this to the process page so that files are only uploaded if the record has successfully been created.
+
 //useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
 //Array of possible file upload errors
                         $phpFileUploadErrors = array(
@@ -441,7 +443,7 @@ function getArray($query, $con)
                             <!--The update button-->
                             <div class="education-Update">
                                 <!--Show the update div-->
-                                <button onclick="showUpdateDiv('updateRecord<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
+                                <button onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
                                 <!--Show the delete button-->
                                 <form method="post" action="process.php">
                                     <input type="hidden" value="<?php echo $uniqueKey;?>" name = "uniqueKey">
@@ -554,7 +556,7 @@ function getArray($query, $con)
                         <!--Todo add styling for mobile-->
                         <!--todo make it so that the user cannot enter both grades and credits-->
 
-                        <div id = "updateRecord<?php echo $uniqueKey;?>" style="display:none;">
+                        <div id = "updateEducation<?php echo $uniqueKey;?>" style="display:none;">
                             <form autocomplete="off" method="post" action="process.php">
                             <div class="add-grid-container">
                                 <div class="add-Institution autocomplete">
@@ -929,6 +931,12 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                 <?php
                                 echo $examplesDescription;
                                 ?>
+                            </p>
+                        </div>
+                        <!-- The div that is used to edit the example-->
+                        <div id = "updateExample">
+                            <p>
+                                I'm the update div
                             </p>
                         </div>
                     </div>
