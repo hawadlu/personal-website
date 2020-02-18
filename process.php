@@ -1,7 +1,6 @@
 <?php
 //TODO make sure that adding grades works properly in all cases.
 //TODO add delete ability. When deleting records delete all Foreign keys that are not used by another record
-//Todo ensure that the unique keys cannot be tampered with wjen submitting forms. It could cause the wrong record to be edited
 
 //Check if the user is logged in
 session_start();
@@ -19,7 +18,7 @@ $tablesToCheck = ['institution', 'subjectLevel', 'year', 'subjectCode', 'codeExt
 $tableColumns = ['institutionFk', 'subject', 'gradeFK', 'subjectLevelFK', 'yearFK', 'subjectCodeFK', 'creditsFk', 'codeExtensionFK'];
 
 //Updating education records
-echo var_dump($_POST);
+//echo var_dump($_POST);
 if (isset($_POST['submitEducationUpdate'])) {
     //Variables for each posted value. Spaces stripped appropriately
     $postedInstitution = $_POST['institution'];
@@ -31,7 +30,7 @@ if (isset($_POST['submitEducationUpdate'])) {
     $postedCredits = stripSpaces($_POST['credits']);
     $postedGrade = stripSpaces($_POST['gpa']);
 
-    echo "Update record.";
+    //echo "Update record.";
 
     //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
     findInvalid('education',
@@ -45,15 +44,13 @@ if (isset($_POST['submitEducationUpdate'])) {
             [$postedGrade, 'grade', 'string', 2]]);
 
 
-    //Todo add statement to return errors and success messages. use an error div to display them. Probably as a cookie that is displayed when the user is redirected.
 
     //Values that will be inserted into the DB
     $valuesToCheck = [$postedInstitution, $postedSubjectLevel, $postedSubjectYear, $postedCode, $postedCodeExtension, $postedGrade];
 
     //Change grade to credits if required
-    //todo check if credits and grade have been posted. Auto choose which one to use.
-    echo "Grade: " . $postedGrade;
-    echo "Credits: " . $postedCredits;
+    //echo "Grade: " . $postedGrade;
+    //echo "Credits: " . $postedCredits;
 
     //Change the grade to be updated in required
     if ($postedGrade != "") {
@@ -65,11 +62,7 @@ if (isset($_POST['submitEducationUpdate'])) {
         die("There was an error. Invalid grade input");
     }
 
-
-    ?><br><?php
-
-    echo "Tables to check: " . $tablesToCheck[0] . " " . $tablesToCheck[1] . " " .
-        $tablesToCheck[2] . " " . $tablesToCheck[3] . " " . $tablesToCheck[4] . " " . $tablesToCheck[5];
+    //echo "Tables to check: " . $tablesToCheck[0] . " " . $tablesToCheck[1] . " " . $tablesToCheck[2] . " " . $tablesToCheck[3] . " " . $tablesToCheck[4] . " " . $tablesToCheck[5];
 
     $gradeUpdate = false; //Tracks if a grade has been updated
 
@@ -83,7 +76,7 @@ if (isset($_POST['submitEducationUpdate'])) {
     for ($i = 0; $i < sizeof($tablesToCheck); $i++) {
         //perform a query to check if the record exists
         ?><br><?php
-        echo "Looking for records";
+        //echo "Looking for records";
         ?><br><?php
         $recordCount = recordExistsLinked("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
 
@@ -94,13 +87,13 @@ if (isset($_POST['submitEducationUpdate'])) {
                 $gradeUpdate = true;
             }
 
-            echo "Inserting new statement: ";
+            //echo "Inserting new statement: ";
             ?><br><?php
             runQuery("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") 
                     VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
 
             ?><br><?php
-            echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
+            //echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
             ?><br><?php
             $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
             array_push($foreignKeys, $key);
@@ -111,25 +104,34 @@ if (isset($_POST['submitEducationUpdate'])) {
         } else {
             //Updating the the record to the new values
             ?><br><?php
-            echo "Record already exists. Updating fields for " . $tablesToCheck[$i];
+            //echo "Record already exists. Updating fields for " . $tablesToCheck[$i];
             ?><br><?php
 
             //Get the new foreign key
-            echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheck[$i];
+            //echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheck[$i];
             ?><br><?php
             $key = getFK($tablesToCheck[$i], $valuesToCheck[$i], $con);
             array_push($foreignKeys, $key);
+
+            //checking if the old foreign key can be removed from the table entirely;
+            ?><br><?php
+            //echo "FK used query: SELECT * FROM education WHERE education." .$tablesToCheck[$i] . "FK = " . $key;
+            $fkNum = numTimesFkUsedEducation("SELECT * FROM education WHERE education." .$tablesToCheck[$i] . "FK = " . $key, $con);
+            if ($fkNum == 1) {
+                ?><br><?php
+                //echo "Used once";
+            }
 
             //Update the foreign key in the primary table
             runQuery("UPDATE education SET education." . $tablesToCheck[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
 
             //Update the grade/credits foreign keys
             if ($tablesToCheck[$i] == "credits") {
-                echo "Hello credits";
+                //echo "Hello credits";
                 runQuery("UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
                 $creditsFK = $key;
             } else if ($tablesToCheck[$i] == "grade") {
-                echo "Hello grade";
+                //echo "Hello grade";
                 runQuery("UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
                 $gradeFK = $key;
             }
@@ -140,7 +142,7 @@ if (isset($_POST['submitEducationUpdate'])) {
     //Look for duplicates
     $values = [$foreignKeys[0], $postedSubject, $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
     if (!findDuplicate('education', $tableColumns, $values, $con)) {
-        echo "No duplicates found";
+        //echo "No duplicates found";
 
         //Update the record name
         ?><br><?php
@@ -153,7 +155,7 @@ if (isset($_POST['submitEducationUpdate'])) {
 
 //Creating new education records
 if (isset($_POST["newEducationRecord"])) {
-    echo "New Record";
+    //echo "New Record";
     ?><br><?php
 
     //Set variables for the posted values
@@ -165,15 +167,6 @@ if (isset($_POST["newEducationRecord"])) {
     $postedNewCodeExtension = stripSpaces($_POST['newCodeExtension']);
     $postedNewCredits = stripSpaces($_POST['newCredits']);
     $postedNewGrade = stripSpaces($_POST['newGpa']);
-
-    echo $postedNewInstitution; ?><br><?php
-    echo $postedNewSubject; ?><br><?php
-    echo $postedNewSubjectYear; ?><br><?php
-    echo $postedNewSubjectLevel; ?><br><?php
-    echo $postedNewSubjectCode; ?><br><?php
-    echo $postedNewCodeExtension; ?><br><?php
-    echo $postedNewCredits; ?><br><?php
-    echo $postedNewGrade; ?><br><?php
 
     //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
     findInvalid('education',
@@ -205,9 +198,9 @@ if (isset($_POST["newEducationRecord"])) {
     }
 
     ?><br><?php
-    echo print_r($valuesToCheck);
+    //echo print_r($valuesToCheck);
     ?><br><?php
-    echo print_r($tablesToCheck);
+    //echo print_r($tablesToCheck);
     ?><br><?php
 
 
@@ -215,24 +208,24 @@ if (isset($_POST["newEducationRecord"])) {
     for ($i = 0; $i < sizeof($tablesToCheck); $i++) {
         //perform a query to check if the record exists
         ?><br><?php
-        echo "Looking for records";
+        //echo "Looking for records";
         ?><br><?php
         $recordCount = recordExistsLinked("SELECT * FROM " . $tablesToCheck[$i] . " WHERE " . $tablesToCheck[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
 
         //The record does not exist. Create a new record
         if ($recordCount == 0) {
             ?><br><?php
-            echo "New Record required for value " . $valuesToCheck[$i];
+            //echo "New Record required for value " . $valuesToCheck[$i];
             ?><br><?php
 
             //Create the new record
-            echo "Inserting new statement: ";
+            //echo "Inserting new statement: ";
             ?><br><?php
             runQuery("INSERT INTO " . $tablesToCheck[$i] . " (" . $tablesToCheck[$i] . "PK, " . $tablesToCheck[$i] . ") VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
 
 
             ?><br><?php
-            echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
+            //echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
             ?><br><?php
 
             //Save the foreign key
@@ -249,11 +242,11 @@ if (isset($_POST["newEducationRecord"])) {
             //The record already exists
         } else {
             ?><br><?php
-            echo "Record already exists. Updating fields for " . $tablesToCheck[$i];
+            //echo "Record already exists. Updating fields for " . $tablesToCheck[$i];
             ?><br><?php
 
             //Get the new foreign key
-            echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheck[$i];
+            //echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheck[$i];
             ?><br><?php
 
             //Save the foreign key
@@ -270,23 +263,23 @@ if (isset($_POST["newEducationRecord"])) {
     }
 
     ?><br><?php
-    echo "Foreign keys: " . print_r($foreignKeys);
+    //echo "Foreign keys: " . print_r($foreignKeys);
 
     //Create the new record
-    echo "grade: " . $gradeFK;
+    //echo "grade: " . $gradeFK;
     ?><br><?php
 
     //Check to see if a duplicate record exists
     $values = [$foreignKeys[0], $postedNewSubject, $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
     if (!findDuplicate('education', $tableColumns, $values, $con)) {
-        echo "No duplicates found";
+        //echo "No duplicates found";
 
         //Create the new record
         runQuery("INSERT INTO education (uniqueKey, institutionFK, subject, gradeFk, subjectLevelFK, yearFK, subjectCodeFK, creditsFK, codeExtensionFK)
         VALUES (NULL, " . $foreignKeys[0] . ", '" . $postedNewSubject . "', " . $gradeFK . ", " . $foreignKeys[1] . ",
     " . $foreignKeys[2] . ", " . $foreignKeys[3] . ", " . $creditsFK . ", " . $foreignKeys[4] . ")", $con);
     } else {
-        echo "Duplicates found!";
+        //echo "Duplicates found!";
 
         //todo clean all previous FK's that may have been created
         redirectWithError('Cannot enter duplicate record', 'edit.php');
@@ -299,7 +292,7 @@ if (isset($_POST["newEducationRecord"])) {
 
 //Deleting education records
 if (isset($_POST['deleteRecord'])) {
-    echo "Delete record";
+    //echo "Delete record";
 
     //Perform a query to get the record to be deleted. This allows the foreign keys to be gathered so that their corresponding values can also be deleted if required
     $getRecordQuery = "SELECT * 
@@ -307,7 +300,7 @@ if (isset($_POST['deleteRecord'])) {
     WHERE education.uniqueKey = " . $_POST['uniqueKey'];
 
     ?><br><?php
-    echo "Query: " . $getRecordQuery;
+    //echo "Query: " . $getRecordQuery;
 
     $getRecordQuery = $con->prepare($getRecordQuery);
     $getRecordQuery->execute();
@@ -315,25 +308,6 @@ if (isset($_POST['deleteRecord'])) {
     $getRecordQuery->store_result();
 
     while ($row = $getRecordQuery->fetch()) {
-        ?><br><?php
-        echo "Unique Key: " . $uniqueKey;
-        ?><br><?php
-        echo "Institution FK: " . $institutionFK;
-        ?><br><?php
-        echo "Subject: " . $subject;
-        ?><br><?php
-        echo "Grade Fk: " . $gradeFK;
-        ?><br><?php
-        echo "Subject level Fk: " . $subjectLevelFK;
-        ?><br><?php
-        echo "Year Fk: " . $yearFk;
-        ?><br><?php
-        echo "Subject code Fk: " . $subjectCodeFK;
-        ?><br><?php
-        echo "Credits Fk: " . $creditsFK;
-        ?><br><?php
-        echo "Code extension Fk: " . $codeExtensionFK;
-
         //Add all the values to an array for easy iteration
         $tablesToCheck = ['institution', 'grade', 'subjectLevel', 'year', 'subjectCode', 'credits', 'codeExtension'];
         $keysToCheck = [$institutionFK, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK];
@@ -342,10 +316,10 @@ if (isset($_POST['deleteRecord'])) {
     //Check to see if the foreign keys are used anywhere else
     for ($i = 0; $i < sizeof($keysToCheck); $i++) {
         ?><br><?php
-        echo "Query: " . "SELECT * FROM education WHERE education." . $tablesToCheck[$i] . "FK = " . $keysToCheck[$i];
+        //echo "Query: " . "SELECT * FROM education WHERE education." . $tablesToCheck[$i] . "FK = " . $keysToCheck[$i];
         ?><br><?php
         $recordCount = numTimesFkUsedEducation("SELECT * FROM education WHERE education." . $tablesToCheck[$i] . "FK = " . $keysToCheck[$i], $con);
-        echo "Record count: " . $recordCount;
+        //echo "Record count: " . $recordCount;
 
         //If the record count is one it is safe to delete from the linked table
         if ($recordCount == 1) {
@@ -364,13 +338,13 @@ if (isset($_POST['deleteRecord'])) {
 function findInvalid($type, $values) {
     $gradeValid = false; //flag used to determine if the grade is valid
     ?><br><?php
-    echo "Check invalid for type: " . $type;
+    //echo "Check invalid for type: " . $type;
     ?><br><?php
-    echo "Check for values of array size: " . sizeof($values);
+    //echo "Check for values of array size: " . sizeof($values);
     ?><br><?php
     for ($i = 0; $i < sizeof($values); $i++) {
         ?><br><?php
-        echo $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2];
+        //echo $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2];
 
         //Array used when checking the length of the string. Declared here to avoid multiple function calls
         $checkLenArray = checkLength($values[$i][0], $values[$i][3]);
@@ -389,7 +363,7 @@ function findInvalid($type, $values) {
             //Check to see if credits and grade are valid
         } else if (($values[$i][1] == 'credits' || $values[$i][1] == 'grade') && !$gradeValid) {
             ?><br><?php
-            echo "Looking at: " . $values[$i][1];
+            //echo "Looking at: " . $values[$i][1];
             ?><br><?php
 
             //Validating the grade and credits
@@ -397,9 +371,9 @@ function findInvalid($type, $values) {
             $creditsPos = findIn2dArray($values, 'credits');
             $gradePos = findIn2dArray($values, 'grade');
 
-            echo "Credits at: " . $creditsPos . " empty = " . isEmpty($values[$creditsPos][0]);
+            //echo "Credits at: " . $creditsPos . " empty = " . isEmpty($values[$creditsPos][0]);
             ?><br><?php
-            echo "Grades at: " . $gradePos . " empty = " . isEmpty($values[$gradePos][0]);
+            //echo "Grades at: " . $gradePos . " empty = " . isEmpty($values[$gradePos][0]);
             ?><br><?php
 
             //No grades have been entered
@@ -445,7 +419,7 @@ function findInvalid($type, $values) {
                     }
                 } else if ($values[$i][1] == 'grade' && !isEmpty($values[$i][0])) {
                     $gpaGrades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'E', 'F'];
-                    echo "Checking grade";
+                    //echo "Checking grade";
                     //Check that the grades are not numeric
                     if (!isType($values[$i][2], $values[$i][0])) {
                         ?><br><?php
@@ -500,7 +474,7 @@ function redirectWithError($cookieValue, $redirectTo) {
     //Add a flag to the front of the cookie describing what it is
     $cookieValue = "ERROR: " . $cookieValue;
 
-    echo "called redirect";
+    //echo "called redirect";
 
     //Set the cookie
     setcookie('errorMsg', $cookieValue);
@@ -554,7 +528,7 @@ function isMemberOf($value, $parameters) {
 //Checks to see if a value is of the specified type. Returns true if it is, false otherwise
 function isType($type, $value) {
     ?><br><?php
-    echo "Checking type: " . $type;
+    //echo "Checking type: " . $type;
 
     //Checking for strings that should be an int
     if ($type == 'int') {
@@ -574,12 +548,12 @@ function isType($type, $value) {
 
 //Takes a value and checks if it contains any illegal characters mark of any kind. Returns the illegal character if it does, true if it does not
 function containsIllegalCharacter($value) {
-    //echo " Checking value " . $value . " for illegal characters";
+    ////echo " Checking value " . $value . " for illegal characters";
     $characters = ['“', '”', '"', '"', '‘', '’', "'", "'", '«', '»', '「', '」'];
     for ($i = 0; $i < sizeof($characters); $i++) {
         //Check if the character is contained in the value
         if (strpos($value, $characters[$i]) !== false) {
-            //echo " contains: " . $characters[$i];
+            ////echo " contains: " . $characters[$i];
             return $characters[$i];
         }
     }
@@ -615,7 +589,7 @@ function findIn2dArray($array, $value) {
 function updateTableValue($table, $column, $value, $conditionalColumn, $key, $con)
 {
     $query = "UPDATE " . $table . " SET " . $column . " = '" . $value . "' WHERE " . $conditionalColumn . " = " . $key;
-    echo "Update column query: " . $query;
+    //echo "Update column query: " . $query;
 
     $query = $con->prepare($query);
     $query->execute();
@@ -624,7 +598,7 @@ function updateTableValue($table, $column, $value, $conditionalColumn, $key, $co
 //Run a specified query
 function runQuery($query, $con)
 {
-    echo $query;
+    //echo $query;
 
     //execute the query
     $newRecordQuery = $con->prepare($query);
@@ -654,7 +628,7 @@ function numTimesFkUsedEducation($query, $con) {
 function recordExistsLinked($query, $con)
 {
     ?><br><?php
-    echo $query;
+    //echo $query;
     $key = "";
     $result = "";
     $query = $con->prepare($query);
@@ -665,10 +639,10 @@ function recordExistsLinked($query, $con)
 
     //Print for debugging
     ?><br><?php
-    echo "Count: " . $recordCount;
+    //echo "Count: " . $recordCount;
     while ($row = $query->fetch()) {
         ?><br><?php
-        echo $result;
+        //echo $result;
     }
     return $recordCount;
 }
@@ -699,10 +673,6 @@ function findDuplicate($table, $fields, $values, $con)
         }
     }
 
-    ?><br><?php
-    echo "Duplicates Query: " . $query;
-    ?><br><?php
-
     //Execute the query
     $query = $con->prepare($query);
     $query->execute();
@@ -721,12 +691,12 @@ function findDuplicate($table, $fields, $values, $con)
 //Function that executes a query and returns the foreign key
 function getFK($table, $value, $con)
 {
-    echo "Value: " . $value;
+    //echo "Value: " . $value;
     ?><br><?php
     $primary = null;
     $val = null;
     $foreignKeyQuery = "SELECT * FROM " . $table . " WHERE " . $table . "." . $table . " = '" . $value . "'";
-    echo "FK QUERY: " . $foreignKeyQuery;
+    //echo "FK QUERY: " . $foreignKeyQuery;
     $foreignKeyQuery = $con->prepare($foreignKeyQuery);
     $foreignKeyQuery->execute();
     $foreignKeyQuery->bind_result($primary, $val);
@@ -737,7 +707,7 @@ function getFK($table, $value, $con)
         $key = $primary;
     }
     ?><br><?php
-    echo "FK: " . $key;
+    //echo "FK: " . $key;
     ?><br><?php
     return $key;
 }
