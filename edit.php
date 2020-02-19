@@ -443,7 +443,7 @@ function getArray($query, $con)
                             <!--The update button-->
                             <div class="education-Update">
                                 <!--Show the update div-->
-                                <button onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
+                                <button id = "updateEducation<?php echo $uniqueKey;?>button" onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>', 'Update', 'Hide')">Update</button>
                                 <!--Show the delete button-->
                                 <form method="post" action="process.php">
                                     <input type="hidden" value="<?php echo $uniqueKey;?>" name = "uniqueKey">
@@ -934,7 +934,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                             </p>
                         </div>
                     </div>
-                    <button onclick="showUpdateDiv('updateExample<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
+                    <button id = "updateExample<?php echo $uniqueKey;?>button" onclick="showUpdateDiv('updateExample<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>', 'Update', 'Hide')">Update</button>
 
                     <!-- The div that is used to edit the example-->
                     <div id = "updateExample<?php echo $uniqueKey;?>" style="background-color: <?php echo $colour;?>; display: none">
@@ -946,24 +946,35 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
 
                         </form>
 
-                        <!--The image gallery-->
-                        <!--todo make this an extra layer that has to be expanded-->
-                        <div class="gallery-container">
-                            <?php
-                            foreach (glob($directoryName . "/*") as $file) {
-                                ?>
-                                <div>
-                                    <img src="<?php echo $file;?>" style="width: 250px">
-
-                                    <!--The delete image form-->
-                                    <form method="post" action="process.php">
-                                        <input name = "file" type="hidden" value="<?php echo $file;?>">
-                                        <input type="submit" name = "deleteImage" value = "Delete">
-                                    </form>
-                                </div>
-                                <?php
-                            }
+                        <!--The image gallery. Only display if there are images-->
+                        <?php
+                        if ($fileCount != 0) {
                             ?>
+                            <button id = "editImages<?php echo $uniqueKey;?>button" onclick="showUpdateDiv('editImages<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>', 'Edit Images', 'Hide Images')">Edit Images</button>
+                            <?php
+                        } else {
+                            echo "There are no images to be edited. Click the button below to add some.";
+                            //todo add button that can be used to add images to the record
+                        }
+                        ?>
+                        <div id = "editImages<?php echo $uniqueKey;?>" style="display: none">
+                            <div class="gallery-container">
+                                <?php
+                                foreach (glob($directoryName . "/*") as $file) {
+                                    ?>
+                                    <div>
+                                        <img src="<?php echo $file;?>" style="width: 250px">
+
+                                        <!--The delete image form-->
+                                        <form method="post" action="process.php">
+                                            <input name = "file" type="hidden" value="<?php echo $file;?>">
+                                            <input type="submit" name = "deleteImage" value = "Delete">
+                                        </form>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                     <?php
@@ -977,7 +988,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
 </div>
 </body>
 <script>
-    //Code used for the slideshows
+    //Code used for the slide shows
     const slideIndex = [];
 
     //Pre-populate the list. Dynamically adjusts based on the number of instances of the grid class
@@ -1038,17 +1049,26 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         }
     }
 
-    //Hides and shows the update div for education and exaples
-    function showUpdateDiv(divName, key) {
+    //Hides and shows the update div for education and examples
+    function showUpdateDiv(divName, key, showText, hideText) {
         var x = document.getElementById(divName);
         if (x.style.display === "none") {
             x.style.display = "block";
+
+            //Change the button text to hide
+            updateButton(divName + 'button', hideText)
         } else {
             x.style.display = "none";
+            updateButton(divName + 'button', showText);
         }
 
         //Load the autocomplete
         loadAutocompleteForUpdate(key);
+    }
+
+    //This function takes a button id and the desired text and updates it
+    function updateButton(id, text) {
+        document.querySelector('#' + id).innerText = text;
     }
 
 
