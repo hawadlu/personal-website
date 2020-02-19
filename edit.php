@@ -27,6 +27,7 @@ $gradeArray = getArray("SELECT grade.grade FROM grade WHERE grade != ''", $con);
 
 //Run queries to get arrays for each examples field
 $exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
+$languageArray = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
 
 //Check to see if an error message has been set
 $errorMessage = null;
@@ -69,7 +70,7 @@ function getArray($query, $con)
 
 ?>
 <body class="background-img">
-<div class="page-grid-container">
+    <div class="page-grid-container">
     <div>
         <p>
             Hello <?php echo $_SESSION['name']; ?>
@@ -592,15 +593,15 @@ function getArray($query, $con)
                                         <?php
                                         //Set the default order
                                         if ($credits != 0) {
-                                            $optionOne = "showupdateEducationCreditsDiv" . $uniqueKey;
-                                            $optionTwo = "showUpdateGpaDiv" . $uniqueKey;
+                                            $optionOne = "showUpdateEducationCreditsDiv" . $uniqueKey;
+                                            $optionTwo = "showUpdateEducationGpaDiv" . $uniqueKey;
                                             $displayValOne = "Credits";
                                             $displayValTwo = "Gpa";
                                             $displayDivCredits = "block";
                                             $displayDivGpa = "none";
                                         } else {
-                                            $optionOne = "showUpdateGpaDiv" . $uniqueKey;
-                                            $optionTwo = "showupdateEducationCreditsDiv" . $uniqueKey;
+                                            $optionOne = "showUpdateEducationGpaDiv" . $uniqueKey;
+                                            $optionTwo = "showUpdateEducationCreditsDiv" . $uniqueKey;
                                             $displayValOne = "Gpa";
                                             $displayValTwo = "Credits";
                                             $displayDivCredits = "none";
@@ -620,7 +621,7 @@ function getArray($query, $con)
                                         </option>
                                     </select>
 
-                                    <div id = "showupdateEducationCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
+                                    <div id = "showUpdateEducationCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
                                         <p>
                                             Credits
                                         </p>
@@ -630,7 +631,7 @@ function getArray($query, $con)
                                         $isNumeric = false;
                                         ?>
                                     </div>
-                                    <div id = "showUpdateGpaDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivGpa;?>">
+                                    <div id = "showUpdateEducationGpaDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivGpa;?>">
                                         <p>
                                             GPA
                                         </p>
@@ -808,67 +809,67 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                             $key = $uniqueKey;
 
                             //Define queries to get the languages
-                            $LangOneQuery = $con->prepare("SELECT languages.languages
+                            $langOneQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageOneFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                            $LangTwoQuery = $con->prepare("SELECT languages.languages
+                            $langTwoQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageTwoFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                            $LangThreeQuery = $con->prepare("SELECT languages.languages
+                            $langThreeQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageThreeFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                            $LangFourQuery = $con->prepare("SELECT languages.languages
+                            $langFourQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageFourFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
-                            $LangFiveQuery = $con->prepare("SELECT languages.languages
+                            $langFiveQuery = $con->prepare("SELECT languages.languages
                             FROM examples
                             LEFT JOIN languages ON examples.languageFiveFK = languages.languagePK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
                             //Execute each query
-                            $LangOneQuery -> execute();
-                            $LangOneQuery -> bind_result($langOne);
-                            $LangOneQuery -> store_result();
-                            $LangOneQuery -> fetch();
+                            $langOneQuery -> execute();
+                            $langOneQuery -> bind_result($langOne);
+                            $langOneQuery -> store_result();
+                            $langOneQuery -> fetch();
 
-                            $LangTwoQuery -> execute();
-                            $LangTwoQuery -> bind_result($langTwo);
-                            $LangTwoQuery -> store_result();
-                            $LangTwoQuery -> fetch();
+                            $langTwoQuery -> execute();
+                            $langTwoQuery -> bind_result($langTwo);
+                            $langTwoQuery -> store_result();
+                            $langTwoQuery -> fetch();
 
-                            $LangThreeQuery -> execute();
-                            $LangThreeQuery -> bind_result($langThree);
-                            $LangThreeQuery -> store_result();
-                            $LangThreeQuery -> fetch();
+                            $langThreeQuery -> execute();
+                            $langThreeQuery -> bind_result($langThree);
+                            $langThreeQuery -> store_result();
+                            $langThreeQuery -> fetch();
 
-                            $LangFourQuery -> execute();
-                            $LangFourQuery -> bind_result($langFour);
-                            $LangFourQuery -> store_result();
-                            $LangFourQuery -> fetch();
+                            $langFourQuery -> execute();
+                            $langFourQuery -> bind_result($langFour);
+                            $langFourQuery -> store_result();
+                            $langFourQuery -> fetch();
 
-                            $LangFiveQuery -> execute();
-                            $LangFiveQuery -> bind_result($langFive);
-                            $LangFiveQuery -> store_result();
-                            $LangFiveQuery -> fetch();
+                            $langFiveQuery -> execute();
+                            $langFiveQuery -> bind_result($langFive);
+                            $langFiveQuery -> store_result();
+                            $langFiveQuery -> fetch();
 
 
 
                             ?>
                             <p class="alignTextLeft">
-                                Language(s):
+                                language(s):
                                 <?php
                                 $languages = "";
                                 if ($langOne != null) {
@@ -903,6 +904,8 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                         ?>
                                     </a>
                                     <?php
+                                }  else {
+                                    echo "Sorry, there is no link to be displayed.";
                                 }
                                 ?>
 
@@ -925,6 +928,8 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                         </a>
                                         <?php
                                     }
+                                } else {
+                                    echo "Sorry, there is no github link.";
                                 }
                                 ?>
                             </p>
@@ -948,7 +953,54 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                         <form method="post" action="process.php">
                             <!--The project title-->
                             <div class="autocomplete">
-                                <input>
+                                <input id = "updateExampleName<?php echo $uniqueKey;?>" type="text" name="exampleName" placeholder="<?php echo $name; ?>">
+                            </div>
+                            
+                            <!--The year-->
+                            <div class="autocomplete">
+                                <input id="updateExampleYear<?php echo $uniqueKey;?>" class="textInput" type="number" name="exampleYear"
+                                       value="<?php echo $relevantYear; ?>" required>
+                            </div>
+
+                            <!--The languages-->
+                            <!--Todo ensure that the user cannot select more than five languages-->
+                            <?php
+                                //Create a checkbox for each language
+                                for ($i = 0; $i < sizeof($languageArray); $i++) {
+                                    //Checking if the language matches one of the languages used in the example
+                                    $checked = "";
+                                    if ($languageArray[$i] == $langOne || $languageArray[$i] == $langTwo || $languageArray[$i] == $langThree ||
+                                    $languageArray[$i] == $langFour || $languageArray[$i] == $langFive) {
+                                        $checked = "checked";
+                                    }
+
+                                    ?>
+                                    <br>
+                                    <label for="<?php echo $languageArray[$i];?>"><?php echo $languageArray[$i]?></label>
+                                    <input type="checkbox" id="<?php echo $languageArray[$i];?>" name="<?php echo $languageArray[$i];?>" value="<?php echo $languageArray[$i];?>" <?php echo $checked;?>>
+                                    <?php
+                                }
+                            ?>
+
+                            <!--The link-->
+                            <?php
+                                //Auto check if there is a link
+                                $checked = "";
+                                $displayLinkDiv = "none";
+                                $linkToDisplay = "";
+                                if ($link != null) {
+                                    $checked = "checked";
+                                    $displayLinkDiv = "block";
+                                    $linkToDisplay = $link;
+                                }
+                            ?>
+                            <br>
+                            <label for="updateExamplesLinkCheckbox<?php echo $uniqueKey;?>">Link</label>
+                            <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey;?>')" type="checkbox" id = "updateExamplesLinkCheckbox<?php echo $uniqueKey;?>" <?php echo $checked;?>>
+
+                            <!--Div that shows the link-->
+                            <div id = "updateExamplesLink<?php echo $uniqueKey;?>" style="display: <?php echo $displayLinkDiv;?>">
+                                <input type="text" value="<?php echo $linkToDisplay;?>" required>
                             </div>
                         </form>
 
@@ -1040,7 +1092,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         itemModal.style.display = "block";
 
         //Load the autocomplete for new records
-        loadnewEducationRecordAutocomplete();
+        loadNewEducationRecordAutocomplete();
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -1053,6 +1105,17 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         if (event.target == itemModal) {
             itemModal.style.display = "none";
         }
+    }
+
+    //Shows and hides the link input in the examples update
+    function showUpdateLinkInput(id) {
+        //Check if the element is already displayed
+        if (document.getElementById(id).style.display == "block") {
+            hideElement(id);
+        } else {
+            document.getElementById(id).style.display = "block";
+        }
+
     }
 
     //Hides and shows the update div for education and examples
@@ -1069,7 +1132,11 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         }
 
         //Load the autocomplete
-        loadAutocompleteForEducationUpdate(key);
+        if (divName.includes("Education")) {
+            loadAutocompleteForEducationUpdate(key);
+        } else if (divName.includes("Example")) {
+            loadAutocompleteForExamplesUpdate(key);
+        }
     }
 
     //This function takes a button id and the desired text and updates it
@@ -1119,18 +1186,18 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         if (show.includes("Update")) {
             if (show.includes("Credits")) {
                 //isolate the id
-                id = show.substring("showupdateEducationCreditsDiv".length)
+                id = show.substring("showUpdateEducationCreditsDiv".length)
 
                 //Show and hide the relevant divs
-                document.getElementById("showupdateEducationCreditsDiv" + id).style.display = 'block';
-                hideElement("showUpdateGpaDiv" + id);
+                document.getElementById("showUpdateEducationCreditsDiv" + id).style.display = 'block';
+                hideElement("showUpdateEducationGpaDiv" + id);
 
             } else if (show.includes("Gpa")) {
-                id = show.substring("showUpdateGpaDiv".length)
+                id = show.substring("showUpdateEducationGpaDiv".length)
 
                 //Show and hide the relevant divs
-                document.getElementById("showUpdateGpaDiv" + id).style.display = 'block';
-                hideElement("showupdateEducationCreditsDiv" + id);
+                document.getElementById("showUpdateEducationGpaDiv" + id).style.display = 'block';
+                hideElement("showUpdateEducationCreditsDiv" + id);
             }
 
         //Change div for new records
@@ -1265,7 +1332,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
     var exampleNames = <?php echo json_encode($exampleNameArray);?>;
 
     //Load the autocompletes for new items
-    function loadnewEducationRecordAutocomplete() {
+    function loadNewEducationRecordAutocomplete() {
         //Autocomplete for new records
         autocomplete(document.getElementById("newEducationRecordInstitution"), institutions);
         autocomplete(document.getElementById("newEducationRecordSubject"), subjects);
@@ -1289,7 +1356,8 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
     
     //Loads autocomplete for updating examples
     function loadAutocompleteForExamplesUpdate(id) {
-        autocomplete(document.getElementById("updateName" + id), exampleNames);
+        autocomplete(document.getElementById("updateExampleName" + id), exampleNames);
+        autocomplete(document.getElementById("updateExampleYear" + id), years);
     }
 
     //Convert array to string
@@ -1304,26 +1372,26 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
 </script>
 <!--Called last so that it renders at the top-->
 <?php
-require("header.php");;
-//Pull information from the footer page
-require("footer.php");
-
-//Show any error messages if required
-if ($errorMessage != null) {
-    ?>
-    <div class="alert alert-danger" style="width: 100%; position: fixed">
-        <strong>Operation failed!</strong> <?php echo $errorMessage;?>
-    </div>
-    <?
-}
-
-//Show any success messages if required
-if ($successMessage != null) {
-    ?>
-    <div class="alert alert-success" role="alert" style="width: 100%; position: fixed">
-        <?php echo $successMessage;?>
-    </div>
-    <?php
-}
+    require("header.php");;
+    //Pull information from the footer page
+    require("footer.php");
+    
+    //Show any error messages if required
+    if ($errorMessage != null) {
+        ?>
+        <div class="alert alert-danger" style="width: 100%; position: fixed">
+            <strong>Operation failed!</strong> <?php echo $errorMessage;?>
+        </div>
+        <?
+    }
+    
+    //Show any success messages if required
+    if ($successMessage != null) {
+        ?>
+        <div class="alert alert-success" role="alert" style="width: 100%; position: fixed">
+            <?php echo $successMessage;?>
+        </div>
+        <?php
+    }
 ?>
 </html>
