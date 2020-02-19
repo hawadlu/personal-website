@@ -16,7 +16,7 @@ require("head.php");
 require("connect.php");
 
 //Todo only run this if logged in
-//Run several php queries to get arrays of each field
+//Run several php queries to get arrays of each field of the education
 $institutionArray = getArray("SELECT institution.institution FROM institution WHERE institution != ''", $con);
 $subjectArray = getArray("SELECT DISTINCT subject FROM education", $con);
 $yearArray = getArray("SELECT year.year FROM year WHERE year != ''", $con);
@@ -24,6 +24,9 @@ $subjectLevelArray = getArray("SELECT subjectLevel.subjectLevel FROM subjectLeve
 $codeArray = getArray("SELECT subjectCode.subjectCode FROM subjectCode WHERE subjectCode != ''", $con);
 $extensionArray = getArray("SELECT codeExtension.codeExtension FROM codeExtension WHERE codeExtension != ''", $con);
 $gradeArray = getArray("SELECT grade.grade FROM grade WHERE grade != ''", $con);
+
+//Run queries to get arrays for each examples field
+$exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
 
 //Check to see if an error message has been set
 $errorMessage = null;
@@ -107,26 +110,26 @@ function getArray($query, $con)
                     </p>
                     <form autocomplete="off" method="post" action="process.php">
                         <div class="autocomplete">
-                            <input id="newRecordInstitution" class="textInput" type="text" name="newInstitution" placeholder="Institution: e.g. Tawa College" required>
+                            <input id="newEducationRecordInstitution" class="textInput" type="text" name="newInstitution" placeholder="Institution: e.g. Tawa College" required>
                         </div>
                         <div class="autocomplete">
-                            <input id="newRecordSubject" class="textInput" type="text" name="newSubject"
+                            <input id="newEducationRecordSubject" class="textInput" type="text" name="newSubject"
                                    placeholder="Subject: e.g. Science" " required>
                         </div>
                         <div class="autocomplete">
-                            <input id="newRecordYear" class="textInput" type="number" name="newSubjectYear"
+                            <input id="newEducationRecordYear" class="textInput" type="number" name="newSubjectYear"
                                    placeholder="Year: e.g. <?php echo date('Y');?>" required>
                         </div>
                         <div class="autocomplete">
-                            <input id="newRecordSubjectLevel" class="textInput" type="text" name="newSubjectLevel"
+                            <input id="newEducationRecordSubjectLevel" class="textInput" type="text" name="newSubjectLevel"
                                    placeholder="Level: e.g. NCEA Level One" required>
                         </div>
                         <div class="autocomplete">
-                            <input id="newRecordCode" class="textInput" type="text" name="newCode"
+                            <input id="newEducationRecordCode" class="textInput" type="text" name="newCode"
                                    placeholder="Code: e.g. COMP" required>
                         </div>
                         <div class="autocomplete">
-                            <input id="newRecordCodeExtension" class="textInput" type="text" name="newCodeExtension"
+                            <input id="newEducationRecordCodeExtension" class="textInput" type="text" name="newCodeExtension"
                                    placeholder="Code Extension: e.g. 101" required>
                         </div>
 
@@ -158,7 +161,7 @@ function getArray($query, $con)
                             <p>
                                 Credits
                             </p>
-                            <input id = "newRecordCredits" class=textInput" type="number" name="newCredits"
+                            <input id = "newEducationRecordCredits" class=textInput" type="number" name="newCredits"
                                    placeholder="Credits: e.g. 22">
                             <?php
                             $isNumeric = false;
@@ -169,7 +172,7 @@ function getArray($query, $con)
                                 GPA
                             </p>
                             <div class="autocomplete">
-                                <input id="newRecordGpa" class=textInput" type="text" name="newGpa"
+                                <input id="newEducationRecordGpa" class=textInput" type="text" name="newGpa"
                                        placeholder="Gpa: e.g. A-">
                             </div>
                         </div>
@@ -560,27 +563,27 @@ function getArray($query, $con)
                             <form autocomplete="off" method="post" action="process.php">
                             <div class="add-grid-container">
                                 <div class="add-Institution autocomplete">
-                                    <input id="updateInstitution<?php echo $uniqueKey;?>" class="textInput" type="text"
+                                    <input id="updateEducationInstitution<?php echo $uniqueKey;?>" class="textInput" type="text"
                                            name="institution" value="<?php echo $institution; ?>" required>
                                 </div>
                                 <div class="add-Subject autocomplete">
-                                    <input id="updateSubject<?php echo $uniqueKey;?>" class="textInput" type="text" name="subject"
+                                    <input id="updateEducationSubject<?php echo $uniqueKey;?>" class="textInput" type="text" name="subject"
                                            value="<?php echo $subject; ?>" required>
                                 </div>
                                 <div class="add-Subject-Year autocomplete">
-                                    <input id="updateYear<?php echo $uniqueKey;?>" class="textInput" type="number" name="subjectYear"
+                                    <input id="updateEducationYear<?php echo $uniqueKey;?>" class="textInput" type="number" name="subjectYear"
                                            value="<?php echo $relevantYear; ?>" required>
                                 </div>
                                 <div class="add-Subject-Level autocomplete">
-                                    <input id="updateSubjectLevel<?php echo $uniqueKey;?>" class="textInput" type="text" name="subjectLevel"
+                                    <input id="updateEducationSubjectLevel<?php echo $uniqueKey;?>" class="textInput" type="text" name="subjectLevel"
                                            value="<?php echo $subjectLevel; ?>" required>
                                 </div>
                                 <div class="add-Code autocomplete">
-                                    <input id="updateCode<?php echo $uniqueKey;?>" class="textInput" type="text" name="code"
+                                    <input id="updateEducationCode<?php echo $uniqueKey;?>" class="textInput" type="text" name="code"
                                            value="<?php echo $code; ?>" required>
                                 </div>
                                 <div class="add-Code-Extension autocomplete">
-                                    <input id="updateCodeExtension<?php echo $uniqueKey;?>" class="textInput" type="text" name="codeExtension"
+                                    <input id="updateEducationCodeExtension<?php echo $uniqueKey;?>" class="textInput" type="text" name="codeExtension"
                                            value="<?php echo $codeExtension; ?> " required>
                                 </div>
                                 <div class="add-Grade">
@@ -589,7 +592,7 @@ function getArray($query, $con)
                                         <?php
                                         //Set the default order
                                         if ($credits != 0) {
-                                            $optionOne = "showUpdateCreditsDiv" . $uniqueKey;
+                                            $optionOne = "showupdateEducationCreditsDiv" . $uniqueKey;
                                             $optionTwo = "showUpdateGpaDiv" . $uniqueKey;
                                             $displayValOne = "Credits";
                                             $displayValTwo = "Gpa";
@@ -597,7 +600,7 @@ function getArray($query, $con)
                                             $displayDivGpa = "none";
                                         } else {
                                             $optionOne = "showUpdateGpaDiv" . $uniqueKey;
-                                            $optionTwo = "showUpdateCreditsDiv" . $uniqueKey;
+                                            $optionTwo = "showupdateEducationCreditsDiv" . $uniqueKey;
                                             $displayValOne = "Gpa";
                                             $displayValTwo = "Credits";
                                             $displayDivCredits = "none";
@@ -617,11 +620,11 @@ function getArray($query, $con)
                                         </option>
                                     </select>
 
-                                    <div id = "showUpdateCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
+                                    <div id = "showupdateEducationCreditsDiv<?php echo $uniqueKey;?>" style="display: <?php echo $displayDivCredits;?>">
                                         <p>
                                             Credits
                                         </p>
-                                        <input id = "updateCredits<?php echo $uniqueKey;?>" class=textInput" type="number" name="credits"
+                                        <input id = "updateEducationCredits<?php echo $uniqueKey;?>" class=textInput" type="number" name="credits"
                                                placeholder="<?php echo $credits; ?>">
                                         <?php
                                         $isNumeric = false;
@@ -632,7 +635,7 @@ function getArray($query, $con)
                                             GPA
                                         </p>
                                         <div class="autocomplete">
-                                            <input id="updateGrade<?php echo $uniqueKey;?>" class=textInput" type="text" name="gpa"
+                                            <input id="updateEducationGrade<?php echo $uniqueKey;?>" class=textInput" type="text" name="gpa"
                                                    placeholder="<?php echo $grade; ?>">
                                         </div>
                                     </div>
@@ -943,7 +946,10 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                         </p>
                         <!--Form for updating the examples-->
                         <form method="post" action="process.php">
-
+                            <!--The project title-->
+                            <div class="autocomplete">
+                                <input>
+                            </div>
                         </form>
 
                         <!--The image gallery. Only display if there are images-->
@@ -1034,7 +1040,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         itemModal.style.display = "block";
 
         //Load the autocomplete for new records
-        loadNewRecordAutocomplete();
+        loadnewEducationRecordAutocomplete();
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -1063,7 +1069,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         }
 
         //Load the autocomplete
-        loadAutocompleteForUpdate(key);
+        loadAutocompleteForEducationUpdate(key);
     }
 
     //This function takes a button id and the desired text and updates it
@@ -1113,10 +1119,10 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         if (show.includes("Update")) {
             if (show.includes("Credits")) {
                 //isolate the id
-                id = show.substring("showUpdateCreditsDiv".length)
+                id = show.substring("showupdateEducationCreditsDiv".length)
 
                 //Show and hide the relevant divs
-                document.getElementById("showUpdateCreditsDiv" + id).style.display = 'block';
+                document.getElementById("showupdateEducationCreditsDiv" + id).style.display = 'block';
                 hideElement("showUpdateGpaDiv" + id);
 
             } else if (show.includes("Gpa")) {
@@ -1124,7 +1130,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
 
                 //Show and hide the relevant divs
                 document.getElementById("showUpdateGpaDiv" + id).style.display = 'block';
-                hideElement("showUpdateCreditsDiv" + id);
+                hideElement("showupdateEducationCreditsDiv" + id);
             }
 
         //Change div for new records
@@ -1256,28 +1262,34 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
     var subjectCodes = <?php echo json_encode($codeArray);?>;
     var codeExtensions = convertArrayToString(<?php echo json_encode($extensionArray);?>);
     var grades = <?php echo json_encode($gradeArray);?>;
+    var exampleNames = <?php echo json_encode($exampleNameArray);?>;
 
     //Load the autocompletes for new items
-    function loadNewRecordAutocomplete() {
+    function loadnewEducationRecordAutocomplete() {
         //Autocomplete for new records
-        autocomplete(document.getElementById("newRecordInstitution"), institutions);
-        autocomplete(document.getElementById("newRecordSubject"), subjects);
-        autocomplete(document.getElementById("newRecordYear"), years);
-        autocomplete(document.getElementById("newRecordSubjectLevel"), subjectLevels);
-        autocomplete(document.getElementById("newRecordCode"), subjectCodes);
-        autocomplete(document.getElementById("newRecordCodeExtension"), codeExtensions);
-        autocomplete(document.getElementById("newRecordGpa"), grades);
+        autocomplete(document.getElementById("newEducationRecordInstitution"), institutions);
+        autocomplete(document.getElementById("newEducationRecordSubject"), subjects);
+        autocomplete(document.getElementById("newEducationRecordYear"), years);
+        autocomplete(document.getElementById("newEducationRecordSubjectLevel"), subjectLevels);
+        autocomplete(document.getElementById("newEducationRecordCode"), subjectCodes);
+        autocomplete(document.getElementById("newEducationRecordCodeExtension"), codeExtensions);
+        autocomplete(document.getElementById("newEducationRecordGpa"), grades);
     }
 
-    //Loads autocomplete for each of the grades
-    function loadAutocompleteForUpdate(id) {
-        autocomplete(document.getElementById("updateInstitution" + id), institutions);
-        autocomplete(document.getElementById("updateSubject" + id), subjects);
-        autocomplete(document.getElementById("updateYear" + id), years);
-        autocomplete(document.getElementById("updateSubjectLevel" + id), subjectLevels);
-        autocomplete(document.getElementById("updateCode" + id), subjectCodes);
-        autocomplete(document.getElementById("updateCodeExtension" + id), codeExtensions);
-        autocomplete(document.getElementById("updateGrade" + id), grades);
+    //Loads autocomplete for updating education
+    function loadAutocompleteForEducationUpdate(id) {
+        autocomplete(document.getElementById("updateEducationInstitution" + id), institutions);
+        autocomplete(document.getElementById("updateEducationSubject" + id), subjects);
+        autocomplete(document.getElementById("updateEducationYear" + id), years);
+        autocomplete(document.getElementById("updateEducationSubjectLevel" + id), subjectLevels);
+        autocomplete(document.getElementById("updateEducationCode" + id), subjectCodes);
+        autocomplete(document.getElementById("updateEducationCodeExtension" + id), codeExtensions);
+        autocomplete(document.getElementById("updateEducationGrade" + id), grades);
+    }
+    
+    //Loads autocomplete for updating examples
+    function loadAutocompleteForExamplesUpdate(id) {
+        autocomplete(document.getElementById("updateName" + id), exampleNames);
     }
 
     //Convert array to string
