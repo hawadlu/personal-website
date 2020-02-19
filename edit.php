@@ -664,9 +664,9 @@ function getArray($query, $con)
             <?php
             //The query which shows the examples
             $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.examplesDescription, 
-examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
+            examples.link, examples.github FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
             $experienceQuery -> execute();
-            $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github, $privateRepo);
+            $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github);
             $experienceQuery->store_result();
             $recordCount = $experienceQuery->num_rows();
 
@@ -916,18 +916,12 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                 if ($github != null) {
                                     ?>
                                     GitHub:
-                                    <?php
-                                    if ($privateRepo == 1) {
-                                        echo "Sorry. This one has to be kept secret.";
-                                    } else {
-                                        ?>
                                         <a class="pageLink" href="<?php echo $github; ?>">
                                             <?php
                                             echo $github;
                                             ?>
                                         </a>
-                                        <?php
-                                    }
+                                    <?php
                                 } else {
                                     echo "Sorry, there is no github link.";
                                 }
@@ -1001,6 +995,28 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                             <!--Div that shows the link-->
                             <div id = "updateExamplesLink<?php echo $uniqueKey;?>" style="display: <?php echo $displayLinkDiv;?>">
                                 <input type="text" value="<?php echo $linkToDisplay;?>" required>
+                            </div>
+
+                            <!--Github-->
+                            <?php
+                            //Auto check if there is a link
+                            $checked = "";
+                            $displayLinkDiv = "none";
+                            $linkToDisplay = "";
+                            if ($github != null) {
+                                $checked = "checked";
+                                $displayLinkDiv = "block";
+                                $linkToDisplay = $link;
+                            }
+                            ?>
+
+                            <br>
+                            <label for="updateGithubLinkCheckbox<?php echo $uniqueKey;?>">Github</label>
+                            <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey;?>')" type="checkbox" id = "updateGithubLinkCheckbox<?php echo $uniqueKey;?>" <?php echo $checked?>>
+
+                            <!--The div that shows the github link-->
+                            <div id = "updateGithubLink<?php echo $uniqueKey;?>" style="display: <?php echo $displayLinkDiv;?>">
+                                <input type="text" value="<?php echo $linkToDisplay;?>">
                             </div>
                         </form>
 

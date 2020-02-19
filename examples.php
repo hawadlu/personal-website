@@ -9,9 +9,9 @@ require("connect.php");
     <?php
     //The query which shows the examples
     $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.examplesDescription, 
-examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
+examples.link, examples.github FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
     $experienceQuery -> execute();
-    $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github, $privateRepo);
+    $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github);
     $experienceQuery->store_result();
     $recordCount = $experienceQuery->num_rows();
 
@@ -261,18 +261,12 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                         if ($github != null) {
                             ?>
                             GitHub:
-                            <?php
-                            if ($privateRepo == 1) {
-                                echo "Sorry. This one has to be kept secret.";
-                            } else {
-                                ?>
                                 <a class="pageLink" href="<?php echo $github; ?>">
                                     <?php
                                     echo $github;
                                     ?>
                                 </a>
                                 <?php
-                            }
                         } else {
                             echo "Sorry, there is no github link.";
                         }
