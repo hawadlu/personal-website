@@ -530,11 +530,29 @@ button {
 }
 
 /*THE GALLERY OF IMAGES ON THE EDIT PAGE*/
-.gallery-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: ". . . .";
+@media (min-width: 750px) {
+  .gallery-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: ". . . .";
+  }
+}
+
+@media (max-width: 750px) {
+  .gallery-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: ". .";
+  }
+}
+
+@media (max-width: 400px) {
+  .gallery-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: ".";
+  }
 }
 
 /*GRID THAT HOLDS THE EDIT TABS*/

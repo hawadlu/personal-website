@@ -240,7 +240,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                     <p class="alignTextLeft">
                         <?php
                         //Only displays if there is a link to display
-                        if ($link != '0') {
+                        if ($link != null) {
                             ?>
                             Link:
                             <a class="pageLink" href="<?php echo $link; ?>">
@@ -249,6 +249,8 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                 ?>
                             </a>
                             <?php
+                        } else {
+                            echo "Sorry, there is no link to be displayed.";
                         }
                         ?>
 
@@ -271,6 +273,8 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                 </a>
                                 <?php
                             }
+                        } else {
+                            echo "Sorry, there is no github link.";
                         }
                         ?>
                     </p>
