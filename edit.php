@@ -990,7 +990,7 @@ function getArray($query, $con)
                             ?>
                             <br>
                             <label for="updateExamplesLinkCheckbox<?php echo $uniqueKey;?>">Link</label>
-                            <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey;?>')" type="checkbox" id = "updateExamplesLinkCheckbox<?php echo $uniqueKey;?>" <?php echo $checked;?>>
+                            <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey;?>')" name = "link" type="checkbox" id = "updateExamplesLinkCheckbox<?php echo $uniqueKey;?>" <?php echo $checked;?>>
 
                             <!--Div that shows the link-->
                             <div id = "updateExamplesLink<?php echo $uniqueKey;?>" style="display: <?php echo $displayLinkDiv;?>">
@@ -1006,18 +1006,25 @@ function getArray($query, $con)
                             if ($github != null) {
                                 $checked = "checked";
                                 $displayLinkDiv = "block";
-                                $linkToDisplay = $link;
+                                $linkToDisplay = $github;
                             }
                             ?>
 
                             <br>
                             <label for="updateGithubLinkCheckbox<?php echo $uniqueKey;?>">Github</label>
-                            <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey;?>')" type="checkbox" id = "updateGithubLinkCheckbox<?php echo $uniqueKey;?>" <?php echo $checked?>>
+                            <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey;?>')" name = "github" type="checkbox" id = "updateGithubLinkCheckbox<?php echo $uniqueKey;?>" <?php echo $checked?>>
 
                             <!--The div that shows the github link-->
                             <div id = "updateGithubLink<?php echo $uniqueKey;?>" style="display: <?php echo $displayLinkDiv;?>">
                                 <input type="text" value="<?php echo $linkToDisplay;?>">
                             </div>
+
+                            <!--The description-->
+                            <textarea name = "description" style="width: 100%; height: auto">
+                                <?php
+                                echo $examplesDescription;
+                                ?>
+                            </textarea>
                         </form>
 
                         <!--The image gallery. Only display if there are images-->
