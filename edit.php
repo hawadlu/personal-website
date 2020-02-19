@@ -934,12 +934,20 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                             </p>
                         </div>
                     </div>
+                    <button onclick="showUpdateDiv('updateExample<?php echo $uniqueKey;?>', '<?php echo $uniqueKey;?>')">Update</button>
+
                     <!-- The div that is used to edit the example-->
-                    <div id = "updateExample" style="background-color: <?php echo $colour;?>">
+                    <div id = "updateExample<?php echo $uniqueKey;?>" style="background-color: <?php echo $colour;?>; display: none">
                         <p>
                             This is the update div
                         </p>
+                        <!--Form for updating the examples-->
+                        <form method="post" action="process.php">
+
+                        </form>
+
                         <!--The image gallery-->
+                        <!--todo make this an extra layer that has to be expanded-->
                         <div class="gallery-container">
                             <?php
                             foreach (glob($directoryName . "/*") as $file) {
@@ -1030,7 +1038,7 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
         }
     }
 
-    //Hides and shows the update div
+    //Hides and shows the update div for education and exaples
     function showUpdateDiv(divName, key) {
         var x = document.getElementById(divName);
         if (x.style.display === "none") {
