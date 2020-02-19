@@ -529,10 +529,13 @@ button {
   }
 }
 
-/*THE ADD RECORD DIVS*/
-
-
-
+/*THE GALLERY OF IMAGES ON THE EDIT PAGE*/
+.gallery-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: ". . . .";
+}
 
 /*GRID THAT HOLDS THE EDIT TABS*/
 .edit-tabs {

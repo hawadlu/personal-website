@@ -333,6 +333,11 @@ if (isset($_POST['deleteRecord'])) {
 
 }
 
+//Deletes images
+if (isset($_POST['deleteImage'])) {
+    echo "Delete image: " . $_POST['file'];
+}
+
 
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
 function findInvalid($type, $values) {

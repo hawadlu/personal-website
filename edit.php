@@ -933,11 +933,29 @@ examples.link, examples.github, examples.privateRepo FROM examples LEFT JOIN yea
                                 ?>
                             </p>
                         </div>
-                        <!-- The div that is used to edit the example-->
-                        <div id = "updateExample">
-                            <p>
-                                I'm the update div
-                            </p>
+                    </div>
+                    <!-- The div that is used to edit the example-->
+                    <div id = "updateExample" style="background-color: <?php echo $colour;?>">
+                        <p>
+                            This is the update div
+                        </p>
+                        <!--The image gallery-->
+                        <div class="gallery-container">
+                            <?php
+                            foreach (glob($directoryName . "/*") as $file) {
+                                ?>
+                                <div>
+                                    <img src="<?php echo $file;?>" style="width: 250px">
+
+                                    <!--The delete image form-->
+                                    <form method="post" action="process.php">
+                                        <input name = "file" type="hidden" value="<?php echo $file;?>">
+                                        <input type="submit" name = "deleteImage" value = "Delete">
+                                    </form>
+                                </div>
+                                <?php
+                            }
+                            ?>
                         </div>
                     </div>
                     <?php
