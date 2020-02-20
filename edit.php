@@ -807,7 +807,7 @@
                                     <p class="alignTextLeft">
                                         <?php
                                         //Only displays if there is a link to display
-                                        if ($link != '0') {
+                                        if ($link != null) {
                                             ?>
                                             Link:
                                             <a class="pageLink" href="<?php echo $link; ?>"><?php echo $link;?></a>
@@ -877,6 +877,15 @@
                                         <?php
                                     }
                                     ?>
+                                    <!--Option that allows the user to add their own code-->
+                                    <br>
+                                    <label for="newLanguage<?php echo $uniqueKey;?>">Other</label>
+                                    <input type="checkbox" name = "newLanguage" id = "newLanguage<?php echo $uniqueKey;?>" onchange="showUpdateLinkInput('newLanguageDiv<?php echo $uniqueKey;?>')">
+
+                                    <!--Input box for the new language-->
+                                    <div id = "newLanguageDiv<?php echo $uniqueKey;?>" style="display:none;">
+                                        <input type="text" placeholder="New Language">
+                                    </div>
 
                                     <!--The link-->
                                     <?php
@@ -884,10 +893,12 @@
                                     $checked = "";
                                     $displayLinkDiv = "none";
                                     $linkToDisplay = "";
+                                    $placeholder = "Link";
                                     if ($link != null) {
                                         $checked = "checked";
                                         $displayLinkDiv = "block";
                                         $linkToDisplay = $link;
+                                        $placeholder = "";
                                     }
                                     ?>
                                     <br>
@@ -897,7 +908,7 @@
 
                                     <!--Div that shows the link-->
                                     <div id="updateExamplesLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input type="text" value="<?php echo $linkToDisplay; ?>">
+                                        <input type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
                                     </div>
 
                                     <!--Github-->
@@ -906,10 +917,12 @@
                                     $checked = "";
                                     $displayLinkDiv = "none";
                                     $linkToDisplay = "";
+                                    $placeholder = "Github link";
                                     if ($github != null) {
                                         $checked = "checked";
                                         $displayLinkDiv = "block";
                                         $linkToDisplay = $github;
+                                        $placeholder = "";
                                     }
                                     ?>
 
@@ -920,7 +933,7 @@
 
                                     <!--The div that shows the github link-->
                                     <div id="updateGithubLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input type="text" value="<?php echo $linkToDisplay; ?>">
+                                        <input type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
                                     </div>
 
                                     <!--The description-->
