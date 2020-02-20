@@ -32,15 +32,14 @@ if (isset($_POST['submitEducationUpdate'])) {
     //echo "Update record.";
 
     //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
-    findInvalid('education',
-        [[$postedInstitution, 'institution', 'string', 40],
-            [$postedSubject, 'subject', 'string', 100],
-            [$postedSubjectYear, 'subjectYear', 'int', 4],
-            [$postedSubjectLevel, 'subjectLevel', 'string', 20],
-            [$postedCode, 'subjectCode', 'string', 10],
-            [$postedCodeExtension, 'codeExtension', 'int', 4],
-            [$postedCredits, 'credits', 'int', 2],
-            [$postedGrade, 'grade', 'string', 2]]);
+    findInvalid([[$postedInstitution, 'institution', 'string', 40, false],
+            [$postedSubject, 'subject', 'string', 100, false],
+            [$postedSubjectYear, 'subjectYear', 'int', 4, false],
+            [$postedSubjectLevel, 'subjectLevel', 'string', 20, false],
+            [$postedCode, 'subjectCode', 'string', 10, false],
+            [$postedCodeExtension, 'codeExtension', 'int', 4, false],
+            [$postedCredits, 'credits', 'int', 2, false],
+            [$postedGrade, 'grade', 'string', 2], false]);
 
 
 
@@ -167,16 +166,16 @@ if (isset($_POST["newEducationRecord"])) {
     $postedNewCredits = stripSpaces($_POST['newCredits']);
     $postedNewGrade = stripSpaces($_POST['newGpa']);
 
-    //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
-    findInvalid('education',
-        [[$postedNewInstitution, 'institution', 'string', 40],
-            [$postedNewSubject, 'subject', 'string', 100],
-            [$postedNewSubjectYear, 'subjectYear', 'int', 4],
-            [$postedNewSubjectLevel, 'subjectLevel', 'string', 20],
-            [$postedNewSubjectCode, 'subjectCode', 'string', 10],
-            [$postedNewCodeExtension, 'codeExtension', 'int', 4],
-            [$postedNewCredits, 'credits', 'int', 2],
-            [$postedNewGrade, 'grade', 'string', 2]]);
+    //Error check all the values. Include each value, the field name, a flag of the expected type in the array,
+    //the max length and a flag to signify if it is ok for the field to be empty.
+    findInvalid([[$postedNewInstitution, 'institution', 'string', 40, false],
+            [$postedNewSubject, 'subject', 'string', 100, false],
+            [$postedNewSubjectYear, 'subjectYear', 'int', 4, false],
+            [$postedNewSubjectLevel, 'subjectLevel', 'string', 20, false],
+            [$postedNewSubjectCode, 'subjectCode', 'string', 10, false],
+            [$postedNewCodeExtension, 'codeExtension', 'int', 4, false],
+            [$postedNewCredits, 'credits', 'int', 2, false],
+            [$postedNewGrade, 'grade', 'string', 2], false]);
 
     //Values that will be inserted into the database
     $valuesToCheck = [$postedNewInstitution, $postedNewSubjectLevel, $postedNewSubjectYear, $postedNewSubjectCode, $postedNewCodeExtension, $postedNewGrade];
@@ -337,10 +336,81 @@ if (isset($_POST['submitExampleUpdate'])) {
     echo "Updating example";
     echo "<br>";
     echo var_dump($_POST);
+    $value = null;
 
     //Get all the posted variables
     $postedExampleName = $_POST['exampleName'];
     $postedExampleYear = $_POST['exampleYear'];
+    $postedExampleLink = $_POST['exampleLink'];
+    $postedExampleGithub = $_POST['exampleGithub'];
+    $postedExampleDescription = $_POST['exampleDescription'];
+
+    //Add the posted values to an array that will be checked for invalids once the languages have been processed
+    //Error check all the values. Include each value, the field name, a flag of the expected type in the array,
+    //the max length and a flag to signify if it is ok for the field to be empty.
+    $invalidArray = [[$postedExampleName, 'exampleName', 'string', 100, false],
+        [$postedExampleYear, 'exampleYear', 'int', 4, false],
+        [$postedExampleLink, 'exampleLink', 'string', 100, true],
+        [$postedExampleGithub, 'exampleGithub', 'string', 100, true],
+        [$postedExampleDescription, 'exampleDescription', 'string', 1000, false]];
+
+
+    //Get all the languages currently stored in the database
+    $value = null;
+    $query = $con->prepare("SELECT languages.languages FROM languages WHERE languages != ''");
+    $query->execute();
+    $query->bind_result($value);
+    $query->store_result();
+
+    $languageArray = [];
+
+    while ($row = $query->fetch()) {
+        array_push($languageArray, $value);
+    }
+    ?><br><?php
+    echo sizeof($languageArray) . " languages were found in the database.";
+
+    $languagesUsed = []; //Array of languages that the user wants to add
+
+    //todo make sure that the new language doesn't already exist
+    if ($_POST['newLanguage'] != "") {
+        //Start the language counter at 1
+        $languageCount = 1;
+
+        //Add the language to the language array
+        array_push($languagesUsed, $_POST['newLanguage']);
+    } else {
+        $languageCount = 0;
+    }
+
+    //Checking to see which of the languages ued in the database are requested by the user
+    for ($i = 0; $i < sizeof($languageArray); $i++) {
+        if (isset($_POST[str_replace(' ', '_', $languageArray[$i])]) && $_POST[str_replace(' ', '_', $languageArray[$i])] == $languageArray[$i]) {
+            //Increment the counter and add the language to the used array
+            $languageCount++;
+            array_push($languagesUsed, $languageArray[$i]);
+            ?><br><?php
+            echo $languageArray[$i] . " found";
+
+            //Add each language to the array to be tested. This to make sure that no html inputs have been tampered with
+            array_push($invalidArray, [$_POST[str_replace(' ', '_', $languageArray[$i])], $languageArray[$i], 'string', 20]);
+
+        } else if (isset($_POST[str_replace(' ', '_', $languageArray[$i])])) {
+            //Report the value as invalid
+            redirectWithError($_POST[str_replace(' ', '_', $languageArray[$i])] . " is not a valid language. ", 'edit.php');
+        }
+
+        //return an error if there are too many languages
+        if ($languageCount > 5) {
+            redirectWithError('You cannot add more than five languages per project.', 'edit.php');
+        }
+    }
+
+    //error check
+    findInvalid($invalidArray);
+
+    ?><br><?php
+    echo $languageCount . " languages have been used.";
 
 }
 
@@ -349,9 +419,8 @@ if (isset($_POST['deleteImage'])) {
     echo "Delete image: " . $_POST['file'];
 }
 
-
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
-function findInvalid($type, $values) {
+function findInvalid($values) {
     $gradeValid = false; //flag used to determine if the grade is valid
     ?><br><?php
     //echo "Check invalid for type: " . $type;
@@ -456,22 +525,8 @@ function findInvalid($type, $values) {
                 }
             }
 
-            //Error checking the year
-        } else if ($values[$i][1] == 'subjectYear' || $values[$i][1] == 'newSubjectYear') {
-            $currentYear = date('Y');
-            $enteredYear = $values[$i][0];
-            $yearDiff = abs($currentYear - $enteredYear);
-            //Check for years in the future
-            if ($enteredYear > $currentYear) {
-                redirectWithError("Can you see the future? The year " . $enteredYear . " is " . $yearDiff . " year(s) from now.", 'edit.php');
-
-            //Check for years too far into the past
-            } else if ($enteredYear < ($currentYear - 100)) {
-                redirectWithError("More than a lifetime ago. The year " . $enteredYear . " occurred " . $yearDiff . " year(s) ago. Are you a time traveler?", 'edit.php');
-            }
-
             //Test to see if the value is empty ignore if a valid grade has been entered
-        } else if (isEmpty($values[$i][0]) && !$gradeValid) {
+        } else if (isEmpty($values[$i][0]) && !$gradeValid && $values[$i][4] == false) {
             ?><br><?php
             redirectWithError("Value cannot be empty. For field: " . $values[$i][1],  'edit.php');
             //die("You cannot have an empty value!");
@@ -479,10 +534,25 @@ function findInvalid($type, $values) {
             //Look for values that do not match their specified type
         } else if (!isType($values[$i][2], $values[$i][0])) {
             ?><br><?php
-            redirectWithError("Invalid type. For value: " . $values[$i][0] . ". This value should be of type " . $values[$i][2],  'edit.php');
-            die($values[$i][1] . " should be of type " . $values[$i][2]);
+            redirectWithError("Invalid type. For value: " . $values[$i][0] . ". " . $values[$i][1] . " should be of type " . $values[$i][2],  'edit.php');
+
+            //Error checking the year
+        } else if ($values[$i][1] == 'subjectYear' || $values[$i][1] == 'newSubjectYear' || $values[$i][1] == 'exampleYear') {
+            $currentYear = date('Y');
+            $enteredYear = $values[$i][0];
+            $yearDiff = abs($currentYear - $enteredYear);
+            //Check for years in the future
+            if ($enteredYear > $currentYear) {
+                redirectWithError("Can you see the future? The year " . $enteredYear . " is " . $yearDiff . " year(s) from now.", 'edit.php');
+
+                //Check for years too far into the past
+            } else if ($enteredYear < ($currentYear - 100)) {
+                redirectWithError("More than a lifetime ago. The year " . $enteredYear . " occurred " . $yearDiff . " year(s) ago. Are you a time traveler?", 'edit.php');
+            }
         }
     }
+
+    echo "No errors were found!";
 }
 
 //Redirects the user to the specified page with an error cookie set.
@@ -636,8 +706,7 @@ function numTimesFkUsedEducation($query, $con) {
     $query = runAndReturn($query, $con);
     $query->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK);
     $query->store_result();
-    $recordCount = $query->num_rows();
-    return $recordCount;
+    return $query->num_rows();
 }
 
 //Checks if a record exists in a linked table. Returns the number of records

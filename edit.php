@@ -847,7 +847,7 @@
                                 <form method="post" action="process.php" autocomplete="off">
                                     <!--The project title-->
                                     <div class="autocomplete">
-                                        <input id="updateExampleName<?php echo $uniqueKey; ?>" type="text" name="exampleName" value="<?php echo $name; ?>">
+                                        <input id="updateExampleName<?php echo $uniqueKey; ?>" type="text" name="exampleName" value="<?php echo $name; ?>" required>
                                     </div>
 
                                     <!--The year-->
@@ -884,7 +884,7 @@
 
                                     <!--Input box for the new language-->
                                     <div id = "newLanguageDiv<?php echo $uniqueKey;?>" style="display:none;">
-                                        <input type="text" placeholder="New Language">
+                                        <input type="text" name = "newLanguage" placeholder="New Language">
                                     </div>
 
                                     <!--The link-->
@@ -904,11 +904,11 @@
                                     <br>
                                     <label for="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>">Link</label>
                                     <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey; ?>')"
-                                    name="link" type="checkbox" id="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked; ?>>
+                                    type="checkbox" id="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked; ?>>
 
                                     <!--Div that shows the link-->
                                     <div id="updateExamplesLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
+                                        <input type="text" name = "exampleLink" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
                                     </div>
 
                                     <!--Github-->
@@ -929,15 +929,15 @@
                                     <br>
                                     <label for="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>">Github</label>
                                     <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey; ?>')"
-                                    name="github" type="checkbox" id="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked ?>>
+                                    type="checkbox" id="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked ?>>
 
                                     <!--The div that shows the github link-->
                                     <div id="updateGithubLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
+                                        <input name = "exampleGithub" type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
                                     </div>
 
                                     <!--The description-->
-                                    <textarea name="description" style="width: 100%; height: auto">
+                                    <textarea name="exampleDescription" style="width: 100%; height: auto" required>
                                         <?php echo $examplesDescription;?>
                                     </textarea>
 
