@@ -1,6 +1,6 @@
 <?php
-//TODO make sure that adding grades works properly in all cases.
-//TODO add delete ability. When deleting records delete all Foreign keys that are not used by another record
+//todo when deleting/renaming records ensure that the file paths are handled appropriately
+
 
 //Check if the user is logged in
 session_start();
@@ -18,7 +18,6 @@ $tablesToCheck = ['institution', 'subjectLevel', 'year', 'subjectCode', 'codeExt
 $tableColumns = ['institutionFk', 'subject', 'gradeFK', 'subjectLevelFK', 'yearFK', 'subjectCodeFK', 'creditsFk', 'codeExtensionFK'];
 
 //Updating education records
-//echo var_dump($_POST);
 if (isset($_POST['submitEducationUpdate'])) {
     //Variables for each posted value. Spaces stripped appropriately
     $postedInstitution = $_POST['institution'];
@@ -291,7 +290,7 @@ if (isset($_POST["newEducationRecord"])) {
 }
 
 //Deleting education records
-if (isset($_POST['deleteRecord'])) {
+if (isset($_POST['deleteEducationRecord'])) {
     //echo "Delete record";
 
     //Perform a query to get the record to be deleted. This allows the foreign keys to be gathered so that their corresponding values can also be deleted if required
@@ -330,6 +329,18 @@ if (isset($_POST['deleteRecord'])) {
 
     //Delete the item in the education table
     runQuery("DELETE FROM education WHERE education.uniqueKey = " . $uniqueKey, $con);
+
+}
+
+//Update examples records
+if (isset($_POST['submitExampleUpdate'])) {
+    echo "Updating example";
+    echo "<br>";
+    echo var_dump($_POST);
+
+    //Get all the posted variables
+    $postedExampleName = $_POST['exampleName'];
+    $postedExampleYear = $_POST['exampleYear'];
 
 }
 

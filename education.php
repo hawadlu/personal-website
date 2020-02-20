@@ -23,7 +23,7 @@ require("connect.php");
     LEFT JOIN year ON education.yearFK = year.yearPK 
     LEFT JOIN subjectCode ON education.subjectCodeFK = subjectCode.subjectCodePK
      LEFT JOIN subjectLevel ON education.subjectLevelFK = subjectLevel.subjectLevelPK 
-     ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.grade ASC,subjectCode.subjectCode ASC");
+     ORDER BY education.institutionFK DESC, year.year DESC, credits.credits DESC, grade.gradePK ASC,subjectCode.subjectCode ASC");
     $educationQuery -> execute();
     $educationQuery->bind_result($uniqueKey, $subject, $codeExtension, $credits, $grade, $institution, $relevantYear, $code, $subjectLevel);
     $educationQuery->store_result();
