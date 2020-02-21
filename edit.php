@@ -299,17 +299,17 @@
                                        type="checkbox" id="newExamplesLinkCheckbox">
 
                                 <!--Div that shows the link-->
-                                <div id="newExamplesLink" style="display: block">
+                                <div id="newExamplesLink" style="display: none">
                                     <input type="text" name = "newExampleLink" placeholder="E.g. google.com">
                                 </div>
 
                                 <br>
                                 <label for="newGithubLinkCheckbox">Github</label>
-                                <input onchange="showUpdateLinkInput('updateGithubLink')"
+                                <input onchange="showUpdateLinkInput('newGithubLink')"
                                        type="checkbox" id="newGithubLinkCheckbox">
 
                                 <!--The div that shows the github link-->
-                                <div id="updateGithubLink=" style="display: block">
+                                <div id="newGithubLink" style="display: none">
                                     <input name = "exampleGithub" type="text"  placeholder="E.g. github.com">
                                 </div>
 
@@ -318,12 +318,9 @@
 
                                 </textarea>
                                 
-                                <input type="submit" name="submitExampleUpdate" value="Update">
-
-
                                 Select image to upload:
                                 <input type="file" name="userFiles[]" id="" multiple="">
-                                <input type="submit" value="Upload" name="submit">
+                                <input type="submit" value="Upload" name="newExampleRecord">
                             </form>
                         </div>
                     </div>
@@ -1101,6 +1098,7 @@
 
             //Load the autocomplete for new records
             loadNewEducationRecordAutocomplete();
+            loadNewExampleRecordAutocomplete();
         }
 
         // When the user clicks on <span> (x), close the modal
@@ -1339,7 +1337,7 @@
         var grades = <?php echo json_encode($gradeArray);?>;
         var exampleNames = <?php echo json_encode($exampleNameArray);?>;
 
-        //Load the autocompletes for new items
+        //Load the autocompletes for new education items
         function loadNewEducationRecordAutocomplete() {
             //Autocomplete for new records
             autocomplete(document.getElementById("newEducationRecordInstitution"), institutions);
@@ -1349,6 +1347,12 @@
             autocomplete(document.getElementById("newEducationRecordCode"), subjectCodes);
             autocomplete(document.getElementById("newEducationRecordCodeExtension"), codeExtensions);
             autocomplete(document.getElementById("newEducationRecordGpa"), grades);
+        }
+
+        //Load the autocomplete for new examples
+        function loadNewExampleRecordAutocomplete() {
+            autocomplete(document.getElementById("newExampleName"), exampleNames);//todo remove this to decrease the chance of potential duplicates?
+            autocomplete(document.getElementById("newExampleYear"), years);
         }
 
         //Loads autocomplete for updating education
@@ -1364,7 +1368,7 @@
 
         //Loads autocomplete for updating examples
         function loadAutocompleteForExamplesUpdate(id) {
-            autocomplete(document.getElementById("updateExampleName" + id), exampleNames);
+            autocomplete(document.getElementById("updateExampleName" + id), exampleNames);//todo remove this to decrease the amount of potential duplicates?
             autocomplete(document.getElementById("updateExampleYear" + id), years);
         }
 

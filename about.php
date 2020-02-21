@@ -43,9 +43,6 @@ require("head.php");
             <p class="alignTextLeft">Please note, however, that if you delete cookies or refuse to accept them, you
                 might not be able to use all of the features we offer, you may not be able to store your preferences,
                 and some of our pages might not display properly.</p>
-            <strong><p class="alignTextLeft">Where can you find more information about cookies</p></strong>
-            <p class="alignTextLeft">You can view Paypal's policies <a
-                    href="https://www.paypal.com/us/webapps/mpp/ua/useragreement-full">here.</a></p>
             <p class="alignTextLeft">You can learn more about cookies on the following third-party websites.</p>
             <!--Links to external websites where the user can learn more-->
             <ul>
