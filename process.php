@@ -30,6 +30,7 @@ if (isset($_POST['submitEducationUpdate'])) {
     $postedCodeExtension = stripSpaces($_POST['codeExtension']);
     $postedCredits = stripSpaces($_POST['credits']);
     $postedGrade = stripSpaces($_POST['gpa']);
+    $uniqueKey = $_POST['uniqueKey'];
 
     //echo "Update record.";
 
@@ -41,117 +42,21 @@ if (isset($_POST['submitEducationUpdate'])) {
             [$postedCode, 'subjectCode', 'string', 10, false],
             [$postedCodeExtension, 'codeExtension', 'int', 4, false],
             [$postedCredits, 'credits', 'int', 2, false],
-            [$postedGrade, 'grade', 'string', 2], false]);
+            [$postedGrade, 'grade', 'string', 2, false]]);
+
+    //2d array of the fields, values and their linked tables (if required) to be inserted
+    $toInsert = [['institutionFK', $postedInstitution, 'institution'],
+        ['subject', $postedSubject],
+        ['gradeFK', $postedGrade, 'grade'],
+        ['subjectLevelFK', $postedSubjectLevel, 'subjectLevel'],
+        ['yearFK', $postedSubjectYear, 'year'],
+        ['subjectCodeFK', $postedCode, 'subjectCode'],
+        ['creditsFK', $postedCredits, 'credits'],
+        ['codeExtensionFK', $postedCodeExtension, 'codeExtension']];
 
 
-
-    //Values that will be inserted into the DB (education)
-    $valuesToCheck = [$postedInstitution, $postedSubjectLevel, $postedSubjectYear, $postedCode, $postedCodeExtension, $postedGrade];
-
-    //Change grade to credits if required
-    //echo "Grade: " . $postedGrade;
-    //echo "Credits: " . $postedCredits;
-
-    //Change the grade to be updated in required
-    if ($postedGrade != "") {
-        $tablesToCheckEducation[5] = "grade";
-    } else if ($postedCredits != "") {
-        $tablesToCheckEducation[5] = "credits";
-        $valuesToCheck[5] = $postedCredits;
-    } else {
-        die("There was an error. Invalid grade input");
-    }
-
-    //echo "Tables to check: " . $tablesToCheckEducation[0] . " " . $tablesToCheckEducation[1] . " " . $tablesToCheckEducation[2] . " " . $tablesToCheckEducation[3] . " " . $tablesToCheckEducation[4] . " " . $tablesToCheckEducation[5];
-
-    $gradeUpdate = false; //Tracks if a grade has been updated
-
-    //Variables used when looking for duplicate records
-    $foreignKeys = []; //Store the foreign keys. Used when looking for duplicates
-    $creditsFK = 0;
-    $gradeFK = 0;
-
-
-    //Iterate over each field to see if it already exists in the database
-    for ($i = 0; $i < sizeof($tablesToCheckEducation); $i++) {
-        //perform a query to check if the record exists
-        ?><br><?php
-        //echo "Looking for records";
-        ?><br><?php
-        $recordCount = recordExistsLinked("SELECT * FROM " . $tablesToCheckEducation[$i] . " WHERE " . $tablesToCheckEducation[$i] . " = '" . $valuesToCheck[$i] . "'", $con);
-
-        //Insert a new record if required
-        if ($recordCount == 0) {
-            //record if a grade is being updated
-            if ($tablesToCheckEducation[$i] == "grade" || $tablesToCheckEducation[$i] == "credits") {
-                $gradeUpdate = true;
-            }
-
-            //echo "Inserting new statement: ";
-            ?><br><?php
-            runQuery("INSERT INTO " . $tablesToCheckEducation[$i] . " (" . $tablesToCheckEducation[$i] . "PK, " . $tablesToCheckEducation[$i] . ") 
-                    VALUES (NULL, '" . $valuesToCheck[$i] . "')", $con);
-
-            ?><br><?php
-            //echo "Getting FK for table value: " . $i . " Value: " . $valuesToCheck[$i];
-            ?><br><?php
-            $key = getFK($tablesToCheckEducation[$i], $valuesToCheck[$i], $con);
-            array_push($foreignKeys, $key);
-
-            //Insert the new foreign key
-            runQuery("UPDATE education SET education." . $tablesToCheckEducation[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
-
-        } else {
-            //Updating the the record to the new values
-            ?><br><?php
-            //echo "Record already exists. Updating fields for " . $tablesToCheckEducation[$i];
-            ?><br><?php
-
-            //Get the new foreign key
-            //echo "Getting FK for table value: " . $i . " Value: " . $tablesToCheckEducation[$i];
-            ?><br><?php
-            $key = getFK($tablesToCheckEducation[$i], $valuesToCheck[$i], $con);
-            array_push($foreignKeys, $key);
-
-            //checking if the old foreign key can be removed from the table entirely;
-            ?><br><?php
-            //echo "FK used query: SELECT * FROM education WHERE education." .$tablesToCheckEducation[$i] . "FK = " . $key;
-            $fkNum = numTimesFkUsedEducation("SELECT * FROM education WHERE education." .$tablesToCheckEducation[$i] . "FK = " . $key, $con);
-            if ($fkNum == 1) {
-                ?><br><?php
-                //echo "Used once";
-                //todo make sure that the old foreign key is removed
-            }
-
-            //Update the foreign key in the primary table
-            runQuery("UPDATE education SET education." . $tablesToCheckEducation[$i] . "FK = " . $key . " WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
-
-            //Update the grade/credits foreign keys
-            if ($tablesToCheckEducation[$i] == "credits") {
-                //echo "Hello credits";
-                runQuery("UPDATE education SET education.gradeFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
-                $creditsFK = $key;
-            } else if ($tablesToCheckEducation[$i] == "grade") {
-                //echo "Hello grade";
-                runQuery("UPDATE education SET education.creditsFK = 0 WHERE education.uniqueKey = " . $_POST['uniqueKey'], $con);
-                $gradeFK = $key;
-            }
-
-        }
-    }
-
-    //Look for duplicates
-    $values = [$foreignKeys[0], $postedSubject, $gradeFK, $foreignKeys[1], $foreignKeys[2], $foreignKeys[3], $creditsFK, $foreignKeys[4]];
-    if (!findDuplicate('education', $tableColumnsEducation, $values, $con)) {
-        //echo "No duplicates found";
-
-        //Update the record name
-        ?><br><?php
-        updateTableValue('education', 'subject', $postedSubject, 'uniqueKey', $_POST['uniqueKey'], $con);
-    }
-    //The new record has successfully been updated. Send a success message
-    redirectWithSuccess('Record updated', 'edit.php');
-
+    //Call function to update the values
+    updateValues($toInsert, $con, 'education', $uniqueKey);
 }
 
 //Creating new education records
@@ -334,7 +239,6 @@ if (isset($_POST['deleteEducationRecord'])) {
 
 }
 
-//Update examples records
 if (isset($_POST['submitExampleUpdate'])) {
     echo "Updating example";
     echo "<br>";
@@ -454,92 +358,8 @@ if (isset($_POST['submitExampleUpdate'])) {
         echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
     }
 
-    //Loop through the array updating the values so that they can easily be used to generate SQL
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        ?><br><?php
-        //Check to see if the field should contain a foreign key
-        if (strpos($toInsert[$i][0], 'FK')) {
-            ?><br><?php
-            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
-
-            //Run a query to check if the value already exists in a linked table
-            $selectQuery = "SELECT * FROM " . $toInsert[$i][2] . " WHERE " . $toInsert[$i][2] . "." . $toInsert[$i][2] . " = '" . $toInsert[$i][1] . "'";
-            ?><br><?php
-            echo "Select Query: " . $selectQuery;
-
-            if (recordExistsLinked($selectQuery, $con) == 0) {
-                //The record does not exist. Create it
-                ?><br><?php
-                //When inserting the FK has to be converted to PK
-
-                echo "Insert Query: " . "INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] .") VALUES (NULL , '" .$toInsert[$i][1] . "')";
-                runQuery("INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] .") VALUES (NULL , '" .$toInsert[$i][1] . "')", $con);
-            }
-            //Run a query to get the primary key of the value
-            $key = getSingleVal($selectQuery, $toInsert[$i][2] . "PK", $con);
-            echo "The key is: " . $key;
-
-            //Update the value in the insert array
-            $toInsert[$i][1] = $key;
-        } else {
-            //Fields that are not foreign keys may be duplicates. Check the database and alert the user
-            $query = "SELECT * FROM examples WHERE " . $toInsert[$i][0] . " = '" . $toInsert[$i][1] . "' AND examples.uniqueKey != " . $uniqueKey;
-            ?><br><?php
-            echo "Duplicate query: " . $query;
-
-            //Run the query and get the number of rows
-            $recordCount = 0;
-            foreach ($con->query($query) as $row) {
-                $recordCount++;
-            }
-            ?><br><?php
-            echo "Number of rows: " . $recordCount;
-
-            if ($recordCount != 0) {
-                ?><br><?php
-                redirectWithError("The value '" . $toInsert[$i][1] . "' already exists for field '" . $toInsert[$i][0] . "'", 'edit.php');
-            }
-        }
-    }
-
-    ?><br><?php
-    ?><br><?php
-    ?><br><?php
-    echo "Insert array";
-    //Print for debugging
-//    for ($i = 0; $i < sizeof($toInsert); $i++) {
-//        ?><!--<br>--><?php
-//        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
-//    }
-
-    //Generate the update statement
-    $query = "UPDATE examples SET ";
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        //do not add quotes for null
-        if ($toInsert[$i][1] == "NULL") {
-            $query = $query . $toInsert[$i][0] . " = " . $toInsert[$i][1];
-        } else {
-            $query = $query . $toInsert[$i][0] . " = '" . $toInsert[$i][1] . "'";
-        }
-
-        //Add a comma if not the last value
-        if ($i != sizeof($toInsert) - 1) {
-            $query = $query . ", ";
-        }
-    }
-
-    //Add the where clause
-    $query = $query . " WHERE examples.uniqueKey = " . $uniqueKey;
-
-//    ?><!--<br>--><?php
-//    echo "Update Query: " . $query;
-
-    //Execute the query
-    runQuery($query, $con);
-
-    //Redirect the user
-    redirectWithSuccess("Record has been updated!", 'edit.php');
+    //Run a function to update all of the necessary values
+    updateValues($toInsert, $con, 'examples', $uniqueKey);
 }
 
 //Deletes images
@@ -549,6 +369,7 @@ if (isset($_POST['deleteImage'])) {
 
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
 function findInvalid($values) {
+    echo print_r($values);
     $gradeValid = false; //flag used to determine if the grade is valid
     ?><br><?php
     //echo "Check invalid for type: " . $type;
@@ -557,7 +378,7 @@ function findInvalid($values) {
     ?><br><?php
     for ($i = 0; $i < sizeof($values); $i++) {
         ?><br><?php
-        //echo $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2];
+        echo $i . ": " . $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2] . ", " . $values[$i][3] . ", " . $values[$i][4];
 
         //Array used when checking the length of the string. Declared here to avoid multiple function calls
         $checkLenArray = checkLength($values[$i][0], $values[$i][3]);
@@ -661,9 +482,11 @@ function findInvalid($values) {
 
             //Look for values that do not match their specified type
         } else if (!isType($values[$i][2], $values[$i][0])) {
-            ?><br><?php
+//            ?><!--<br>--><?php
+            //echo "Failed at: " . $i;
+//            ?><!--<br>--><?php
             redirectWithError("Invalid type. For value: " . $values[$i][0] . ". " . $values[$i][1] . " should be of type " . $values[$i][2],  'edit.php');
-
+            e($values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2] . ", " . $values[$i][3] . ", " . $values[$i][4]);
             //Error checking the year
         } else if ($values[$i][1] == 'subjectYear' || $values[$i][1] == 'newSubjectYear' || $values[$i][1] == 'exampleYear') {
             $currentYear = date('Y');
@@ -683,10 +506,92 @@ function findInvalid($values) {
     echo "No errors were found!";
 }
 
+//Update examples records
+function updateValues(array $toInsert, mysqli $con, $tableToUpdate, $uniqueKey)
+{
+//Loop through the array updating the values so that they can easily be used to generate SQL
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+        ?><br><?php
+        ?><br><?php
+        //Check to see if the field should contain a foreign key
+        if (strpos($toInsert[$i][0], 'FK')) {
+            ?><br><?php
+            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
+
+            //Run a query to check if the value already exists in a linked table
+            $selectQuery = "SELECT * FROM " . $toInsert[$i][2] . " WHERE " . $toInsert[$i][2] . "." . $toInsert[$i][2] . " = '" . $toInsert[$i][1] . "'";
+            ?><br><?php
+            echo "Select Query: " . $selectQuery;
+
+            if (recordExistsLinked($selectQuery, $con) == 0) {
+                //The record does not exist. Create it
+                ?><br><?php
+                //When inserting the FK has to be converted to PK
+
+                echo "Insert Query: " . "INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] . ") VALUES (NULL , '" . $toInsert[$i][1] . "')";
+                runQuery("INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] . ") VALUES (NULL , '" . $toInsert[$i][1] . "')", $con);
+            }
+            //Run a query to get the primary key of the value
+            $key = getSingleVal($selectQuery, $toInsert[$i][2] . "PK", $con);
+            echo "The key is: " . $key;
+
+            //Update the value in the insert array
+            $toInsert[$i][1] = $key;
+        } else {
+            //Fields that are not foreign keys may be duplicates. Check the database and alert the user
+            $query = "SELECT * FROM " . $tableToUpdate . " WHERE " . $toInsert[$i][0] . " = '" . $toInsert[$i][1] . "' AND " . $tableToUpdate . ".uniqueKey != " . $uniqueKey;
+
+
+            if (findDuplicate($query, $con) != 0) {
+                ?><br><?php
+                redirectWithError("The value '" . $toInsert[$i][1] . "' already exists for field '" . $toInsert[$i][0] . "'", 'edit.php');
+            }
+        }
+    }
+
+    ?><br><?php
+    ?><br><?php
+    ?><br><?php
+    echo "Insert array";
+    //Print for debugging
+//    for ($i = 0; $i < sizeof($toInsert); $i++) {
+//        ?><!--<br>--><?php
+//        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
+//    }
+
+    //Generate the update statement
+    $query = "UPDATE " . $tableToUpdate . " SET ";
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+        //do not add quotes for null
+        if ($toInsert[$i][1] == "NULL") {
+            $query = $query . $toInsert[$i][0] . " = " . $toInsert[$i][1];
+        } else {
+            $query = $query . $toInsert[$i][0] . " = '" . $toInsert[$i][1] . "'";
+        }
+
+        //Add a comma if not the last value
+        if ($i != sizeof($toInsert) - 1) {
+            $query = $query . ", ";
+        }
+    }
+
+    //Add the where clause
+    $query = $query . " WHERE " . $tableToUpdate . ".uniqueKey = " . $uniqueKey;
+
+//    ?><!--<br>--><?php
+//    echo "Update Query: " . $query;
+
+    //Execute the query
+    runQuery($query, $con);
+
+    //Redirect the user
+    redirectWithSuccess("Record has been updated!", 'edit.php');
+}
+
 //Takes a query and returns a single value
 function getSingleVal($query, $colName, $con) {
     $primary = $val = null;
-    echo "Single val query: " . $query;
+//    echo "Single val query: " . $query;
     $query = $con->prepare($query);
     $query->execute();
     $query->bind_result($primary, $val);
@@ -870,42 +775,19 @@ function recordExistsLinked($query, $con)
 
 //Looks for duplicate records in the given table. Takes a the table name. An array of fields and and array of values.
 //Returns true if a duplicate is found
-function findDuplicate($table, $fields, $values, $con)
+function findDuplicate($query, $con)
 {
-    //Build the query
-    $query = "SELECT * FROM " . $table;
+    ?><br><?php
+    echo "Duplicate query: " . $query;
 
-    for ($i = 0; $i < sizeof($fields); $i++) {
-        //Add where for the first value
-        if ($i == 0) {
-            $query = $query . " WHERE ";
-        }
-
-        //Insert with quotation marks if the value is not numeric
-        if (!is_numeric($values[$i])) {
-            $query = $query . $fields[$i] . " = '" . $values[$i] . "'";
-        } else {
-            $query = $query . $fields[$i] . " = " . $values[$i];
-        }
-
-        //Add an and if it is not the last value
-        if ($i < sizeof($fields) - 1) {
-            $query = $query . " AND ";
-        }
+    //Run the query and get the number of rows
+    $recordCount = 0;
+    foreach ($con->query($query) as $row) {
+        $recordCount++;
     }
-
-    //Execute the query
-    $query = $con->prepare($query);
-    $query->execute();
-    $query->store_result();
-    $recordCount = $query->num_rows();
-
-    if ($recordCount > 0) {
-        return true;
-    }
-
-    //No duplicate records found. Return false.
-    return false;
+    ?><br><?php
+    echo "Number of rows: " . $recordCount;
+    return $recordCount;
 }
 
 
