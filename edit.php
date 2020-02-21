@@ -256,7 +256,69 @@
                             <p>Add project</p>
                             <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image. when using cookies-->
                             <!--Upload files. Allow up to five-->
-                            <form action="" method="post" enctype="multipart/form-data">
+                            <form action="process.php" method="post" enctype="multipart/form-data">
+                                <!--The project title-->
+                                <div class="autocomplete">
+                                    <input id="newExampleName" type="text" name="newExampleName" placeholder="Project Name: E.g. Tarzan" required>
+                                </div>
+
+                                <!--The year-->
+                                <div class="autocomplete">
+                                    <input id="newExampleYear" class="textInput" type="number"
+                                           name="newExampleYear" placeholder="Year: E.g. <?php echo date('Y');?>" required>
+                                </div>
+
+                                <!--The languages-->
+                                <!--Todo ensure that the user cannot select more than five languages-->
+                                <?php
+                                //Create a checkbox for each language
+                                for ($i = 0; $i < sizeof($languageArray); $i++) {
+                                   ?>
+                                    <br>
+                                    <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
+                                    <input type="checkbox" id="<?php echo $languageArray[$i]; ?>"
+                                           name="<?php echo $languageArray[$i]; ?>" value="<?php echo $languageArray[$i]; ?>">
+                                    <?php
+                                }
+                                ?>
+                                <!--Option that allows the user to add their own code-->
+                                <br>
+                                <label for="newLanguageInput">Other</label>
+                                <input type="checkbox" name = "newLanguageInput" id = "newLanguageInput" onchange="showUpdateLinkInput('newLanguageInputDiv')">
+
+                                <!--Input box for the new language-->
+                                <div id = "newLanguageInputDiv" style="display:none;">
+                                    <input type="text" name = "newLanguageEntry" placeholder="New Language">
+                                </div>
+
+                                <br>
+                                <label for="newExamplesLinkCheckbox">Link</label>
+                                <input onchange="showUpdateLinkInput('newExamplesLink')"
+                                       type="checkbox" id="newExamplesLinkCheckbox">
+
+                                <!--Div that shows the link-->
+                                <div id="newExamplesLink" style="display: block">
+                                    <input type="text" name = "newExampleLink" placeholder="E.g. google.com">
+                                </div>
+
+                                <br>
+                                <label for="newGithubLinkCheckbox">Github</label>
+                                <input onchange="showUpdateLinkInput('updateGithubLink')"
+                                       type="checkbox" id="newGithubLinkCheckbox">
+
+                                <!--The div that shows the github link-->
+                                <div id="updateGithubLink=" style="display: block">
+                                    <input name = "exampleGithub" type="text"  placeholder="E.g. github.com">
+                                </div>
+
+                                <!--The description-->
+                                <textarea name="exampleDescription" style="width: 100%; height: auto" placeholder="Enter some text" required>
+
+                                </textarea>
+                                
+                                <input type="submit" name="submitExampleUpdate" value="Update">
+
+
                                 Select image to upload:
                                 <input type="file" name="userFiles[]" id="" multiple="">
                                 <input type="submit" value="Upload" name="submit">
