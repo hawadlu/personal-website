@@ -11,6 +11,8 @@
     <?php
         require("head.php");
         require("connect.php");
+    
+        //Todo add default records that the user can use when using cookies
 
         //Todo only run this if logged in
         //Run several php queries to get arrays of each field of the education
