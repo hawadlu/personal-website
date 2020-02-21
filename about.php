@@ -2,6 +2,8 @@
 <!--Pulls in the head and other required pages-->
 <?php
 require("head.php");
+    
+    //todo add section where people can find my contact informa i.e. email addresss.
 ?>
 <body class="background-img">
 <div class="page-grid-container">
