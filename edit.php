@@ -591,7 +591,7 @@
                     <p>Projects</p>
                     <?php
                     //The query which shows the examples
-                    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.examplesDescription, 
+                    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.description, 
                     examples.link, examples.github FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
                     $experienceQuery->execute();
                     $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github);
@@ -724,31 +724,31 @@
                                     //Define queries to get the languages
                                     $langOneQuery = $con->prepare("SELECT languages.languages
                                     FROM examples
-                                    LEFT JOIN languages ON examples.languageOneFK = languages.languagePK
+                                    LEFT JOIN languages ON examples.languageOneFK = languages.languagesPK
                                     WHERE examples.uniqueKey LIKE $key
                                     ");
 
                                     $langTwoQuery = $con->prepare("SELECT languages.languages
                                     FROM examples
-                                    LEFT JOIN languages ON examples.languageTwoFK = languages.languagePK
+                                    LEFT JOIN languages ON examples.languageTwoFK = languages.languagesPK
                                     WHERE examples.uniqueKey LIKE $key
                                     ");
 
                                     $langThreeQuery = $con->prepare("SELECT languages.languages
                                     FROM examples
-                                    LEFT JOIN languages ON examples.languageThreeFK = languages.languagePK
+                                    LEFT JOIN languages ON examples.languageThreeFK = languages.languagesPK
                                     WHERE examples.uniqueKey LIKE $key
                                     ");
 
                                     $langFourQuery = $con->prepare("SELECT languages.languages
                                     FROM examples
-                                    LEFT JOIN languages ON examples.languageFourFK = languages.languagePK
+                                    LEFT JOIN languages ON examples.languageFourFK = languages.languagesPK
                                     WHERE examples.uniqueKey LIKE $key
                                     ");
 
                                     $langFiveQuery = $con->prepare("SELECT languages.languages
                                     FROM examples
-                                    LEFT JOIN languages ON examples.languageFiveFK = languages.languagePK
+                                    LEFT JOIN languages ON examples.languageFiveFK = languages.languagesPK
                                     WHERE examples.uniqueKey LIKE $key
                                     ");
 

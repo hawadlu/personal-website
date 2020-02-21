@@ -8,8 +8,8 @@ require("connect.php");
 <div class="page-grid-container">
     <?php
     //The query which shows the examples
-    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.examplesDescription, 
-examples.link, examples.github FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
+    $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.description, 
+    examples.link, examples.github FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
     $experienceQuery -> execute();
     $experienceQuery->bind_result($uniqueKey, $name, $relevantYear, $examplesDescription, $link, $github);
     $experienceQuery->store_result();
