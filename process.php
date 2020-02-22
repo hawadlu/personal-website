@@ -284,6 +284,11 @@ if (isset($_POST['submitExampleUpdate'])) {
     //error check
     findInvalid($invalidArray);
 
+    //Check the database to see if the name already exists.
+    if (findDuplicate("SELECT * FROM examples WHERE name = '" . $postedExampleName . "' AND examples.uniqueKey != " .$uniqueKey, $con)) {
+        redirectWithError('Duplicate record', 'edit.php');
+    }
+
     //2d array of the fields, values and their linked tables (if required) to be inserted
     $toInsert = [['name', $postedExampleName], ['yearFK', $postedExampleYear, 'year'], ['description', $postedExampleDescription], ['link', $postedExampleLink], ['github', $postedExampleGithub]];
 
@@ -333,6 +338,34 @@ if (isset($_POST['submitExampleUpdate'])) {
     //todo add ability to rename the directory to the current example name
 }
 
+//Delete examples
+if (isset($_POST['deleteExample'])) {
+    //Create a 2d array of the FK column's and their respective keys
+    $uniqueKey = $name = $yearFk = $description = $languageOneFK = $languageTwoFK =$languageThreeFK = $languageFourFK = $languageFiveFK = $link = $github = null;
+    $query = "SELECT * FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
+    ?><br><?php
+    echo $query;
+    $query = runAndReturn($query, $con);
+    $query->bind_result($uniqueKey, $name, $yearFk, $description, $languageOneFK, $languageTwoFK, $languageThreeFK, $languageFourFK, $languageFiveFK, $link, $github);
+    $query->store_result();
+
+    //The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
+    $toDelete = [[['examples', 'education'], 'year', 'yearFK', $yearFk],
+        [['examples'], 'languages', 'languageOneFK', $languageOneFK],
+        [['examples'], 'languages', 'languageTwoFK', $languageTwoFK],
+        [['examples'], 'languages', 'languageThreeFK', $languageThreeFK],
+        [['examples'], 'languages', 'languageFourFK', $languageFourFK],
+        [['examples'], 'languages', 'languageFiveFK', $languageFiveFK]];
+
+    //Delete the record
+    ?><br><?php
+    $query = "DELETE FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
+    echo $query;
+    //runQuery($query, $con);
+
+    cleanUpFK($toDelete);
+}
+
 //Deletes images
 if (isset($_POST['deleteImage'])) {
     echo "Delete image: " . $_POST['file'];
@@ -346,23 +379,6 @@ if (isset($_POST['newExampleRecord'])) {
     echo var_dump($_POST);
     $value = null;
     $foreignKeys = [];
-
-//    //When link and github are check. Check that they contain values
-//    if (empty($_POST['newLanguageInput'])) {
-//        ?><!--<br>--><?php
-//        echo "New language checkbox was not checked";
-//    } else {
-//        ?><!--<br>--><?php
-//        echo "New language checkbox was checked";
-//    }
-//
-//    if (empty($_POST['newLanguageEntry'])) {
-//        ?><!--<br>--><?php
-//        echo "New language was not entered";
-//    } else if (!empty($_POST['newLanguageEntry'])) {
-//        ?><!--<br>--><?php
-//        echo "New language was entered";
-//    }
 
     //looking for a checked new language and an empty new language entry
     if (!empty($_POST['newLanguageInput']) && empty($_POST['newLanguageEntry'])) {
@@ -632,6 +648,33 @@ if (isset($_POST['newExampleRecord'])) {
     }
 }
 
+//Takes a 2d array of foreign keys and cleans any that are no longer needed
+//ToClean = The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
+function cleanUpFK($toClean) {
+    //print for debugging
+    ?><br><?php
+    for ($i = 0; $i < sizeof($toClean); $i ++) {
+        echo print_r($toClean[$i]);
+        ?><br><?php
+    }
+
+    //Go through each foreign key
+    for ($i = 0; $i < sizeof($toClean); $i++) {
+        //Check to see if the foreign key is 0
+        if ($toClean[$i][3] != 0) {
+            //Go through each of the tables
+            for ($j = 0; $j < sizeof($toClean[$i][0]); $j++) {
+                $query = "SELECT * FROM " . $toClean[$i][0][$j] . " WHERE " . $toClean[$i][0][$j] . $toClean[$i][2] . " = " . $toClean[$i][3];
+                ?><br><?php
+                echo $query;
+            }
+        } else {
+            ?><br><?php
+            echo "Skipped this one";
+        }
+    }
+}
+
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
 function findInvalid($values) {
     echo print_r($values);
@@ -793,7 +836,7 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
 //            ?><!--<br>--><?php
 //            echo "Select Query: " . $selectQuery;
 
-            if (recordExistsLinked($selectQuery, $con) == 0) {
+            if (recordCount($selectQuery, $con) == 0) {
                 //The record does not exist. Create it
                 ?><br><?php
                 //When inserting the FK has to be converted to PK
@@ -883,7 +926,7 @@ function updateValues(array $toInsert, mysqli $con, $tableToUpdate, $uniqueKey)
 //            ?><!--<br>--><?php
 //            echo "Select Query: " . $selectQuery;
 
-            if (recordExistsLinked($selectQuery, $con) == 0) {
+            if (recordCount($selectQuery, $con) == 0) {
                 //The record does not exist. Create it
                 ?><br><?php
                 //When inserting the FK has to be converted to PK
@@ -1138,7 +1181,7 @@ function numTimesFkUsedEducation($query, $con) {
 }
 
 //Checks if a record exists in a linked table. Returns the number of records
-function recordExistsLinked($query, $con)
+function recordCount($query, $con)
 {
     ?><br><?php
     //echo $query;

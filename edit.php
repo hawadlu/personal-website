@@ -804,6 +804,11 @@
                                 <div class="examples-description alignTextLeft">
                                     <p><?php echo $examplesDescription;?></p>
                                 </div>
+                                <!--Allow the user to delete the record-->
+                                <form method="post" action="process.php">
+                                    <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
+                                    <input type="submit" name="deleteExample" value="Delete">
+                                </form>
                             </div>
                             <button id="updateExample<?php echo $uniqueKey; ?>button"
                             onclick="showUpdateDiv('updateExample<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide')">
