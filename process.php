@@ -411,6 +411,11 @@ if (isset($_POST['newExampleRecord'])) {
         [$postedNewExampleGithub, 'exampleGithub', 'string', 100, true],
         [$postedNewExampleDescription, 'exampleDescription', 'string', 1000, false]];
 
+    //Check the database to see if the name already exists.
+    if (findDuplicate("SELECT * FROM examples WHERE name = '" . $postedNewExampleName . "'", $con)) {
+        redirectWithError('Duplicate record', 'edit.php');
+    }
+
 
     //Get all the languages currently stored in the database
     $value = null;
@@ -622,7 +627,7 @@ if (isset($_POST['newExampleRecord'])) {
         }
 
         //Print a success message
-        //redirectWithSuccess("The record was created and images uploaded", 'edit.php');
+        redirectWithSuccess("The record was created and images uploaded", 'edit.php');
 
     }
 }
@@ -766,7 +771,7 @@ function findInvalid($values) {
     echo "No errors were found!";
 }
 
-//Update records for education and examples. Takes an array of values and uses them to insert a record
+//Update records for education and examples. Takes an array of values and uses them to insert a record.
 function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
 {
 
@@ -774,8 +779,8 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
     for ($i = 0; $i < sizeof($toInsert); $i++) {
         ?><br><?php
         ?><br><?php
-        //If the value is null set a default value
-        if ($toInsert[$i][1] == 'NULL') {
+        //If the value is null and an FK set a default value
+        if ($toInsert[$i][1] == 'NULL' && strpos($toInsert[$i][0], 'FK')) {
             $toInsert[$i][1] = 0;
 
             //Check to see if the field should contain a foreign key.
@@ -841,6 +846,7 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
        if ($i != sizeof($toInsert) - 1) {
            $insert = $insert . ", ";
            $values = $values . ", ";
+
            $duplicateWhere = $duplicateWhere . " AND ";
        } else {
            $insert = $insert . ") ";
