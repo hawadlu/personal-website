@@ -226,7 +226,7 @@
                                 <textarea name="newExampleDescription" style="width: 100%; height: auto" placeholder="Enter some text" required>
 
                                 </textarea>
-                                
+                                <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
                                 Select image to upload:
                                 <input type="file" name="userFiles[]" id="" multiple="">
                                 <input type="submit" value="Submit" name="newExampleRecord">

@@ -564,8 +564,16 @@ if (isset($_POST['newExampleRecord'])) {
         );
 
         $file_array = reArrayFiles($_FILES['userFiles']);
-        pre_r($file_array);
+        //pre_r($file_array);
         //die();
+
+        //The directory where the images will be stored.
+        $directory = "images/examples/" . stripSpaces($postedNewExampleName) . "/";
+
+        //Create the directory if it does not exist
+        if (!is_dir($directory)) {
+            mkdir($directory);
+        }
 
         for ($i = 0; $i < count($file_array); $i++) {
             //Check for errors
@@ -586,8 +594,8 @@ if (isset($_POST['newExampleRecord'])) {
                     //File uploaded successfully
                     //Check if the file already exists in the directory
                     if (!file_exists("images/" . $file_array[$i]["name"])) {
-                        //Move the file from the temporary directory to the intended directory
-                        move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
+                        //Move the file from the temporary directory to the intended directory. Resize at the same time
+                        move_uploaded_file($file_array[$i]["tmp_name"], $directory . $file_array[$i]["name"]);
 
                     } else {
                         //Print message stating that the file already exists
@@ -595,10 +603,26 @@ if (isset($_POST['newExampleRecord'])) {
                     }
                 }
             }
+
+            //Resize the image
+            $file = $directory . $file_array[$i]["name"];
+            $image = resize_image($directory . $file_array[$i]['name'], 250, 250);
+
+            //Save the image
+            if (strpos($file, '.jpeg')) {
+                imagejpeg($image, $file);
+            } else if (strpos($file, '.png')) {
+                imagepng($image, $file);
+            } else if (strpos($file, '.gif')) {
+                imagegif($image, $file);
+            } else if (strpos($file, '.jpg')) {
+                imagejpeg($image, $file);
+            }
+
         }
 
         //Print a success message
-        redirectWithSuccess("The record was created and images uploaded", 'edit.php');
+        //redirectWithSuccess("The record was created and images uploaded", 'edit.php');
 
     }
 }
@@ -1167,6 +1191,53 @@ function getFK($table, $value, $con)
 //Takes a value, strips the spaces and returns it
 function stripSpaces($value) {
     return str_replace(' ', '', $value);
+}
+
+//Takes an image file and adjusts the size
+function resize_image($file, $w, $h, $crop=true) {
+    ?><br><?php
+    echo "resizing: " . $file;
+    list($width, $height) = getimagesize($file);
+    ?><br><?php
+    echo "W & H: " . print_r(getimagesize($file));
+    $r = $width / $height;
+    if ($crop) {
+        if ($width > $height) {
+            $width = ceil($width-($width*abs($r-$w/$h)));
+        } else {
+            $height = ceil($height-($height*abs($r-$w/$h)));
+        }
+        $newwidth = $w;
+        $newheight = $h;
+    } else {
+        if ($w/$h > $r) {
+            $newwidth = $h*$r;
+            $newheight = $h;
+        } else {
+            $newheight = $w/$r;
+            $newwidth = $w;
+        }
+    }
+
+    //Set the image type
+    $src = null;
+    if (strpos($file, '.jpeg')) {
+        $src = imagecreatefromjpeg($file);
+    } else if (strpos($file, '.png')) {
+        $src = imagecreatefrompng($file);
+    } else if (strpos($file, '.gif')) {
+        $src = imagecreatefromgif($file);
+    } else if (strpos($file, '.jpg')) {
+        $src = imagecreatefromjpeg($file);
+    }
+
+    ?><br><?php
+    echo "SRC: " . $src;
+
+    $dst = imagecreatetruecolor($newwidth, $newheight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+    return $dst;
 }
 
 //Manual redirect.
