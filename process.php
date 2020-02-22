@@ -62,6 +62,9 @@ if (isset($_POST['submitEducationUpdate'])) {
 
     //Call function to update the values
     updateValues($toInsert, $con, 'education', $uniqueKey);
+
+    //Redirect the user
+    redirectWithSuccess("Record has been updated!", 'edit.php');
 }
 
 //Creating new education records
@@ -113,6 +116,9 @@ if (isset($_POST["newEducationRecord"])) {
     //Run function to insert the record
     insertValues($toInsert, $con, 'education');
 
+    //Redirect the user
+    redirectWithSuccess("Record has been created!", 'edit.php');
+
 }
 
 //Deleting education records
@@ -155,6 +161,9 @@ if (isset($_POST['deleteEducationRecord'])) {
 
     //Delete the item in the education table
     runQuery("DELETE FROM education WHERE education.uniqueKey = " . $uniqueKey, $con);
+
+    //Redirect the user
+    redirectWithSuccess("Record has been deleted!", 'edit.php');
 
 }
 
@@ -317,6 +326,9 @@ if (isset($_POST['submitExampleUpdate'])) {
 
     //Run a function to update all of the necessary values
     updateValues($toInsert, $con, 'examples', $uniqueKey);
+
+    //Redirect the user
+    redirectWithSuccess("Record has been updated!", 'edit.php');
 
     //todo add ability to rename the directory to the current example name
 }
@@ -518,11 +530,13 @@ if (isset($_POST['newExampleRecord'])) {
     ?><br><?php
     ?><br><?php
     ?><br><?php
-    echo print_r($toInsert);
+    //echo print_r($toInsert);
 
     //Insert the record
     insertValues($toInsert, $con, 'examples');
 
+    //A flag used to explain that the record was created but something went wrong with the images
+    $recordCreated = "The record was created but... ";
 
     ?><br><?php
     ?><br><?php
@@ -550,12 +564,13 @@ if (isset($_POST['newExampleRecord'])) {
         );
 
         $file_array = reArrayFiles($_FILES['userFiles']);
-        //pre_r($file_array);
+        pre_r($file_array);
+        //die();
 
         for ($i = 0; $i < count($file_array); $i++) {
             //Check for errors
             if ($file_array[$i]['error']) {
-                redirectWithError($file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']], 'edit.php');
+                redirectWithError($recordCreated . " " . $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']], 'edit.php');
 
                 //Check for extensions errors
             } else {
@@ -566,7 +581,7 @@ if (isset($_POST['newExampleRecord'])) {
 
                 //Check if the extension is acceptable
                 if (!in_array($file_ext, $extensions)) {
-                    redirectWithError($file_array[$i]["name"] . " Invalid file extension!", 'edit.php');
+                    redirectWithError($recordCreated . " " . $file_array[$i]["name"] . " Invalid file extension!", 'edit.php');
                 } else {
                     //File uploaded successfully
                     //Check if the file already exists in the directory
@@ -574,15 +589,17 @@ if (isset($_POST['newExampleRecord'])) {
                         //Move the file from the temporary directory to the intended directory
                         move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
 
-                        //Print a success message
-                        redirectWithSuccess($file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]], 'edit.php');
                     } else {
                         //Print message stating that the file already exists
-                        redirectWithError($file_array[$i]["name"] . " already exists", 'edit.php');
+                        redirectWithError($recordCreated . " " . $file_array[$i]["name"] . " already exists", 'edit.php');
                     }
                 }
             }
         }
+
+        //Print a success message
+        redirectWithSuccess("The record was created and images uploaded", 'edit.php');
+
     }
 }
 
@@ -739,13 +756,13 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
 
             //Check to see if the field should contain a foreign key.
         } else if (strpos($toInsert[$i][0], 'FK')) {
-            ?><br><?php
-            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
+//            ?><!--<br>--><?php
+//            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
 
             //Run a query to check if the value already exists in a linked table. Look for null value if necessary
             $selectQuery = "SELECT * FROM " . $toInsert[$i][2] . " WHERE " . $toInsert[$i][2] . "." . $toInsert[$i][2] . " = '" . $toInsert[$i][1] . "'";
-            ?><br><?php
-            echo "Select Query: " . $selectQuery;
+//            ?><!--<br>--><?php
+//            echo "Select Query: " . $selectQuery;
 
             if (recordExistsLinked($selectQuery, $con) == 0) {
                 //The record does not exist. Create it
@@ -817,10 +834,6 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
 
     //Execute the query
     runQuery($query, $con);
-
-    //Redirect the user
-    //redirectWithSuccess("Record has been updated!", 'edit.php');
-    echo "The end";
 }
 
 //Update records for education and examples. Takes an array of values and uses them to update the appropriate record
@@ -899,9 +912,6 @@ function updateValues(array $toInsert, mysqli $con, $tableToUpdate, $uniqueKey)
 
     //Execute the query
     runQuery($query, $con);
-
-    //Redirect the user
-    redirectWithSuccess("Record has been updated!", 'edit.php');
 }
 
 //Converts $_FILES to a cleaner array when uploading multiple files

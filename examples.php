@@ -96,7 +96,7 @@ require("connect.php");
                                 </p>
                             </div>
                             <img class="center rounded" src="<?php echo $primaryImage; ?>"
-                                 alt="Image of the project">
+                                 alt="Image of the project" style="width: 250px; height 250px;">
                         </div>
 
                         <!--Load the next images -->
@@ -156,31 +156,31 @@ require("connect.php");
                     //Define queries to get the languages
                     $LangOneQuery = $con->prepare("SELECT languages.languages
                             FROM examples
-                            LEFT JOIN languages ON examples.languageOneFK = languages.languagePK
+                            LEFT JOIN languages ON examples.languageOneFK = languages.languagesPK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
                     $LangTwoQuery = $con->prepare("SELECT languages.languages
                             FROM examples
-                            LEFT JOIN languages ON examples.languageTwoFK = languages.languagePK
+                            LEFT JOIN languages ON examples.languageTwoFK = languages.languagesPK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
                     $LangThreeQuery = $con->prepare("SELECT languages.languages
                             FROM examples
-                            LEFT JOIN languages ON examples.languageThreeFK = languages.languagePK
+                            LEFT JOIN languages ON examples.languageThreeFK = languages.languagesPK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
                     $LangFourQuery = $con->prepare("SELECT languages.languages
                             FROM examples
-                            LEFT JOIN languages ON examples.languageFourFK = languages.languagePK
+                            LEFT JOIN languages ON examples.languageFourFK = languages.languagesPK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
                     $LangFiveQuery = $con->prepare("SELECT languages.languages
                             FROM examples
-                            LEFT JOIN languages ON examples.languageFiveFK = languages.languagePK
+                            LEFT JOIN languages ON examples.languageFiveFK = languages.languagesPK
                             WHERE examples.uniqueKey LIKE $key
                             ");
 
