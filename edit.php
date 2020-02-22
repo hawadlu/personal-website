@@ -28,99 +28,6 @@
         $exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
         $languageArray = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
 
-        //Function used when uploading images
-        //Check the upload files form has been submitted
-        if (isset($_FILES['userFiles'])) {
-            //todo moves this to the process page so that files are only uploaded if the record has successfully been created.
-
-            //useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
-            //Array of possible file upload errors
-            $phpFileUploadErrors = array(
-            0 => "The file uploaded successfully",
-            1 => "The file exceeds the maximum file size defined in php.ini",
-            2 => "The file exceeds the maximum file size defines in the HTML form",
-            3 => "The uploaded file was only partially uploaded",
-            4 => "No file was uploaded",
-            6 => "Missing a temporary folder",
-            7 => "Filed to write file to the disc",
-            8 => "A php extension stopped the file from uploading"
-            );
-
-            $file_array = reArrayFiles($_FILES['userFiles']);
-            //pre_r($file_array);
-
-            for ($i = 0; $i < count($file_array); $i++) {
-                //Check for errors
-                if ($file_array[$i]['error']) {
-                    ?>
-                    <div class="alert alert-danger">
-                    <?php echo $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']]; ?>
-                    </div>
-                    <?php
-
-                //Check for extensions errors
-                } else {
-                    //Allowable file types
-                    $extensions = array("jpg", "png", "gif", "jpeg");
-                    $file_ext = explode(".", $file_array[$i]["name"]);
-                    $file_ext = end($file_ext);
-
-                    //Check if the extension is acceptable
-                    if (!in_array($file_ext, $extensions)) {
-                        ?>
-                        <div class="alert alert-danger">
-                        <?php echo $file_array[$i]["name"] . " Invalid file extension!"; ?>
-                        </div>
-                        <?php
-                    } else {
-                        //File uploaded successfully
-                        //Check if the file already exists in the directory
-                        if (!file_exists("images/" . $file_array[$i]["name"])) {
-                            //Move the file from the temporary directory to the intended directory
-                            move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
-
-                            //Print a success message
-                            ?>
-                            <div class="alert alert-success">
-                            <?php echo $file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]] ?>
-                            </div>
-                            <?php
-                        } else {
-                            //Print message stating that the file already exists
-                            ?>
-                            <div class="alert alert-danger">
-                            <?php echo $file_array[$i]["name"] . " already exists"; ?>
-                            </div>
-                            <?php
-                        }
-                    }
-            }
-            }
-        }
-
-    //Converts $_FILES to a cleaner array when uploading multiple files
-    function reArrayFiles($file_post) {
-        $file_ary = array();
-        $file_count = count($file_post['name']);
-        $file_keys = array_keys($file_post);
-
-        for ($i = 0; $i < $file_count; $i++) {
-            foreach ($file_keys as $key) {
-                $file_ary[$i][$key] = $file_post[$key][$i];
-            }
-        }
-
-        return $file_ary;
-    }
-
-    //Same as print_r surrounded with <pre></pre> HTML tags for better array readability
-    function pre_r($array) {
-        echo '<pre>';
-        print_r($array);
-        echo '</pre>';
-    }
-
-
     //Check to see if an error message has been set
     $errorMessage = null;
     if (isset($_COOKIE['errorMsg'])) {
@@ -296,31 +203,33 @@
                                 <br>
                                 <label for="newExamplesLinkCheckbox">Link</label>
                                 <input onchange="showUpdateLinkInput('newExamplesLink')"
+                                       name="newLinkInput"
                                        type="checkbox" id="newExamplesLinkCheckbox">
 
                                 <!--Div that shows the link-->
                                 <div id="newExamplesLink" style="display: none">
-                                    <input type="text" name = "newExampleLink" placeholder="E.g. google.com">
+                                    <input type="text" name = "newLinkEntry" placeholder="E.g. google.com">
                                 </div>
 
                                 <br>
                                 <label for="newGithubLinkCheckbox">Github</label>
                                 <input onchange="showUpdateLinkInput('newGithubLink')"
-                                       type="checkbox" id="newGithubLinkCheckbox">
+                                       type="checkbox" id="newGithubLinkCheckbox"
+                                       name = "newGithubInput" >
 
                                 <!--The div that shows the github link-->
                                 <div id="newGithubLink" style="display: none">
-                                    <input name = "exampleGithub" type="text"  placeholder="E.g. github.com">
+                                    <input name = "newGithubEntry" type="text"  placeholder="E.g. github.com">
                                 </div>
 
                                 <!--The description-->
-                                <textarea name="exampleDescription" style="width: 100%; height: auto" placeholder="Enter some text" required>
+                                <textarea name="newExampleDescription" style="width: 100%; height: auto" placeholder="Enter some text" required>
 
                                 </textarea>
                                 
                                 Select image to upload:
                                 <input type="file" name="userFiles[]" id="" multiple="">
-                                <input type="submit" value="Upload" name="newExampleRecord">
+                                <input type="submit" value="Submit" name="newExampleRecord">
                             </form>
                         </div>
                     </div>
@@ -530,7 +439,7 @@
                                             if ($subjectLevel != null) {
                                                 echo $subjectLevel;
                                             } else {
-                                                echo "Not applicable";
+                                                echo "NA";
                                             }
                                             ?>
                                         </p>
@@ -547,7 +456,7 @@
                                             if ($relevantYear != null) {
                                                 echo $relevantYear;
                                             } else {
-                                                echo "Not applicable";
+                                                echo "NA";
                                             }
                                             ?>
                                         </p>
@@ -941,11 +850,11 @@
                                     <!--Option that allows the user to add their own code-->
                                     <br>
                                     <label for="newLanguage<?php echo $uniqueKey;?>">Other</label>
-                                    <input type="checkbox" name = "newLanguage" id = "newLanguage<?php echo $uniqueKey;?>" onchange="showUpdateLinkInput('newLanguageDiv<?php echo $uniqueKey;?>')">
+                                    <input type="checkbox" name = "updateLanguageInput" id = "newLanguage<?php echo $uniqueKey;?>" onchange="showUpdateLinkInput('newLanguageDiv<?php echo $uniqueKey;?>')">
 
                                     <!--Input box for the new language-->
                                     <div id = "newLanguageDiv<?php echo $uniqueKey;?>" style="display:none;">
-                                        <input type="text" name = "newLanguage" placeholder="New Language">
+                                        <input type="text" name = "updateLanguageEntry" placeholder="New Language">
                                     </div>
 
                                     <!--The link-->
@@ -965,11 +874,12 @@
                                     <br>
                                     <label for="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>">Link</label>
                                     <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey; ?>')"
+                                    name = "updateLinkInput";
                                     type="checkbox" id="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked; ?>>
 
                                     <!--Div that shows the link-->
                                     <div id="updateExamplesLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input type="text" name = "exampleLink" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
+                                        <input type="text" name = "updateLinkEntry" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
                                     </div>
 
                                     <!--Github-->
@@ -990,11 +900,12 @@
                                     <br>
                                     <label for="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>">Github</label>
                                     <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey; ?>')"
+                                    name = "updateGithubInput"
                                     type="checkbox" id="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked ?>>
 
                                     <!--The div that shows the github link-->
                                     <div id="updateGithubLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input name = "exampleGithub" type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
+                                        <input name = "updateGithubEntry" type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
                                     </div>
 
                                     <!--The description-->

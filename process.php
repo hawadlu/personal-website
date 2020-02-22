@@ -158,6 +158,7 @@ if (isset($_POST['deleteEducationRecord'])) {
 
 }
 
+//Updates examples
 if (isset($_POST['submitExampleUpdate'])) {
     echo "Updating example";
     echo "<br>";
@@ -165,12 +166,43 @@ if (isset($_POST['submitExampleUpdate'])) {
     $value = null;
     $foreignKeys = [];
 
+    //looking for a checked update language and an empty update language entry
+    if (!empty($_POST['updateLanguageInput']) && empty($_POST['updateLanguageEntry'])) {
+        ?><br><?php
+        die("You checked 'other' but did not enter a update language");
+
+        //Looking for a update language entry and an unchecked update language checkbox
+    } else if (empty($_POST['updateLanguageInput']) && !empty($_POST['updateLanguageEntry'])) {
+        ?><br><?php
+        die("You entered a language but did not check 'other'");
+
+        //Looking for a checked github and no github link
+    } else if (!empty($_POST['updateGithubInput']) && empty($_POST['updateGithubEntry'])) {
+        ?><br><?php
+        die("You checked 'github' but did not enter a link");
+
+        //Looking for a github link and no checked github
+    } else if (empty($_POST['updateGithubInput']) && !empty($_POST['updateGithubEntry'])) {
+        ?><br><?php
+        die("You entered a github link but did not check 'github'");
+
+        //Looking for a checked link but no link provided
+    } else if (!empty($_POST['updateLinkInput']) && empty($_POST['updateLinkEntry'])) {
+        ?><br><?php
+        die("You checked 'link' and did not enter a link");
+
+        //Looking for link and no check link
+    } else if (empty($_POST['updateLinkInput']) && !empty($_POST['updateLinkEntry'])) {
+        ?><br><?php
+        die("You entered a link but did not check 'link'");
+    }
+
     //Get all the posted variables
     $postedExampleName = $_POST['exampleName'];
     $postedExampleYear = $_POST['exampleYear'];
-    $postedExampleLink = $_POST['exampleLink'];
-    echo "Empty: " . empty($_POST['exampleLink']);
-    $postedExampleGithub = $_POST['exampleGithub'];
+    $postedExampleLink = $_POST['updateLinkEntry'];
+    echo "Empty: " . empty($_POST['updateLinkEntry']);
+    $postedExampleGithub = $_POST['updateGithubEntry'];
     $postedExampleDescription = $_POST['exampleDescription'];
     $uniqueKey = $_POST['uniqueKey'];
 
@@ -201,7 +233,7 @@ if (isset($_POST['submitExampleUpdate'])) {
 
     $languagesUsed = []; //Array of languages that the user wants to add
 
-    if ($_POST['newLanguage'] != "") {
+    if ($_POST['updateLanguageEntry'] != "") {
         //Start the language counter at 1
         $languageCount = 1;
 
@@ -233,6 +265,12 @@ if (isset($_POST['submitExampleUpdate'])) {
             redirectWithError('You cannot add more than five languages per project.', 'edit.php');
         }
     }
+
+    //User must enter at least one language
+    if ($languageCount == 0) {
+        redirectWithError('You must enter at least one language', 'edit.php');
+    }
+
 
     //error check
     findInvalid($invalidArray);
@@ -272,18 +310,280 @@ if (isset($_POST['submitExampleUpdate'])) {
     ?><br><?php
     echo "Insert array";
     //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
-    }
+//    for ($i = 0; $i < sizeof($toInsert); $i++) {
+//        ?><!--<br>--><?php
+//        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
+//    }
 
     //Run a function to update all of the necessary values
     updateValues($toInsert, $con, 'examples', $uniqueKey);
+
+    //todo add ability to rename the directory to the current example name
 }
 
 //Deletes images
 if (isset($_POST['deleteImage'])) {
     echo "Delete image: " . $_POST['file'];
+}
+
+//Creates new examples
+if (isset($_POST['newExampleRecord'])) {
+    //todo ensure that both the query and the images are valid before uploading/submitting either;
+    echo "Updating example";
+    echo "<br>";
+    echo var_dump($_POST);
+    $value = null;
+    $foreignKeys = [];
+
+//    //When link and github are check. Check that they contain values
+//    if (empty($_POST['newLanguageInput'])) {
+//        ?><!--<br>--><?php
+//        echo "New language checkbox was not checked";
+//    } else {
+//        ?><!--<br>--><?php
+//        echo "New language checkbox was checked";
+//    }
+//
+//    if (empty($_POST['newLanguageEntry'])) {
+//        ?><!--<br>--><?php
+//        echo "New language was not entered";
+//    } else if (!empty($_POST['newLanguageEntry'])) {
+//        ?><!--<br>--><?php
+//        echo "New language was entered";
+//    }
+
+    //looking for a checked new language and an empty new language entry
+    if (!empty($_POST['newLanguageInput']) && empty($_POST['newLanguageEntry'])) {
+        ?><br><?php
+        die("You checked 'other' but did not enter a new language");
+
+        //Looking for a new language entry and an unchecked new language checkbox
+    } else if (empty($_POST['newLanguageInput']) && !empty($_POST['newLanguageEntry'])) {
+        ?><br><?php
+        die("You entered a new language but did not check 'other'");
+
+        //Looking for a checked github and no github link
+    } else if (!empty($_POST['newGithubInput']) && empty($_POST['newGithubEntry'])) {
+        ?><br><?php
+        die("You checked 'github' but did not enter a link");
+
+        //Looking for a github link and no checked github
+    } else if (empty($_POST['newGithubInput']) && !empty($_POST['newGithubEntry'])) {
+        ?><br><?php
+        die("You entered a new github link but did not check 'github'");
+
+        //Looking for a checked link but no link provided
+    } else if (!empty($_POST['newLinkInput']) && empty($_POST['newLinkEntry'])) {
+        ?><br><?php
+        die("You checked 'link' and did not enter a link");
+
+        //Looking for link and no check link
+    } else if (empty($_POST['newLinkInput']) && !empty($_POST['newLinkEntry'])) {
+        ?><br><?php
+        die("You entered a new link but did not check 'link'");
+    }
+
+    //Get all the posted variables
+    $postedNewExampleName = $_POST['newExampleName'];
+    $postedNewExampleYear = $_POST['newExampleYear'];
+    $postedNewExampleLink = $_POST['newLinkEntry'];
+    $postedNewExampleGithub = $_POST['newGithubEntry'];
+    $postedNewExampleDescription = $_POST['newExampleDescription'];
+
+    //Add the posted values to an array that will be checked for invalids once the languages have been processed
+    //Error check all the values. Include each value, the field name, a flag of the expected type in the array,
+    //the max length and a flag to signify if it is ok for the field to be empty.
+    $invalidArray = [[$postedNewExampleName, 'exampleName', 'string', 100, false],
+        [$postedNewExampleYear, 'exampleYear', 'int', 4, false],
+        [$postedNewExampleLink, 'exampleLink', 'string', 100, true],
+        [$postedNewExampleGithub, 'exampleGithub', 'string', 100, true],
+        [$postedNewExampleDescription, 'exampleDescription', 'string', 1000, false]];
+
+
+    //Get all the languages currently stored in the database
+    $value = null;
+    $query = $con->prepare("SELECT languages.languages FROM languages WHERE languages != ''");
+    $query->execute();
+    $query->bind_result($value);
+    $query->store_result();
+
+    $languageArray = [];
+
+    while ($row = $query->fetch()) {
+        array_push($languageArray, $value);
+    }
+    ?><br><?php
+    echo sizeof($languageArray) . " languages were found in the database.";
+
+    $languagesUsed = []; //Array of languages that the user wants to add
+
+    if ($_POST['newLanguageEntry'] != "") {
+        //Start the language counter at 1
+        $languageCount = 1;
+
+        //Add the language to the language array
+        array_push($languagesUsed, $_POST['newLanguage']);
+    } else {
+        $languageCount = 0;
+    }
+
+    //Checking to see which of the languages ued in the database are requested by the user
+    for ($i = 0; $i < sizeof($languageArray); $i++) {
+        if (isset($_POST[str_replace(' ', '_', $languageArray[$i])]) && $_POST[str_replace(' ', '_', $languageArray[$i])] == $languageArray[$i]) {
+            //Increment the counter and add the language to the used array
+            $languageCount++;
+            array_push($languagesUsed, $languageArray[$i]);
+            ?><br><?php
+            echo $languageArray[$i] . " found";
+
+            //Add each language to the array to be tested. This to make sure that no html inputs have been tampered with
+            array_push($invalidArray, [$_POST[str_replace(' ', '_', $languageArray[$i])], $languageArray[$i], 'string', 20]);
+
+        } else if (isset($_POST[str_replace(' ', '_', $languageArray[$i])])) {
+            //Report the value as invalid
+            redirectWithError($_POST[str_replace(' ', '_', $languageArray[$i])] . " is not a valid language. ", 'edit.php');
+        }
+
+        //return an error if there are too many languages
+        if ($languageCount > 5) {
+            redirectWithError('You cannot add more than five languages per project.', 'edit.php');
+        }
+    }
+
+    //User must enter at least one language
+    if ($languageCount == 0) {
+        redirectWithError('You must enter at least one language', 'edit.php');
+    }
+
+    //error check
+    findInvalid($invalidArray);
+
+    //2d array of the fields, values and their linked tables (if required) to be inserted
+    $toInsert = [['name', $postedNewExampleName],
+        ['yearFK', $postedNewExampleYear, 'year'],
+        ['description', $postedNewExampleDescription],
+        ['link', $postedNewExampleLink],
+        ['github', $postedNewExampleGithub]];
+
+    //If the language array is < 5 add default values
+    ?><br><?php
+    echo "Language array size: " . sizeof($languagesUsed);
+    if (sizeof($languagesUsed) < 5) {
+        for ($i = sizeof($languagesUsed); $i < 5; $i++) {
+            //push the default null value to the array
+            array_push($languagesUsed, "NULL");
+            }
+        }
+
+
+    ?><br><?php
+    echo "Languages used array: " . print_r($languagesUsed);
+
+    //Add the languages to the insert array
+    for ($i = 0; $i < sizeof($languagesUsed); $i++) {
+        //Set the language number
+        if ($i == 0) {
+            $langNum = "One";
+        } else if ($i == 1) {
+            $langNum = "Two";
+        } else if ($i == 2) {
+            $langNum = "Three";
+        } else if ($i == 3) {
+            $langNum = "Four";
+        } else {
+            $langNum = "Five";
+        }
+
+        //Add to the to insert array
+        array_push($toInsert, ['language' . $langNum . 'FK', $languagesUsed[$i], 'languages']);
+    }
+
+    //Replace empty values with null
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+        if (empty($toInsert[$i][1])) {
+            $toInsert[$i][1] = "NULL";
+        }
+    }
+
+    ?><br><?php
+    echo $languageCount . " languages have been used.";
+    ?><br><?php
+    echo "Insert array";
+    //Print for debugging
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+        ?><br><?php
+        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
+    }
+
+    ?><br><?php
+    ?><br><?php
+    ?><br><?php
+    echo print_r($toInsert);
+
+    //Insert the record
+    insertValues($toInsert, $con, 'examples');
+
+
+    ?><br><?php
+    ?><br><?php
+    ?><br><?php
+    ?><br><?php
+    ?><br><?php
+    echo "First Image Name: " . $_FILES['userFiles']['name'][0];
+    ?><br><?php
+    //die(var_dump($_FILES['userFiles']));
+
+    //Handle file uploads
+    //Check a file has been uploaded in the form
+    if (isset($_FILES['userFiles']) && $_FILES['userFiles']['name'][0] != "") {
+        //useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
+        //Array of possible file upload errors
+        $phpFileUploadErrors = array(
+            0 => "The file uploaded successfully",
+            1 => "The file exceeds the maximum file size defined in php.ini",
+            2 => "The file exceeds the maximum file size defines in the HTML form",
+            3 => "The uploaded file was only partially uploaded",
+            4 => "No file was uploaded",
+            6 => "Missing a temporary folder",
+            7 => "Filed to write file to the disc",
+            8 => "A php extension stopped the file from uploading"
+        );
+
+        $file_array = reArrayFiles($_FILES['userFiles']);
+        //pre_r($file_array);
+
+        for ($i = 0; $i < count($file_array); $i++) {
+            //Check for errors
+            if ($file_array[$i]['error']) {
+                redirectWithError($file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']], 'edit.php');
+
+                //Check for extensions errors
+            } else {
+                //Allowable file types
+                $extensions = array("jpg", "png", "gif", "jpeg");
+                $file_ext = explode(".", $file_array[$i]["name"]);
+                $file_ext = end($file_ext);
+
+                //Check if the extension is acceptable
+                if (!in_array($file_ext, $extensions)) {
+                    redirectWithError($file_array[$i]["name"] . " Invalid file extension!", 'edit.php');
+                } else {
+                    //File uploaded successfully
+                    //Check if the file already exists in the directory
+                    if (!file_exists("images/" . $file_array[$i]["name"])) {
+                        //Move the file from the temporary directory to the intended directory
+                        move_uploaded_file($file_array[$i]["tmp_name"], "images/" . $file_array[$i]["name"]);
+
+                        //Print a success message
+                        redirectWithSuccess($file_array[$i]["name"] . " " . $phpFileUploadErrors[$file_array[$i]["error"]], 'edit.php');
+                    } else {
+                        //Print message stating that the file already exists
+                        redirectWithError($file_array[$i]["name"] . " already exists", 'edit.php');
+                    }
+                }
+            }
+        }
+    }
 }
 
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
@@ -297,7 +597,7 @@ function findInvalid($values) {
     ?><br><?php
     for ($i = 0; $i < sizeof($values); $i++) {
         ?><br><?php
-        echo $i . ": " . $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2] . ", " . $values[$i][3] . ", " . $values[$i][4];
+//        echo $i . ": " . $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2] . ", " . $values[$i][3] . ", " . $values[$i][4];
 
         //Array used when checking the length of the string. Declared here to avoid multiple function calls
         $checkLenArray = checkLength($values[$i][0], $values[$i][3]);
@@ -433,12 +733,16 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
     for ($i = 0; $i < sizeof($toInsert); $i++) {
         ?><br><?php
         ?><br><?php
-        //Check to see if the field should contain a foreign key
-        if (strpos($toInsert[$i][0], 'FK')) {
+        //If the value is null set a default value
+        if ($toInsert[$i][1] == 'NULL') {
+            $toInsert[$i][1] = 0;
+
+            //Check to see if the field should contain a foreign key.
+        } else if (strpos($toInsert[$i][0], 'FK')) {
             ?><br><?php
             echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
 
-            //Run a query to check if the value already exists in a linked table
+            //Run a query to check if the value already exists in a linked table. Look for null value if necessary
             $selectQuery = "SELECT * FROM " . $toInsert[$i][2] . " WHERE " . $toInsert[$i][2] . "." . $toInsert[$i][2] . " = '" . $toInsert[$i][1] . "'";
             ?><br><?php
             echo "Select Query: " . $selectQuery;
@@ -515,7 +819,8 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
     runQuery($query, $con);
 
     //Redirect the user
-    redirectWithSuccess("Record has been updated!", 'edit.php');
+    //redirectWithSuccess("Record has been updated!", 'edit.php');
+    echo "The end";
 }
 
 //Update records for education and examples. Takes an array of values and uses them to update the appropriate record
@@ -527,13 +832,13 @@ function updateValues(array $toInsert, mysqli $con, $tableToUpdate, $uniqueKey)
         ?><br><?php
         //Check to see if the field should contain a foreign key
         if (strpos($toInsert[$i][0], 'FK')) {
-            ?><br><?php
-            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
+//            ?><!--<br>--><?php
+//            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
 
             //Run a query to check if the value already exists in a linked table
             $selectQuery = "SELECT * FROM " . $toInsert[$i][2] . " WHERE " . $toInsert[$i][2] . "." . $toInsert[$i][2] . " = '" . $toInsert[$i][1] . "'";
-            ?><br><?php
-            echo "Select Query: " . $selectQuery;
+//            ?><!--<br>--><?php
+//            echo "Select Query: " . $selectQuery;
 
             if (recordExistsLinked($selectQuery, $con) == 0) {
                 //The record does not exist. Create it
@@ -545,14 +850,13 @@ function updateValues(array $toInsert, mysqli $con, $tableToUpdate, $uniqueKey)
             }
             //Run a query to get the primary key of the value
             $key = getSingleVal($selectQuery, $toInsert[$i][2] . "PK", $con);
-            echo "The key is: " . $key;
+            //echo "The key is: " . $key;
 
             //Update the value in the insert array
             $toInsert[$i][1] = $key;
         } else {
             //Fields that are not foreign keys may be duplicates. Check the database and alert the user
             $query = "SELECT * FROM " . $tableToUpdate . " WHERE " . $toInsert[$i][0] . " = '" . $toInsert[$i][1] . "' AND " . $tableToUpdate . ".uniqueKey != " . $uniqueKey;
-
 
             if (findDuplicate($query, $con) != 0) {
                 ?><br><?php
@@ -598,6 +902,28 @@ function updateValues(array $toInsert, mysqli $con, $tableToUpdate, $uniqueKey)
 
     //Redirect the user
     redirectWithSuccess("Record has been updated!", 'edit.php');
+}
+
+//Converts $_FILES to a cleaner array when uploading multiple files
+function reArrayFiles($file_post) {
+    $file_ary = array();
+    $file_count = count($file_post['name']);
+    $file_keys = array_keys($file_post);
+
+    for ($i = 0; $i < $file_count; $i++) {
+        foreach ($file_keys as $key) {
+            $file_ary[$i][$key] = $file_post[$key][$i];
+        }
+    }
+
+    return$file_ary;
+}
+
+//Same as print_r surrounded with <pre></pre> HTML tags for better array readability
+function pre_r($array) {
+    echo '<pre>';
+    print_r($array);
+    echo '</pre>';
 }
 
 //Takes a query and returns a single value
@@ -659,7 +985,6 @@ function checkLength($value, $maxLen) {
 function trimString($value) {
     return substr($value, 0, 37) . "...";
 }
-
 
 //Checks to see if a value is a member of the supplied values. returns true if it is.
 function isMemberOf($value, $parameters) {
@@ -731,7 +1056,6 @@ function findIn2dArray($array, $value) {
     return false;
 }
 
-
 //Updates the specified value in the specified table
 function updateTableValue($table, $column, $value, $conditionalColumn, $key, $con)
 {
@@ -745,7 +1069,10 @@ function updateTableValue($table, $column, $value, $conditionalColumn, $key, $co
 //Run a specified query
 function runQuery($query, $con)
 {
-    //echo $query;
+    ?><br><?php
+    echo "Run query";
+    ?><br><?php
+    echo $query;
 
     //execute the query
     $newRecordQuery = $con->prepare($query);

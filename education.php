@@ -1,5 +1,4 @@
 <html lang="English">
-<!--TODO add play around functionality with reset-->
 <!--Pulls in the head and other required pages-->
 <?php
 require("head.php");
@@ -197,7 +196,7 @@ require("connect.php");
                             if ($subjectLevel != null) {
                                 echo $subjectLevel;
                             } else {
-                                echo "Not applicable";
+                                echo "NA";
                             }
                             ?>
                         </p>
@@ -216,7 +215,7 @@ require("connect.php");
                             if ($relevantYear!= null) {
                                 echo $relevantYear;
                             } else {
-                                echo "Not applicable";
+                                echo "NA";
                             }
                             ?>
                         </p>
