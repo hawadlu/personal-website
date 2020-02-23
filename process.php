@@ -1,6 +1,7 @@
 <?php
 //todo when deleting/renaming records ensure that the file paths are handled appropriately
 //todo review all prepared queries so that they comply with https://www.w3schools.com/php/php_mysql_prepared_statements.asp
+//todo close all queries when they are no longer required.
 
 
 //Check if the user is logged in
@@ -343,7 +344,7 @@ if (isset($_POST['submitExampleUpdate'])) {
         $languageCount = 1;
 
         //Add the language to the language array
-        array_push($languagesUsed, $_POST['newLanguage']);
+        array_push($languagesUsed, $_POST['updateLanguageEntry']);
     } else {
         $languageCount = 0;
     }
@@ -385,19 +386,16 @@ if (isset($_POST['submitExampleUpdate'])) {
         redirectWithError('Duplicate record', 'edit.php');
     }
 
-    //Setup the array of foreign keys which will be deleted if they are no longer required
-    $toDelete = setCleanupExamples($uniqueKey, $con);
-
     //2d array of the fields, values and their linked tables (if required) to be inserted
-    $toInsert = [['name', $postedExampleName],
-        ['yearFK', $postedExampleYear, 'year'],
-        ['description', $postedExampleDescription],
-        ['link', $postedExampleLink],
-        ['github', $postedExampleGithub]];
+    $toInsert = [[null, 'name', $postedExampleName],
+        ['year', 'yearFK', $postedExampleYear],
+        [null, 'description', $postedExampleDescription],
+        [null, 'link', $postedExampleLink],
+        [null, 'github', $postedExampleGithub]];
 
 
     //Add the languages to the insert array
-    for ($i = 0; $i < sizeof($languagesUsed); $i++) {
+    for ($i = 0; $i < 5; $i++) {
         //Set the language number
         if ($i == 0) {
             $langNum = "One";
@@ -411,32 +409,79 @@ if (isset($_POST['submitExampleUpdate'])) {
             $langNum = "Five";
         }
 
-        //Add to the to insert array
-        array_push($toInsert, ['language' . $langNum . 'FK', $languagesUsed[$i], 'languages']);
+        if ($i < sizeof($languagesUsed)) {
+            //Add to the to insert array
+            array_push($toInsert, ['languages', 'language' . $langNum . 'FK', $languagesUsed[$i]]);
+        } else {
+            array_push($toInsert, ['languages', 'language' . $langNum . 'FK', null]);
+        }
     }
 
-    //Replace empty values with null
+    //Set any empty values to null
+    for ($i = 0; $i < sizeof($toInsert); $i ++) {
+        if (isEmpty($toInsert[$i][2])) {
+            $toInsert[$i][2] = Null;
+        }
+    }
+
+    //Print for debugging
     for ($i = 0; $i < sizeof($toInsert); $i++) {
-        if (empty($toInsert[$i][1])) {
-            $toInsert[$i][1] = 0;
+        ?><br><?php
+        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
+            if (!is_null($toInsert[$i][$j])) {
+                echo $toInsert[$i][$j] . ", ";
+            } else {
+                echo "Set to null, ";
+            }
+        }
+    }
+
+    $toInsert = updateValues($toInsert, $con);
+
+    //Print for debugging
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+        ?><br><?php
+        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
+            if (!is_null($toInsert[$i][$j])) {
+                echo $toInsert[$i][$j] . ", ";
+            } else {
+                echo "Set to null, ";
+            }
+        }
+}
+
+ //   die();
+
+    //Build the cleanup array
+
+    //Generate the insert statement
+    $insert = "UPDATE examples SET ";
+
+
+
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+
+        if ($i != sizeof($toInsert) - 1) {
+            $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "', ";
+        } else {
+            $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "'";
         }
     }
 
     ?><br><?php
-    echo $languageCount . " languages have been used.";
-    ?><br><?php
-    echo "Insert array";
-    //Print for debugging
-//    for ($i = 0; $i < sizeof($toInsert); $i++) {
-//        ?><!--<br>--><?php
-//        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
-//    }
+    //echo $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
+    $query = $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
+    echo $query;
 
-    //Run a function to update all of the necessary values
-    updateValues($toInsert, $con, 'examples', $uniqueKey);
+    //Execute the query
+    runQuery($query, $con);
 
-    //Get rid of the unused foreign keys
-    cleanUpFK($toDelete, $con);
+    $toClean = setCleanupExamples($uniqueKey, $con);
+
+    //Clean the database
+    cleanUpFK($toClean, $con);
+
+    die();
 
     //Redirect the user
     redirectWithSuccess("Record has been updated!", 'edit.php');
@@ -456,6 +501,8 @@ if (isset($_POST['deleteExample'])) {
     runQuery($query, $con);
 
     cleanUpFK($toDelete, $con);
+
+    die();
 
     redirectWithSuccess('Record deleted!', 'edit.php');
 }
@@ -548,7 +595,7 @@ if (isset($_POST['newExampleRecord'])) {
         $languageCount = 1;
 
         //Add the language to the language array
-        array_push($languagesUsed, $_POST['newLanguage']);
+        array_push($languagesUsed, $_POST['newLanguageEntry']);
     } else {
         $languageCount = 0;
     }
@@ -736,6 +783,8 @@ if (isset($_POST['newExampleRecord'])) {
         }
     }
 
+    die();
+
     //Print a success message
     redirectWithSuccess("The record was created and images uploaded (if any).", 'edit.php');
 }
@@ -819,8 +868,8 @@ function cleanUpFK($toClean, $con)
                 if (is_array($toClean[$i][$j])) {
                     for ($k = 0; $k < sizeof($toClean[$i][$j]); $k++) {
                         $query = "SELECT * FROM " . $toClean[$i][$j][$k] . " WHERE " . $toClean[$i][$j][$k] . "." . $toClean[$i][2] . " = " . $toClean[$i][3];
-//                        ?><!--<br>--><?php
-//                        echo $query;
+                        ?><br><?php
+                        echo $query;
 
                         $query = $con->prepare($query);
                         $query->execute();
@@ -830,22 +879,27 @@ function cleanUpFK($toClean, $con)
                         }
 
                         //Get the number of records that use this foreign key. If !0 return without deleting the record
-                        if ($recordCount != 0 && $fkContained == false) {
+                        if ($recordCount != 0) {
                             //The record should not be deleted
                             $fkContained = true;
                         }
                     }
 
-//                    ?><!--<br>--><?php
-//                    echo "Record count: " . $recordCount . " FK contained: " . $fkContained;
+                    ?><br><?php
+                    echo "Record count: " . $recordCount . " FK contained: " . $fkContained;
                 }
             }
+            //Delete the foreign key if it is safe
             if ($fkContained == false) {
-//                ?><!--<br>--><?php
-//                echo "Safe to delete foreign key " . $toClean[$i][3] . "Column: " . $toClean[$i][2];
+                ?><br><?php
+                echo "Safe to delete foreign key " . $toClean[$i][3] . " Column: " . $toClean[$i][2];
                 $query = "DELETE FROM " . $toClean[$i][1] . " WHERE " . $toClean[$i][1] . "PK = " . $toClean[$i][3];
+                ?><br><?php
                 echo $query;
                 runQuery($query, $con);
+            } else {
+                ?><br><?php
+                echo "NOT SAFE to delete foreign key " . $toClean[$i][3] . " Column: " . $toClean[$i][2];
             }
         }
     }
@@ -1022,7 +1076,7 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
                 runQuery("INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] . ") VALUES (NULL , '" . $toInsert[$i][1] . "')", $con);
             }
             //Run a query to get the primary key of the value
-            $key = getPK($selectQuery, $toInsert[$i][2] . "PK", $con);
+            $key = getPK($selectQuery, $con);
 
             //If the key is empty set it to default to 0
             if (empty($key)) {
@@ -1040,11 +1094,11 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
     ?><br><?php
     echo "Insert array";
     //Print for debugging
-//    for ($i = 0; $i < sizeof($toInsert); $i++) {
-//
-    ?><!--<br>--><?php
-//        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
-//    }
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
+
+    ?><br><?php
+        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
+    }
 
     //Generate the insert statement
     $insert = "INSERT INTO " . $tableToUpdate . " (uniqueKey, ";
@@ -1157,9 +1211,15 @@ function pre_r($array)
 function getPK($query, $con)
 {
     $primary = $val = null;
-    ?><br><?php
-    echo "Single val query: " . $query;
+//    ?><!--<br>--><?php
+//    echo "Single val query: " . $query;
     $query = $con->prepare($query);
+
+    //Look for errors
+    if (false === $query) {
+        die("Prepare failed with error: " . htmlspecialchars($con->error));
+    }
+
     $query->execute();
     $query->bind_result($primary, $val);
     $query->store_result();
@@ -1314,17 +1374,17 @@ function updateTableValue($table, $column, $value, $conditionalColumn, $key, $co
 //Run a specified query
 function runQuery($query, $con)
 {
-    ?><br><?php
-    echo "Run query";
-    ?><br><?php
-    echo $query;
+//    ?><!--<br>--><?php
+//    echo "Run query";
+//    ?><!--<br>--><?php
+//    echo $query;
 
     //execute the query
     $query = $con->prepare($query);
     $query->execute();
 
-    ?><br><?php
-    echo "Query executed";
+//    ?><!--<br>--><?php
+//    echo "Query executed";
 
     //Close the query
     $query->close();
