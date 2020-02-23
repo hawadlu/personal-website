@@ -1,5 +1,6 @@
 <?php
 //todo when deleting/renaming records ensure that the file paths are handled appropriately
+//todo review all prepared queries so that they comply with https://www.w3schools.com/php/php_mysql_prepared_statements.asp
 
 
 //Check if the user is logged in
@@ -62,6 +63,9 @@ if (isset($_POST['submitEducationUpdate'])) {
 
     //Call function to update the values
     updateValues($toInsert, $con, 'education', $uniqueKey);
+
+    //Run a function to remove any unneeded foreign keys from the database
+
 
     //Redirect the user
     redirectWithSuccess("Record has been updated!", 'edit.php');
@@ -340,30 +344,18 @@ if (isset($_POST['submitExampleUpdate'])) {
 
 //Delete examples
 if (isset($_POST['deleteExample'])) {
-    //Create a 2d array of the FK column's and their respective keys
-    $uniqueKey = $name = $yearFk = $description = $languageOneFK = $languageTwoFK =$languageThreeFK = $languageFourFK = $languageFiveFK = $link = $github = null;
-    $query = "SELECT * FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
-    ?><br><?php
-    echo $query;
-    $query = runAndReturn($query, $con);
-    $query->bind_result($uniqueKey, $name, $yearFk, $description, $languageOneFK, $languageTwoFK, $languageThreeFK, $languageFourFK, $languageFiveFK, $link, $github);
-    $query->store_result();
-
-    //The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
-    $toDelete = [[['examples', 'education'], 'year', 'yearFK', $yearFk],
-        [['examples'], 'languages', 'languageOneFK', $languageOneFK],
-        [['examples'], 'languages', 'languageTwoFK', $languageTwoFK],
-        [['examples'], 'languages', 'languageThreeFK', $languageThreeFK],
-        [['examples'], 'languages', 'languageFourFK', $languageFourFK],
-        [['examples'], 'languages', 'languageFiveFK', $languageFiveFK]];
+    //Setup the array that will be used when cleaning the database
+    $toDelete = setCleanupExamples($con);
 
     //Delete the record
     ?><br><?php
     $query = "DELETE FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
     echo $query;
-    //runQuery($query, $con);
+    runQuery($query, $con);
 
-    cleanUpFK($toDelete);
+    cleanUpFK($toDelete, $con);
+
+    redirectWithSuccess('Record deleted!', 'edit.php');
 }
 
 //Deletes images
@@ -648,10 +640,39 @@ if (isset($_POST['newExampleRecord'])) {
     }
 }
 
+//Sets up and returns all the required parameters needed when foreign keys are removed from the database. Specific to the examples table
+function setCleanupExamples(mysqli $con)
+{
+//Create a 2d array of the FK column's and their respective keys
+    $uniqueKey = $name = $yearFk = $description = $languageOneFK = $languageTwoFK = $languageThreeFK = $languageFourFK = $languageFiveFK = $link = $github = null;
+    $query = "SELECT * FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
+    ?><br><?php
+    echo $query;
+    $query = runAndReturn($query, $con);
+    $query->bind_result($uniqueKey, $name, $yearFk, $description, $languageOneFK, $languageTwoFK, $languageThreeFK, $languageFourFK, $languageFiveFK, $link, $github);
+    $query->store_result();
+    $query->fetch();
+
+    ?><br><?php
+    echo "Language one: " . $languageOneFK;
+
+    //The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
+    $toDelete = [[['examples', 'education'], 'year', 'yearFK', $yearFk],
+        [['examples'], 'languages', 'languageOneFK', $languageOneFK],
+        [['examples'], 'languages', 'languageTwoFK', $languageTwoFK],
+        [['examples'], 'languages', 'languageThreeFK', $languageThreeFK],
+        [['examples'], 'languages', 'languageFourFK', $languageFourFK],
+        [['examples'], 'languages', 'languageFiveFK', $languageFiveFK]];
+
+    return $toDelete;
+}
+
 //Takes a 2d array of foreign keys and cleans any that are no longer needed
 //ToClean = The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
-function cleanUpFK($toClean) {
+function cleanUpFK($toClean, $con) {
     //print for debugging
+    ?><br><?php
+    //echo print_r($toClean);
     ?><br><?php
     for ($i = 0; $i < sizeof($toClean); $i ++) {
         echo print_r($toClean[$i]);
@@ -660,13 +681,45 @@ function cleanUpFK($toClean) {
 
     //Go through each foreign key
     for ($i = 0; $i < sizeof($toClean); $i++) {
+        $fkContained = false; //Assume that that foreign key does not exist anywhere else
+
         //Check to see if the foreign key is 0
         if ($toClean[$i][3] != 0) {
             //Go through each of the tables
             for ($j = 0; $j < sizeof($toClean[$i][0]); $j++) {
-                $query = "SELECT * FROM " . $toClean[$i][0][$j] . " WHERE " . $toClean[$i][0][$j] . $toClean[$i][2] . " = " . $toClean[$i][3];
+                //Only run if it is an array
+                if (is_array($toClean[$i][$j])) {
+                    for ($k = 0; $k < sizeof($toClean[$i][$j]); $k++) {
+                        ?><br><?php
+                        echo "Table: " . $toClean[$i][$j][$k] . " i: " . $i . " j: " . $j . " k: " . $k;
+                        $query = "SELECT * FROM " . $toClean[$i][$j][$k] . " WHERE " . $toClean[$i][$j][$k] . "." . $toClean[$i][2] . " = " . $toClean[$i][3];
+                        ?><br><?php
+                        echo $query;
+
+                        $query = $con->prepare($query);
+                        $query->execute();
+                        $recordCount = 0;
+                        while ($query->fetch()) {
+                            $recordCount++;
+                        }
+
+                        //Get the number of records that use this foreign key. If !0 return without deleting the record
+                        if ($recordCount != 0 && $fkContained == false) {
+                            //The record should not be deleted
+                            $fkContained = true;
+                        }
+                    }
+
+                    ?><br><?php
+                    echo "Record count: " . $recordCount . " FK contained: " . $fkContained;
+                }
+            }
+            if ($fkContained == false) {
                 ?><br><?php
+                echo "Safe to delete foreign key " . $toClean[$i][3] . "Column: " . $toClean[$i][2];
+                $query = "DELETE FROM " . $toClean[$i][1] . " WHERE " . $toClean[$i][1] . "PK = " . $toClean[$i][3];
                 echo $query;
+                runQuery($query, $con);
             }
         } else {
             ?><br><?php
@@ -1244,11 +1297,11 @@ function stripSpaces($value) {
 
 //Takes an image file and adjusts the size
 function resize_image($file, $w, $h, $crop=true) {
-    ?><br><?php
-    echo "resizing: " . $file;
+//    ?><!--<br>--><?php
+//    echo "resizing: " . $file;
     list($width, $height) = getimagesize($file);
-    ?><br><?php
-    echo "W & H: " . print_r(getimagesize($file));
+//    ?><!--<br>--><?php
+//    echo "W & H: " . print_r(getimagesize($file));
     $r = $width / $height;
     if ($crop) {
         if ($width > $height) {
