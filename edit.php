@@ -1173,12 +1173,12 @@
         //Autocomplete code
         function autocomplete(inp, arr) {
             /*the autocomplete function takes two arguments,
-            the text field element and an array of possible autocompleted values:*/
+            the text field element and an array of possible auto completed values:*/
             var currentFocus;
             /*execute a function when someone writes in the text field:*/
             inp.addEventListener("input", function (e) {
                 var a, b, i, val = this.value;
-                /*close any already open lists of autocompleted values*/
+                /*close any already open lists of auto completed values*/
                 closeAllLists();
                 if (!val) {
                     return false;

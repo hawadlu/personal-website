@@ -519,14 +519,13 @@ if (isset($_POST['deleteExample'])) {
 
 //Adds images
 if (isset($_POST['addImages'])) {
+    echo "Adding images. Key: " . $_POST['uniqueKey'];
+    $uniqueKey = $_POST['uniqueKey'];
     //Handle file uploads
     //Check a file has been uploaded in the form
     if (isset($_FILES['updateImages']) && $_FILES['updateImages']['name'][0] != "") {
         //Calculate the directory
-        $directory = getExampleDirectory($_POST['uniqueKey'], $con);
-
-        ?><br><?php
-        echo $directory;
+        $directory = getExampleDirectory($uniqueKey, $con);
 
         $imageUpload = uploadImages($directory, $_FILES['updateImages']);
 
@@ -895,8 +894,6 @@ function getExampleDirectory($uniqueKey, mysqli $con)
     $query->bind_result($value);
     $query->store_result();
 
-    $languageArray = [];
-
     while ($row = $query->fetch()) {
         $originalDirectory = $value;
     }
@@ -905,14 +902,12 @@ function getExampleDirectory($uniqueKey, mysqli $con)
     $originalDirectory = 'images/examples/' . stripSpaces($originalDirectory);
 
     //Check to see if the directory exists
-    if (is_dir($originalDirectory)) {
-        ?><br><?php
-        echo "Directory found";
-
-        //If the directory cannot be found set the directory to null
-    } else {
-        $originalDirectory = null;
-    }
+//    if (is_dir($originalDirectory)) {
+//        ?><!--<br>--><?php
+//        echo "Directory found";
+//
+//        //If the directory cannot be found set the directory to null
+//    }
     return $originalDirectory;
 }
 
