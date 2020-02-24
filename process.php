@@ -386,6 +386,8 @@ if (isset($_POST['submitExampleUpdate'])) {
         redirectWithError('Duplicate record', 'edit.php');
     }
 
+    $originalDirectory = getExampleDirectory($uniqueKey, $con);
+
     //2d array of the fields, values and their linked tables (if required) to be inserted
     $toInsert = [[null, 'name', $postedExampleName],
         ['year', 'yearFK', $postedExampleYear],
@@ -418,7 +420,7 @@ if (isset($_POST['submitExampleUpdate'])) {
     }
 
     //Set any empty values to null
-    for ($i = 0; $i < sizeof($toInsert); $i ++) {
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
         if (isEmpty($toInsert[$i][2])) {
             $toInsert[$i][2] = Null;
         }
@@ -439,24 +441,18 @@ if (isset($_POST['submitExampleUpdate'])) {
     $toInsert = updateValues($toInsert, $con);
 
     //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
-            if (!is_null($toInsert[$i][$j])) {
-                echo $toInsert[$i][$j] . ", ";
-            } else {
-                echo "Set to null, ";
-            }
-        }
-}
-
- //   die();
-
-    //Build the cleanup array
+//    for ($i = 0; $i < sizeof($toInsert); $i++) {
+//        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
+//            if (!is_null($toInsert[$i][$j])) {
+//                echo $toInsert[$i][$j] . ", ";
+//            } else {
+//                echo "Set to null, ";
+//            }
+//        }
+//    }
 
     //Generate the insert statement
     $insert = "UPDATE examples SET ";
-
 
 
     for ($i = 0; $i < sizeof($toInsert); $i++) {
@@ -471,28 +467,41 @@ if (isset($_POST['submitExampleUpdate'])) {
     ?><br><?php
     //echo $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
     $query = $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
-    echo $query;
+    //echo $query;
 
     //Execute the query
     runQuery($query, $con);
 
+    //Build the cleanup array
     $toClean = setCleanupExamples($uniqueKey, $con);
 
     //Clean the database
     cleanUpFK($toClean, $con);
 
-    die();
+    //Rename the directory where the images are stored. Done here so that any errors are caught before the directory is renamed
+    if (!is_null($originalDirectory)) {
+        //Calculate the new directory
+        $newDirectory = stripSpaces($postedExampleName);
+        $newDirectory = 'images/examples/' . $newDirectory;
+
+        //Rename the old directory
+        rename($originalDirectory, $newDirectory);
+    }
 
     //Redirect the user
     redirectWithSuccess("Record has been updated!", 'edit.php');
 
-    //todo add ability to rename the directory to the current example name
 }
 
 //Delete examples
 if (isset($_POST['deleteExample'])) {
-    //Setup the array that will be used when cleaning the database
-    $toDelete = setCleanupExamples($_POST['uniqueKey'], $con);
+    //Get the path to where the images are stored
+    $originalDirectory = getExampleDirectory($_POST['uniqueKey'], $con);
+
+    //Delete the images
+    if (!is_null($originalDirectory)) {
+        deleteDirectory($originalDirectory);
+    }
 
     //Delete the record
     ?><br><?php
@@ -500,16 +509,53 @@ if (isset($_POST['deleteExample'])) {
     echo $query;
     runQuery($query, $con);
 
-    cleanUpFK($toDelete, $con);
+    //Setup the array that will be used when cleaning the database
+    $toClean = setCleanupExamples($_POST['uniqueKey'], $con);
 
-    die();
+    cleanUpFK($toClean, $con);
 
     redirectWithSuccess('Record deleted!', 'edit.php');
 }
 
-//Deletes images
+//Adds images
+if (isset($_POST['addImages'])) {
+    //Handle file uploads
+    //Check a file has been uploaded in the form
+    if (isset($_FILES['updateImages']) && $_FILES['updateImages']['name'][0] != "") {
+        //Calculate the directory
+        $directory = getExampleDirectory($_POST['uniqueKey'], $con);
+
+        ?><br><?php
+        echo $directory;
+
+        $imageUpload = uploadImages($directory, $_FILES['updateImages']);
+
+        //Return the error if necessary
+        if ($imageUpload != true) {
+            redirectWithError($imageUpload, 'edit.php');
+        }
+    }
+    redirectWithSuccess('Images have been uploaded.', 'edit.php');
+}
+
+//Deletes single images
 if (isset($_POST['deleteImage'])) {
     echo "Delete image: " . $_POST['file'];
+
+    //Get the expected filepath. This is used to help verify that the user has not tampered with the file to be deleted
+    $originalDirectory = getExampleDirectory($_POST['uniqueKey'], $con);
+
+    //Make sure that the image path is valid
+    ?><br><?php
+    if (strpos($_POST['file'], $originalDirectory) !== false && isImage($_POST['file'])) {
+        //Delete the image
+        unlink($_POST['file']);
+    } else {
+        //The filepath is invalid
+        redirectWithError('Invalid filepath!', 'edit.php');
+    }
+
+    redirectWithSuccess('Image deleted.', 'edit.php');
 }
 
 //Creates new examples
@@ -523,32 +569,32 @@ if (isset($_POST['newExampleRecord'])) {
     //looking for a checked new language and an empty new language entry
     if (!empty($_POST['newLanguageInput']) && empty($_POST['newLanguageEntry'])) {
         ?><br><?php
-        die("You checked 'other' but did not enter a new language");
+        redirectWithError("You checked 'other' but did not enter a new language", 'edit.php');
 
         //Looking for a new language entry and an unchecked new language checkbox
     } else if (empty($_POST['newLanguageInput']) && !empty($_POST['newLanguageEntry'])) {
         ?><br><?php
-        die("You entered a new language but did not check 'other'");
+        redirectWithError("You entered a new language but did not check 'other'", 'edit.php');
 
         //Looking for a checked github and no github link
     } else if (!empty($_POST['newGithubInput']) && empty($_POST['newGithubEntry'])) {
         ?><br><?php
-        die("You checked 'github' but did not enter a link");
+        redirectWithError("You checked 'github' but did not enter a link", 'edit.php');
 
         //Looking for a github link and no checked github
     } else if (empty($_POST['newGithubInput']) && !empty($_POST['newGithubEntry'])) {
         ?><br><?php
-        die("You entered a new github link but did not check 'github'");
+        redirectWithError("You entered a new github link but did not check 'github'", 'edit.php');
 
         //Looking for a checked link but no link provided
     } else if (!empty($_POST['newLinkInput']) && empty($_POST['newLinkEntry'])) {
         ?><br><?php
-        die("You checked 'link' and did not enter a link");
+        redirectWithError("You checked 'link' and did not enter a link", 'edit.php');
 
         //Looking for link and no check link
     } else if (empty($_POST['newLinkInput']) && !empty($_POST['newLinkEntry'])) {
         ?><br><?php
-        die("You entered a new link but did not check 'link'");
+        redirectWithError("You entered a new link but did not check 'link'", 'edit.php');
     }
 
     //Get all the posted variables
@@ -710,83 +756,164 @@ if (isset($_POST['newExampleRecord'])) {
 
     //Handle file uploads
     //Check a file has been uploaded in the form
-    if (isset($_FILES['userFiles']) && $_FILES['userFiles']['name'][0] != "") {
-        //useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
-        //Array of possible file upload errors
-        $phpFileUploadErrors = array(
-            0 => "The file uploaded successfully",
-            1 => "The file exceeds the maximum file size defined in php.ini",
-            2 => "The file exceeds the maximum file size defines in the HTML form",
-            3 => "The uploaded file was only partially uploaded",
-            4 => "No file was uploaded",
-            6 => "Missing a temporary folder",
-            7 => "Filed to write file to the disc",
-            8 => "A php extension stopped the file from uploading"
-        );
+    if (isset($_FILES['addImages']) && $_FILES['addImages']['name'][0] != "") {
+        //Calculate the directory
+        $directory = "images/examples/" . stripSpaces($postedNewExampleName);
 
-        $file_array = reArrayFiles($_FILES['userFiles']);
-        //pre_r($file_array);
-        //die();
+        $imageUpload = uploadImages($directory, $_FILES['addImages']);
 
-        //The directory where the images will be stored.
-        $directory = "images/examples/" . stripSpaces($postedNewExampleName) . "/";
-
-        //Create the directory if it does not exist
-        if (!is_dir($directory)) {
-            mkdir($directory);
-        }
-
-        for ($i = 0; $i < count($file_array); $i++) {
-            //Check for errors
-            if ($file_array[$i]['error']) {
-                redirectWithError($recordCreated . " " . $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']], 'edit.php');
-
-                //Check for extensions errors
-            } else {
-                //Allowable file types
-                $extensions = array("jpg", "png", "gif", "jpeg");
-                $file_ext = explode(".", $file_array[$i]["name"]);
-                $file_ext = end($file_ext);
-
-                //Check if the extension is acceptable
-                if (!in_array($file_ext, $extensions)) {
-                    redirectWithError($recordCreated . " " . $file_array[$i]["name"] . " Invalid file extension!", 'edit.php');
-                } else {
-                    //File uploaded successfully
-                    //Check if the file already exists in the directory
-                    if (!file_exists("images/" . $file_array[$i]["name"])) {
-                        //Move the file from the temporary directory to the intended directory. Resize at the same time
-                        move_uploaded_file($file_array[$i]["tmp_name"], $directory . $file_array[$i]["name"]);
-
-                    } else {
-                        //Print message stating that the file already exists
-                        redirectWithError($recordCreated . " " . $file_array[$i]["name"] . " already exists", 'edit.php');
-                    }
-                }
-            }
-
-            //Resize the image
-            $file = $directory . $file_array[$i]["name"];
-            $image = resize_image($directory . $file_array[$i]['name'], 250, 250);
-
-            //Save the image
-            if (strpos($file, '.jpeg')) {
-                imagejpeg($image, $file);
-            } else if (strpos($file, '.png')) {
-                imagepng($image, $file);
-            } else if (strpos($file, '.gif')) {
-                imagegif($image, $file);
-            } else if (strpos($file, '.jpg')) {
-                imagejpeg($image, $file);
-            }
-
+        //Return the error if necessary
+        if ($imageUpload != true) {
+            redirectWithError($recordCreated . " " . $imageUpload, 'edit.php');
         }
     }
 
-    die();
-
     //Print a success message
     redirectWithSuccess("The record was created and images uploaded (if any).", 'edit.php');
+}
+
+//Takes the required directory and file array and uploads the image. Returns error if needed
+function uploadImages($directory, $toUploadArray)
+{
+//useful functions and variables. Credit to "Clever Techie. https://www.youtube.com/watch?v=KXyMpRp4d2Q"
+    //Array of possible file upload errors
+    $phpFileUploadErrors = array(
+        0 => "The file uploaded successfully",
+        1 => "The file exceeds the maximum file size defined in php.ini",
+        2 => "The file exceeds the maximum file size defines in the HTML form",
+        3 => "The uploaded file was only partially uploaded",
+        4 => "No file was uploaded",
+        6 => "Missing a temporary folder",
+        7 => "Filed to write file to the disc",
+        8 => "A php extension stopped the file from uploading"
+    );
+
+    $file_array = reArrayFiles($toUploadArray);
+    //pre_r($file_array);
+    //die();
+
+    //Create the directory if it does not exist
+    if (!is_dir($directory)) {
+        mkdir($directory);
+    }
+
+    for ($i = 0; $i < count($file_array); $i++) {
+        //Check for errors
+        if ($file_array[$i]['error']) {
+            return $file_array[$i]['name'] . " " . $phpFileUploadErrors[$file_array[$i]['error']];
+
+            //Check for extensions errors
+        } else {
+            //Allowable file types
+            $extensions = array("jpg", "png", "gif", "jpeg");
+            $file_ext = explode(".", $file_array[$i]["name"]);
+            $file_ext = end($file_ext);
+
+            //Check if the extension is acceptable
+            if (!in_array($file_ext, $extensions)) {
+                return $file_array[$i]["name"] . " Invalid file extension!";
+            } else {
+                //File uploaded successfully
+                //Check if the file already exists in the directory
+                if (!file_exists("images/examples/" . $file_array[$i]["name"])) {
+                    //Move the file from the temporary directory to the intended directory. Resize at the same time
+                    ?><br><?php
+                    move_uploaded_file($file_array[$i]["tmp_name"], $directory . "/" .$file_array[$i]["name"]);
+
+                } else {
+                    //Print message stating that the file already exists
+                    return $file_array[$i]["name"] . " already exists";
+                }
+            }
+        }
+
+        //Resize the image
+        $file = $directory . "/" . $file_array[$i]["name"];
+        $image = resize_image($directory . "/" . $file_array[$i]['name'], 250, 250);
+
+        //Save the image
+        if (strpos($file, '.jpeg')) {
+            imagejpeg($image, $file);
+        } else if (strpos($file, '.png')) {
+            imagepng($image, $file);
+        } else if (strpos($file, '.gif')) {
+            imagegif($image, $file);
+        } else if (strpos($file, '.jpg')) {
+            imagejpeg($image, $file);
+        }
+
+    }
+    return true;
+}
+
+
+//Checks that the provided file is an image
+function isImage($path)
+{
+    $a = getimagesize($path);
+    $image_type = $a[2];
+
+    if(in_array($image_type , array(IMAGETYPE_GIF , IMAGETYPE_JPEG ,IMAGETYPE_PNG , IMAGETYPE_BMP)))
+    {
+        return true;
+    }
+    return false;
+}
+
+//Deletes an entire directory (recursively)
+function deleteDirectory($filePath) {
+    //Check to see if the supplied filepath exists
+    if (!is_dir($filePath)) {
+        redirectWithError('Failed to remove images. Contact admin.', 'edit.php');
+    }
+
+    //Look for new folders
+    $files = glob($filePath . '*', GLOB_MARK);
+
+    //Loop through the contents
+    foreach ($files as $file) {
+        //If the file is a directory call the function again
+        if (is_dir($file)) {
+            deleteDirectory($file);
+        } else {
+            unlink($file);
+        }
+    }
+
+    //Remove the directory
+    rmdir($filePath);
+}
+
+//Calculates and returns the directory where the example images are stored for a record
+function getExampleDirectory($uniqueKey, mysqli $con)
+{
+//Get the current example name. This will be used later when renaming the directory.
+    $originalDirectory = $value = null;
+    $query = "SELECT examples.name FROM examples WHERE examples.uniqueKey = " . $uniqueKey;
+    $query = $con->prepare($query);
+    $query->execute();
+    $query->bind_result($value);
+    $query->store_result();
+
+    $languageArray = [];
+
+    while ($row = $query->fetch()) {
+        $originalDirectory = $value;
+    }
+
+    //Strip the spaces from the directory
+    $originalDirectory = 'images/examples/' . stripSpaces($originalDirectory);
+
+    //Check to see if the directory exists
+    if (is_dir($originalDirectory)) {
+        ?><br><?php
+        echo "Directory found";
+
+        //If the directory cannot be found set the directory to null
+    } else {
+        $originalDirectory = null;
+    }
+    return $originalDirectory;
 }
 
 //Sets up and returns all the required parameters needed when foreign keys are removed from the database. Specific to the examples table
@@ -795,15 +922,10 @@ function setCleanupExamples($key, mysqli $con)
 //Create a 2d array of the FK column's and their respective keys
     $uniqueKey = $name = $yearFk = $description = $languageOneFK = $languageTwoFK = $languageThreeFK = $languageFourFK = $languageFiveFK = $link = $github = null;
     $query = "SELECT * FROM examples WHERE examples.uniqueKey = " . $key;
-    ?><br><?php
-    echo $query;
     $query = runAndReturn($query, $con);
     $query->bind_result($uniqueKey, $name, $yearFk, $description, $languageOneFK, $languageTwoFK, $languageThreeFK, $languageFourFK, $languageFiveFK, $link, $github);
     $query->store_result();
     $query->fetch();
-
-    ?><br><?php
-    echo "Language one: " . $languageOneFK;
 
     //The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
     $toDelete = [[['examples', 'education'], 'year', 'yearFK', $yearFk],
@@ -842,20 +964,9 @@ function setCleanupEducation($key, mysqli $con)
     return $toDelete;
 }
 
-
 //Takes a 2d array of foreign keys and cleans any that are no longer needed
 //ToClean = The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
-function cleanUpFK($toClean, $con)
-{
-    //print for debugging
-//    ?><!--<br>--><?php
-//    //echo print_r($toClean);
-//    ?><!--<br>--><?php
-//    for ($i = 0; $i < sizeof($toClean); $i++) {
-//        echo print_r($toClean[$i]);
-//        ?><!--<br>--><?php
-//    }
-
+function cleanUpFK($toClean, $con){
     //Go through each foreign key
     for ($i = 0; $i < sizeof($toClean); $i++) {
         $fkContained = false; //Assume that that foreign key does not exist anywhere else
@@ -868,8 +979,6 @@ function cleanUpFK($toClean, $con)
                 if (is_array($toClean[$i][$j])) {
                     for ($k = 0; $k < sizeof($toClean[$i][$j]); $k++) {
                         $query = "SELECT * FROM " . $toClean[$i][$j][$k] . " WHERE " . $toClean[$i][$j][$k] . "." . $toClean[$i][2] . " = " . $toClean[$i][3];
-                        ?><br><?php
-                        echo $query;
 
                         $query = $con->prepare($query);
                         $query->execute();
@@ -884,22 +993,12 @@ function cleanUpFK($toClean, $con)
                             $fkContained = true;
                         }
                     }
-
-                    ?><br><?php
-                    echo "Record count: " . $recordCount . " FK contained: " . $fkContained;
                 }
             }
             //Delete the foreign key if it is safe
             if ($fkContained == false) {
-                ?><br><?php
-                echo "Safe to delete foreign key " . $toClean[$i][3] . " Column: " . $toClean[$i][2];
                 $query = "DELETE FROM " . $toClean[$i][1] . " WHERE " . $toClean[$i][1] . "PK = " . $toClean[$i][3];
-                ?><br><?php
-                echo $query;
                 runQuery($query, $con);
-            } else {
-                ?><br><?php
-                echo "NOT SAFE to delete foreign key " . $toClean[$i][3] . " Column: " . $toClean[$i][2];
             }
         }
     }
@@ -1146,8 +1245,8 @@ function updateValues(array $toInsert, mysqli $con) {
     for ($i = 0; $i < sizeof($toInsert); $i++) {
         //Ignore tables that have no associated foreign key
         if (!is_null($toInsert[$i][0])) {
-            ?><br><?php
-            echo "Look for updates: " . $toInsert[$i][0];
+//            ?><!--<br>--><?php
+//            echo "Look for updates: " . $toInsert[$i][0];
 
             //Look for the value in the linked table
             //If the value is null the foreign key should be set to 0
@@ -1157,13 +1256,10 @@ function updateValues(array $toInsert, mysqli $con) {
             //Query the appropriate table to see if the record exists
             } else {
                 $selectQuery = "SELECT * FROM " . $toInsert[$i][0] . " WHERE " . $toInsert[$i][0] . " = '" . $toInsert[$i][2] . "'";
-                ?><br><?php
-                echo $selectQuery;
 
                 $PK = getPK($selectQuery, $con);
-                ?><br><?php
                 if ($PK != false) {
-                    echo "PK: " . $PK;
+                    //echo "PK: " . $PK;
 
                     //The record exists in this table. Update the insert array
                     $toInsert[$i][2] = $PK;
@@ -1232,7 +1328,7 @@ function getPK($query, $con)
 
     $key = "";
     while ($row = $query->fetch()) {
-        ?><br><?php
+//        ?><!--<br>--><?php
         $key = $primary;
     }
     return $key;
@@ -1256,6 +1352,7 @@ function redirectWithError($cookieValue, $redirectTo)
     exit();
 }
 
+//Redirects the user to  specific page with the success cookie set
 function redirectWithSuccess($cookieValue, $redirectTo)
 {
     //Add a flag to the front of the cookie describing what it is
@@ -1324,7 +1421,7 @@ function isType($type, $value)
 function containsIllegalCharacter($value)
 {
     ////echo " Checking value " . $value . " for illegal characters";
-    $characters = ['“', '”', '"', '"', '‘', '’', "'", "'", '«', '»', '「', '」'];
+    $characters = ['“', '”', '"', '"', '‘', '’', "'", "'", '«', '»', '「', '」', '`'];
     for ($i = 0; $i < sizeof($characters); $i++) {
         //Check if the character is contained in the value
         if (strpos($value, $characters[$i]) !== false) {
@@ -1374,17 +1471,9 @@ function updateTableValue($table, $column, $value, $conditionalColumn, $key, $co
 //Run a specified query
 function runQuery($query, $con)
 {
-//    ?><!--<br>--><?php
-//    echo "Run query";
-//    ?><!--<br>--><?php
-//    echo $query;
-
     //execute the query
     $query = $con->prepare($query);
     $query->execute();
-
-//    ?><!--<br>--><?php
-//    echo "Query executed";
 
     //Close the query
     $query->close();
@@ -1400,7 +1489,6 @@ function runAndReturn($query, mysqli $con)
         die("Prepare failed with error: " . htmlspecialchars($con->error));
     }
     $query->execute();
-    ?><br><?php
     return $query;
 }
 
@@ -1482,13 +1570,9 @@ function stripSpaces($value)
 }
 
 //Takes an image file and adjusts the size
-function resize_image($file, $w, $h, $crop = true)
-{
-//    ?><!--<br>--><?php
-//    echo "resizing: " . $file;
+function resize_image($file, $w, $h, $crop = true) {
     list($width, $height) = getimagesize($file);
-//    ?><!--<br>--><?php
-//    echo "W & H: " . print_r(getimagesize($file));
+
     $r = $width / $height;
     if ($crop) {
         if ($width > $height) {
@@ -1519,9 +1603,6 @@ function resize_image($file, $w, $h, $crop = true)
     } else if (strpos($file, '.jpg')) {
         $src = imagecreatefromjpeg($file);
     }
-
-    ?><br><?php
-    echo "SRC: " . $src;
 
     $dst = imagecreatetruecolor($newwidth, $newheight);
     imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);

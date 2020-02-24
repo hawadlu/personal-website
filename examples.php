@@ -52,7 +52,7 @@ require("connect.php");
             $directoryName = "images/examples/" . str_replace(" ", "", $name);
 
             //Avoid errors if the file or folder does not exist
-            if (file_exists($directoryName)) {
+            if (is_dir($directoryName) && !dir_is_empty($directoryName)) {
                 $files = scandir($directoryName);
                 $primaryImage = $files[2];
 

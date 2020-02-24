@@ -50,7 +50,7 @@
         setcookie('successMsg', time() - 3600);
     }
 
-
+    //Gets an array of values from the database. Used for autocomplete
     function getArray($query, $con) {
         $value = null;
         $query = $con->prepare($query);
@@ -64,6 +64,19 @@
             array_push($array, $value);
         }
         return $array;
+    }
+
+    //Function to check if a directory is empty
+    function dir_is_empty($dir) {
+        $handle = opendir($dir);
+        while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+                closedir($handle);
+                return FALSE;
+            }
+        }
+        closedir($handle);
+        return TRUE;
     }
 
 ?>
@@ -228,7 +241,7 @@
                                 </textarea>
                                 <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
                                 Select image to upload:
-                                <input type="file" name="userFiles[]" id="" multiple="">
+                                <input type="file" name="addImages[]" id="" multiple="">
                                 <input type="submit" value="Submit" name="newExampleRecord">
                             </form>
                         </div>
@@ -603,7 +616,7 @@
                             $directoryName = "images/examples/" . str_replace(" ", "", $name);
 
                             //Avoid errors if the file or folder does not exist
-                            if (file_exists($directoryName)) {
+                            if (file_exists($directoryName) && !dir_is_empty($directoryName)) {
                                 $files = scandir($directoryName);
                                 $primaryImage = $files[2];
 
@@ -933,9 +946,27 @@
                                     <?php
                                 } else {
                                     echo "There are no images to be edited. Click the button below to add some.";
-                                    //todo add button that can be used to add images to the record
+                                    ?>
+                                    <button id="addImages<?php echo $uniqueKey; ?>button"
+                                    onclick="showUpdateDiv('addImages<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Add Images', 'Hide Add Images')">
+                                        Add Images
+                                    </button>
+                                    <?php
                                 }
                                 ?>
+                                <!--Div that displays to allow the user to add images-->
+                                <div id="addImages<?php echo $uniqueKey;?>" style="display: none">
+                                    <!--Form that allows the user to add images-->
+                                    <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
+                                    Select image to upload:
+                                    <form action="process.php" method="post" enctype="multipart/form-data">
+                                        <input type="file" name="updateImages[]" id="" multiple="">
+                                        <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
+                                        <input type="submit" name="addImages" value="Submit Images">
+                                    </form>
+                                </div>
+
+                                <!--Div that displays all the images for editing-->
                                 <div id="editImages<?php echo $uniqueKey; ?>" style="display: none">
                                     <div class="gallery-container">
                                         <?php
@@ -947,6 +978,7 @@
                                                 <!--The delete image form-->
                                                 <form method="post" action="process.php">
                                                     <input name="file" type="hidden" value="<?php echo $file; ?>">
+                                                    <input name="uniqueKey" type="hidden" value="<?php echo $uniqueKey;?>">
                                                     <input type="submit" name="deleteImage" value="Delete">
                                                 </form>
                                             </div>
