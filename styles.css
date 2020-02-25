@@ -1,3 +1,5 @@
+/*TODO: Tidy and group this CSS*/
+
 body {
   background-color: #ffffff;
   margin: 0;
@@ -7,6 +9,7 @@ body {
 
 /*FONTS*/
 h1 {
+  margin: 0;
   font-size: 26px;
   font-family: Raleway ;
 }
@@ -34,6 +37,29 @@ a {
 
 }
 
+a:hover {
+  text-decoration: none;
+}
+
+/*STYLE THE FORMS*/
+form{
+  margin:0px; padding:0px; display:inline;
+}
+
+input{
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+input[type=checkbox] {
+  display: inline;
+}
+
 /*Style some links on hover*/
 .onHover:hover {
   color: #ffcf00;
@@ -52,11 +78,19 @@ a {
   margin: 0;
 }
 
+/*Style the checkboxes*/
+.checkbox {
+  height: auto;
+  width: auto;
+}
+
 /*Style input text*/
 .textInput {
   width: 90%;
   margin-left: 5%;
   margin-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 /* VARIOUS BG IMAGE SIZES*/
@@ -320,6 +354,17 @@ button {
   }
 }
 
+/*Styling for the new item button*/
+.newItemButton {
+  width: 50%;
+  border: none;
+  font-size: 15px;
+}
+
+.newItemButton:hover {
+  color: #ffcf00;
+}
+
 /*Styling for buttons on the index page*/
 .indexButton {
   border-radius: 5px;
@@ -399,7 +444,7 @@ button {
 /*THE EDUCATION GRID STYLED TO ALLOW EDITING */
 .education-grid-container-edit {
   display: grid;
-  grid-template-columns: 10% 10% 40% 7.5% 22.5% 10%;
+  grid-template-columns: 20% 10% 30% 7.5% 22.5% 10%;
   grid-template-rows: auto auto;
   grid-template-areas:
           "update Code Subject Credits subjectLevel Year"
@@ -414,7 +459,7 @@ button {
 @media (min-width: 750px) {
   .education-Titles-Large-Edit {
     display: grid;
-    grid-template-columns: 10% 10% 40% 7.5% 22.5% 10%;
+    grid-template-columns: 20% 10% 30% 7.5% 22.5% 10%;
     grid-template-rows: auto;
   }
 }
@@ -456,30 +501,151 @@ button {
   .subjectLevelTitle-Edit {grid-area: subjectLevelTitle; display: block}
 }
 
-/*GRID THAT CONTAINS ALL OF THE EDIT FIELDS*/
-.add-grid-container {
+/*GRID THAT CONTAINS THE UPDATE AND EDIT BUTTONS*/
+.updateDelete-container {
+  height: 100%;
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas: "add-Institution add-Subject add-Subject-Year add-Subject-Level"
-  "add-Code add-Code-Extension add-Grade save-Record";
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 1fr;
+  grid-template-areas: "delete update";
 }
 
-.add-Institution { grid-area: add-Institution; }
+.delete { grid-area: delete;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
 
-.add-Subject { grid-area: add-Subject; }
+.update { grid-area: update;
+  height: 100%;
+  width: 100%;
+}
 
-.add-Subject-Year { grid-area: add-Subject-Year; }
+.deleteButton {
+  background-color: #e97e51;
+  border: none;
+  transition: 0.5s;
+}
 
-.add-Subject-Level { grid-area: add-Subject-Level; }
+.deleteButton:hover {
+  background-color: #d90029;
+}
 
-.add-Code { grid-area: add-Code; }
+.updateButton {
+  background-color: #39afe9;
+  border: none;
+  transition: 0.5s;
+}
 
-.add-Code-Extension { grid-area: add-Code-Extension; }
+.updateButton:hover {
+  background-color: #2661e9;
+}
 
-.add-Grade { grid-area: add-Grade; }
 
-.save-Record { grid-area: save-Record; }
+/*GRID THAT CONTAINS ALL OF THE EDIT FIELDS*/
+/*.add-grid-container {*/
+/*  display: grid;*/
+/*  grid-template-columns: auto auto auto auto;*/
+/*  grid-template-rows: 1fr 1fr;*/
+/*  grid-template-areas: "add-Institution add-Subject add-Subject-Year add-Subject-Level"*/
+/*  "add-Code add-Code-Extension add-Grade save-Record";*/
+/*}*/
+
+/*.add-Institution { grid-area: add-Institution; }*/
+
+/*.add-Subject { grid-area: add-Subject; }*/
+
+/*.add-Subject-Year { grid-area: add-Subject-Year; }*/
+
+/*.add-Subject-Level { grid-area: add-Subject-Level; }*/
+
+/*.add-Code { grid-area: add-Code; }*/
+
+/*.add-Code-Extension { grid-area: add-Code-Extension; }*/
+
+/*.add-Grade { grid-area: add-Grade; }*/
+
+/*.save-Record { grid-area: save-Record; }*/
+
+/*GRID THAT CONTAINS ALL OF THE FIELDS FOR ADDING/EDITING A NEW EDUCATION RECORD*/
+.addEducationContainer {
+  display: grid;
+  grid-gap: 15px 0;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+  grid-template-rows: auto;
+  grid-template-areas:
+  "institutionTitle levelTitle yearTitleNewEducation"
+  "addInstitution addLevel addYear"
+  "subjectTitleNew codeTitleNew codeExtensionTitle"
+  "addSubject addCode addCodeExtension"
+  "gradeTypeTitle gradeTitleNew submitTitleNew"
+  "addGradeType addGrade submit";
+}
+
+.institutionTitle { grid-area: institutionTitle; }
+.levelTitle { grid-area: levelTitle; }
+.yearTitleNewEducation { grid-area: yearTitleNewEducation; }
+.addInstitution { grid-area: addInstitution; }
+.addLevel { grid-area: addLevel; }
+.addYear { grid-area: addYear; }
+.subjectTitleNew { grid-area: subjectTitleNew; }
+.codeTitleNew { grid-area: codeTitleNew; }
+.codeExtensionTitle { grid-area: codeExtensionTitle; }
+.addSubject { grid-area: addSubject; }
+.addCode { grid-area: addCode; }
+.addCodeExtension { grid-area: addCodeExtension; }
+.gradeTypeTitle { grid-area: gradeTypeTitle; }
+.gradeTitleNew { grid-area: gradeTitleNew; }
+.submitTitleNew { grid-area: submitTitleNew; }
+.addGradeType { grid-area: addGradeType; }
+.addGrade { grid-area: addGrade; }
+.submit { grid-area: submit; }
+
+/*GRID CONTAINING ALL THE FIELDS FOR ADDING A NEW EXAMPLE RECORD*/
+.addExampleContainer {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: grid;
+  grid-template-columns: 50% 16.7% 33.3%;
+  grid-template-rows: auto;
+  grid-template-areas: "nameTitle nameTitle yearTitleNewExample"
+  "addName addName addYear"
+  "linksTitle linksTitle linksTitle"
+  "addLink addGithub addGithub"
+  "languagesTitle languagesTitle languagesTitle"
+  "addLanguages addLanguages addLanguages"
+  "addNewLanguage addNewLanguage addNewLanguage"
+  "descriptionTitle descriptionTitle descriptionTitle"
+  "addDescription addDescription addDescription"
+  "imagesTitle imagesTitle imagesTitle"
+  "addImages addImages addImages"
+  "submitTitle submitTitle submitTitle"
+  "submit submit submit";
+}
+
+.nameTitle { grid-area: nameTitle; }
+.yearTitleNewExample { grid-area: yearTitleNewExample; }
+.addName { grid-area: addName; margin-right: 5px}
+.addYear { grid-area: addYear; margin-left: 5px}
+.linksTitle { grid-area: linksTitle; }
+.addLink { grid-area: addLink; margin-right: 5px}
+.addGithub { grid-area: addGithub; margin-left: 5px}
+.languagesTitle { grid-area: languagesTitle; }
+.addLanguages {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: ". . . . .";
+  grid-area: addLanguages;
+}
+.addNewLanguage { grid-area: addNewLanguage; }
+.descriptionTitle { grid-area: descriptionTitle; }
+.addDescription { grid-area: addDescription; }
+.imagesTitle { grid-area: imagesTitle; }
+.addImages { grid-area: addImages; }
+.submitTitle { grid-area: submitTitle; }
+.submit { grid-area: submit; }
+
 
 
 /*THE EXPERIENCE GRID*/
@@ -502,6 +668,11 @@ button {
   border-radius: 0 0 20px 20px;
 }
 
+/*Rounds all the corners*/
+.roundAll {
+  border-radius: 20px 20px 20px 20px;
+}
+
 @media (max-width: 750px) {
   .examples-grid-container {
     display: grid;
@@ -512,15 +683,10 @@ button {
 }
 
 .examples-image { grid-area: image;}
-
 .examples-name { grid-area: name; }
-
 .examples-year { grid-area: year;}
-
 .examples-language {grid-area: languages;}
-
 .examples-link { grid-area: link;}
-
 .examples-description { grid-area: description;}
 
 @media (max-width: 750px) {
@@ -714,24 +880,26 @@ button {
 
 /* Modal Content/Box */
 .newItemModalContent {
-  background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
-  border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
 }
 
+.newItemModalInnerDiv {
+  background-color: #d3d3d3;
+}
+
 /* The Close Button */
-.closeNewModal {
-  color: #aaa;
-  float: right;
+.closeNewItemModal {
+  color: #e97e51;
+  /*float: right;*/
   font-size: 28px;
   font-weight: bold;
 }
 
-.closeNewModal:hover,
-.closeNewModal:focus {
-  color: black;
+.closeNewItemModal:hover,
+.closeNewItemModal:focus {
+  color: #d90029;
   text-decoration: none;
   cursor: pointer;
 }
@@ -741,22 +909,7 @@ button {
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
-  display: inline-block;
-}
-
-input {
-  border: 1px solid transparent;
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 16px;
-}
-input[type=text] {
-  background-color: #f1f1f1;
-  width: 100%;
-}
-input[type=submit] {
-  background-color: DodgerBlue;
-  color: #fff;
+  display: block;
 }
 
 .autocomplete-items {

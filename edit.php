@@ -83,186 +83,324 @@
     <body class="background-img">
         <div class="page-grid-container">
             <div>
-                <p>
-                    Hello <?php echo $_SESSION['name']; ?>
-                    <br>
-                    Be aware that you may have to scroll down to the desired record while editing
-                </p>
-
-                <!--Button for adding new items-->
-                <!-- Trigger/Open The Modal -->
-                <button id="newProjectButton">Create New Item</button>
-
-                <!-- The new project Modal -->
-                    <div id="newItemModal" class="newItemModal">
-
-                    <!-- Modal content -->
-                    <div class="newItemModalContent">
-                        <span class="closeNewItemModal">&times;</span>
-                        <!--Load tabs based on the record being entered-->
-                        <div class="edit-tabs">
-                            <div class="Education">
-                                <!--Make button grey by default-->
-                                <button id="addEducationTab" class="indexButton" style="display: block; border: none; border-radius: 0; background-color: #D3D3D3" onclick="showElement('addEducation')">Education</button>
-                            </div>
-                            <div class="Projects">
-                                <button id="addProjectTab" class="indexButton" style="display: block; border: none; border-radius: 0;" onclick="showElement('addProject')">Projects </button>
-                            </div>
-                        </div>
-
-                        <div id="addEducation" style="display: block">
-                            <p>Add education</p>
-                            <form autocomplete="off" method="post" action="process.php">
-                                <div class="autocomplete">
-                                    <input id="newEducationRecordInstitution" class="textInput" type="text" name="newInstitution" placeholder="Institution: e.g. Tawa College" required>
-                                </div>
-                                <div class="autocomplete">
-                                    <input id="newEducationRecordSubject" class="textInput" type="text" name="newSubject" placeholder="Subject: e.g. Science" " required>
-                                </div>
-                                <div class="autocomplete">
-                                    <input id="newEducationRecordYear" class="textInput" type="number" name="newSubjectYear" placeholder="Year: e.g. <?php echo date('Y'); ?>" required>
-                                </div>
-                                <div class="autocomplete">
-                                    <input id="newEducationRecordSubjectLevel" class="textInput" type="text" name="newSubjectLevel" placeholder="Level: e.g. NCEA Level One" required>
-                                </div>
-                                <div class="autocomplete">
-                                    <input id="newEducationRecordCode" class="textInput" type="text" name="newCode"  placeholder="Code: e.g. COMP" required>
-                                </div>
-                                <div class="autocomplete">
-                                    <input id="newEducationRecordCodeExtension" class="textInput" type="text" name="newCodeExtension" placeholder="Code Extension: e.g. 101" required>
-                                </div>
-
-                                <!--Change the input type based on the type of grade the user wishes to enter-->
-                                <select onchange="showCreditsGpa(this.value)">
-                                    <?php
-                                        //Set the default order
-                                        $optionOne = "showNewCreditsDiv";
-                                        $optionTwo = "showNewGpaDiv";
-                                        $displayValOne = "Credits";
-                                        $displayValTwo = "Gpa";
-                                        $displayDivCredits = "block";
-                                        $displayDivGpa = "none";
-                                    ?>
-                                    <option value="<?php echo $optionOne; ?>">
-                                        <?php
-                                            echo $displayValOne;
-                                            //Update the type of grade being submitted
-                                        ?>
-                                    </option>
-                                    <option value="<?php echo $optionTwo; ?>">
-                                        <?php
-                                            //Update the type of grade being submitted
-                                            echo $displayValTwo;
-                                        ?>
-                                    </option>
-                                </select>
-
-                                <div id="showNewCreditsDiv" style="display: <?php echo $displayDivCredits; ?>">
-                                    <p>Credits</p>
-                                    <input id="newEducationRecordCredits" class=textInput" type="number" name="newCredits" placeholder="Credits: e.g. 22">
-                                    <?php
-                                        $isNumeric = false;
-                                    ?>
-                                </div>
-                                <div id="showNewGpaDiv" style="display: <?php echo $displayDivGpa; ?>">
-                                    <p>GPA</p>
-                                    <div class="autocomplete">
-                                        <input id="newEducationRecordGpa" class=textInput" type="text" name="newGpa" placeholder="Gpa: e.g. A-">
-                                    </div>
-                                </div>
-                                <input name="newEducationRecord" value="Submit Record" type="submit">
-                            </form>
-
-                        </div>
-                        <div id="addProject" style="display: none">
-                            <p>Add project</p>
-                            <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image. when using cookies-->
-                            <!--Upload files. Allow up to five-->
-                            <form action="process.php" method="post" enctype="multipart/form-data">
-                                <!--The project title-->
-                                <div class="autocomplete">
-                                    <input id="newExampleName" type="text" name="newExampleName" placeholder="Project Name: E.g. Tarzan" required>
-                                </div>
-
-                                <!--The year-->
-                                <div class="autocomplete">
-                                    <input id="newExampleYear" class="textInput" type="number"
-                                           name="newExampleYear" placeholder="Year: E.g. <?php echo date('Y');?>" required>
-                                </div>
-
-                                <!--The languages-->
-                                <!--Todo ensure that the user cannot select more than five languages-->
-                                <?php
-                                //Create a checkbox for each language
-                                for ($i = 0; $i < sizeof($languageArray); $i++) {
-                                   ?>
-                                    <br>
-                                    <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
-                                    <input type="checkbox" id="<?php echo $languageArray[$i]; ?>"
-                                           name="<?php echo $languageArray[$i]; ?>" value="<?php echo $languageArray[$i]; ?>">
-                                    <?php
-                                }
-                                ?>
-                                <!--Option that allows the user to add their own code-->
-                                <br>
-                                <label for="newLanguageInput">Other</label>
-                                <input type="checkbox" name = "newLanguageInput" id = "newLanguageInput" onchange="showUpdateLinkInput('newLanguageInputDiv')">
-
-                                <!--Input box for the new language-->
-                                <div id = "newLanguageInputDiv" style="display:none;">
-                                    <input type="text" name = "newLanguageEntry" placeholder="New Language">
-                                </div>
-
-                                <br>
-                                <label for="newExamplesLinkCheckbox">Link</label>
-                                <input onchange="showUpdateLinkInput('newExamplesLink')"
-                                       name="newLinkInput"
-                                       type="checkbox" id="newExamplesLinkCheckbox">
-
-                                <!--Div that shows the link-->
-                                <div id="newExamplesLink" style="display: none">
-                                    <input type="text" name = "newLinkEntry" placeholder="E.g. google.com">
-                                </div>
-
-                                <br>
-                                <label for="newGithubLinkCheckbox">Github</label>
-                                <input onchange="showUpdateLinkInput('newGithubLink')"
-                                       type="checkbox" id="newGithubLinkCheckbox"
-                                       name = "newGithubInput" >
-
-                                <!--The div that shows the github link-->
-                                <div id="newGithubLink" style="display: none">
-                                    <input name = "newGithubEntry" type="text"  placeholder="E.g. github.com">
-                                </div>
-
-                                <!--The description-->
-                                <textarea name="newExampleDescription" style="width: 100%; height: auto" placeholder="Enter some text" required>
-
-                                </textarea>
-                                <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
-                                Select image to upload:
-                                <input type="file" name="addImages[]" id="" multiple="">
-                                <input type="submit" value="Submit" name="newExampleRecord">
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-
                 <!--The edit tabs-->
                 <div class="edit-tabs">
                     <div class="Education">
                         <!--Make button grey by default-->
-                        <button id="educationTab" class="indexButton" style="display: block; border: none; border-radius: 0; background-color: #D3D3D3" onclick="showElement('editEducation')">Education</button>
+                        <button id="educationTab" class="indexButton" style="display: block; border: none; border-radius: 20px 0 0 0;  background-color: #D3D3D3" onclick="showElement('editEducation')">Education</button>
                     </div>
                     <div class="Projects">
-                        <button id="projectTab" class="indexButton" style="display: block; border: none; border-radius: 0;" onclick="showElement('editProjects')">Projects</button>
+                        <button id="projectTab" class="indexButton" style="display: block; border: none; border-radius: 0 20px 0 0;" onclick="showElement('editProjects')">Projects</button>
                     </div>
+                </div>
+
+                <div style="background-color: #D3D3D3">
+                    <!--Button for adding new items-->
+                    <!-- Trigger/Open The Modal -->
+                    <br>
+                    <div style="text-align: center;">
+                        <button id="newProjectButton" class="indexButton newItemButton">Create New Item</button>
+                    </div>
+                    <br>
+                </div>
+
+                <!-- The new project Modal -->
+                <div id="newItemModal" class="newItemModal">
+
+                    <!-- Modal content -->
+                    <div class="newItemModalContent">
+                        <span class="closeNewItemModal">&times;</span>
+                        <div class="newItemModalInnerDiv roundAll">
+                            <!--Load tabs based on the record being entered-->
+                            <div class="edit-tabs">
+                                <div class="Education">
+                                    <!--Make button grey by default-->
+                                    <button id="addEducationTab" class="indexButton" style="display: block; border: none; border-radius: 20px 0 0 0; background-color: #d3d3d3" onclick="showElement('addEducation')">Education</button>
+                                </div>
+                                <div class="Projects">
+                                    <button id="addProjectTab" class="indexButton" style="display: block; border: none; border-radius: 0 20px 0 0; background-color: white" onclick="showElement('addProject')">Projects </button>
+                                </div>
+                            </div>
+                            <br>
+                            <div id="addEducation" style="display: block">
+                                <form autocomplete="off" method="post" action="process.php">
+                                    <div class="addEducationContainer">
+
+                                        <!--Institution header-->
+                                        <div class="institutionTitle" style="text-align: center;">
+                                            <h2>Institution</h2>
+                                        </div>
+
+                                        <!--Institution-->
+                                        <div class="addInstitution">
+                                            <div class="autocomplete">
+                                                <input id="newEducationRecordInstitution" class="textInput" type="text" name="newInstitution" placeholder="Institution: e.g. Tawa College" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Level header-->
+                                        <div class="levelTitle" style="text-align: center;">
+                                            <h2>Level</h2>
+                                        </div>
+
+                                        <!--Level-->
+                                        <div class="addLevel">
+                                            <div class="autocomplete">
+                                                <input id="newEducationRecordSubjectLevel" class="textInput" type="text" name="newSubjectLevel" placeholder="Level: e.g. NCEA Level One" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Year header-->
+                                        <div class="yearTitleNewEducation" style="text-align: center;">
+                                            <h2>Year</h2>
+                                        </div>
+
+                                        <!--Year-->
+                                        <div class="addYear">
+                                            <div class="autocomplete">
+                                                <input id="newEducationRecordYear" class="textInput" type="number" name="newSubjectYear" placeholder="Year: e.g. <?php echo date('Y'); ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Subject header-->
+                                        <div class="subjectTitleNew" style="text-align: center;">
+                                            <h2>Subject</h2>
+                                        </div>
+
+                                        <!--Subject-->
+                                        <div class="addSubject">
+                                            <div class="autocomplete">
+                                                <input id="newEducationRecordSubject" class="textInput" type="text" name="newSubject" placeholder="Subject: e.g. Science" " required>
+                                            </div>
+                                        </div>
+
+                                        <!--Code header-->
+                                        <div class="codeTitleNew" style="text-align: center;">
+                                            <h2>Code</h2>
+                                        </div>
+
+                                        <!--Code-->
+                                        <div class="addCode">
+                                            <div class="autocomplete">
+                                                <input id="newEducationRecordCode" class="textInput" type="text" name="newCode"  placeholder="Code: e.g. COMP" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Code extension header-->
+                                        <div class="codeExtensionTitle" style="text-align: center;">
+                                            <h2>Code Extension</h2>
+                                        </div>
+
+                                        <!--Code extension-->
+                                        <div class="addCodeExtension">
+                                            <div class="autocomplete">
+                                                <input id="newEducationRecordCodeExtension" class="textInput" type="text" name="newCodeExtension" placeholder="Code Extension: e.g. 101" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Grade type header-->
+                                        <div class="gradeTypeTitle" style="text-align: center;">
+                                            <h2>Grade Type</h2>
+                                        </div>
+
+                                        <!--Grade Type-->
+                                        <div class="addGradeType">
+                                            <!--Change the input type based on the type of grade the user wishes to enter-->
+                                            <select onchange="showCreditsGpa(this.value)" class="textInput">
+                                                <?php
+                                                //Set the default order
+                                                $optionOne = "showNewCreditsDiv";
+                                                $optionTwo = "showNewGpaDiv";
+                                                $displayValOne = "Credits";
+                                                $displayValTwo = "Gpa";
+                                                $displayDivCredits = "block";
+                                                $displayDivGpa = "none";
+                                                ?>
+                                                <option value="<?php echo $optionOne; ?>">
+                                                    <?php
+                                                    echo $displayValOne;
+                                                    //Update the type of grade being submitted
+                                                    ?>
+                                                </option>
+                                                <option value="<?php echo $optionTwo; ?>">
+                                                    <?php
+                                                    //Update the type of grade being submitted
+                                                    echo $displayValTwo;
+                                                    ?>
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <!--Grade header-->
+                                        <div class="gradeTitleNew" style="text-align: center">
+                                            <h2>Grade/Credits</h2>
+                                        </div>
+
+                                        <!--Grade-->
+                                        <div class="addGrade">
+                                            <div id="showNewCreditsDiv" style="display: <?php echo $displayDivCredits; ?>">
+                                                <input id="newEducationRecordCredits" class=textInput" type="number" name="newCredits" placeholder="Credits: e.g. 22">
+                                                <?php
+                                                $isNumeric = false;
+                                                ?>
+                                            </div>
+                                            <div id="showNewGpaDiv" style="display: <?php echo $displayDivGpa; ?>">
+                                                <div class="autocomplete">
+                                                    <input id="newEducationRecordGpa" class=textInput" type="text" name="newGpa" placeholder="Gpa: e.g. A-">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--Submit header-->
+                                        <div class="submitTitleNew" style="text-align: center;">
+                                            <h2>Submit (duh)</h2>
+                                        </div>
+
+                                        <!--Submit-->
+                                        <div class="submit">
+                                            <input name="newEducationRecord" value="Submit Record" type="submit" class="textInput updateButton">
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div id="addProject" style="display: none">
+                                <!--Todo for play around file uploads it is probably best not to upload the file, but to store the file path instead and use that to display the image. when using cookies-->
+                                <form action="process.php" method="post" enctype="multipart/form-data">
+                                    <div class = "addExampleContainer">
+                                        <!--Name header-->
+                                        <div class="nameTitle" style="text-align: center;">
+                                            <h2>Project Name</h2>
+                                        </div>
+
+                                        <!--Year header-->
+                                        <div class="yearTitleNewExample" style="text-align: center">
+                                            <h2>Year</h2>
+                                        </div>
+
+                                        <!--The project title-->
+                                        <div class="addName">
+                                            <div class="autocomplete">
+                                                <input id="newExampleName" type="text" name="newExampleName" placeholder="Project Name: E.g. Tarzan" required>
+                                            </div>
+                                        </div>
+
+                                        <!--The year-->
+                                        <div class="addYear">
+                                            <div class="autocomplete">
+                                                <input id="newExampleYear" type="number"
+                                                       name="newExampleYear" placeholder="Year: E.g. <?php echo date('Y');?>" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Links header-->
+                                        <div class="linksTitle" style="text-align: center">
+                                            <h2>
+                                                Links
+                                            </h2>
+                                        </div>
+
+                                        <!--The link-->
+                                        <div class="addLink">
+                                            <div style="text-align: center">
+                                                <input onchange="showUpdateLinkInput('newExamplesLink')" name="newLinkInput" type="checkbox" id="newExamplesLinkCheckbox" class="checkbox">
+                                                <label for="newExamplesLinkCheckbox" style = "word-wrap: break-word;">Link </label>
+                                            </div>
+
+                                            <!--Div that shows the link-->
+                                            <div id="newExamplesLink" style="display: none">
+                                                <input type="text" name = "newLinkEntry" placeholder="E.g. google.com">
+                                            </div>
+                                        </div>
+
+                                        <!--Github-->
+                                        <div class="addGithub">
+                                            <div style="text-align: center">
+                                                <input onchange="showUpdateLinkInput('newGithubLink')" type="checkbox" id="newGithubLinkCheckbox"  name = "newGithubInput" class="checkbox">
+                                                <label for="newGithubLinkCheckbox">Github</label>
+                                            </div>
+
+                                            <!--The div that shows the github link-->
+                                            <div id="newGithubLink" style="display: none">
+                                                <input name = "newGithubEntry" type="text"  placeholder="E.g. github.com">
+                                            </div>
+                                        </div>
+
+                                        <!--Languages header-->
+                                        <div class="languagesTitle" style="text-align: center">
+                                            <h2>
+                                                Languages
+                                            </h2>
+                                        </div>
+
+                                        <!--The languages-->
+                                        <div class="addLanguages">
+                                            <?php
+                                            //Create a checkbox for each language
+                                            for ($i = 0; $i < sizeof($languageArray); $i++) {
+                                                ?>
+                                                <div>
+                                                    <input type="checkbox" id="<?php echo $languageArray[$i]; ?>" class="checkbox" name="<?php echo $languageArray[$i]; ?>" value="<?php echo $languageArray[$i]; ?>">
+                                                    <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+
+                                        <!--Option that allows the user to add their own code-->
+                                        <div class="addNewLanguage">
+                                            <input class="checkbox" type="checkbox" name = "newLanguageInput" id = "newLanguageInput" onchange="showUpdateLinkInput('newLanguageInputDiv')">
+                                            <label for="newLanguageInput">Add a new language</label>
+
+                                            <!--Input box for the new language-->
+                                            <div id = "newLanguageInputDiv" style="display:none;">
+                                                <input type="text" name = "newLanguageEntry" placeholder="New Language">
+                                            </div>
+                                        </div>
+
+                                        <!--Description Header-->
+                                        <div class="descriptionTitle" style="text-align: center">
+                                            <h2>Description</h2>
+                                        </div>
+
+                                        <!--Description-->
+                                        <div class="addDescription">
+                                            <textarea name="newExampleDescription" style="width: 100%" placeholder="Enter a description" required></textarea>
+                                        </div>
+
+                                        <!--Images header-->
+                                        <div class="imagesTitle" style="text-align: center;">
+                                            <h2>Images</h2>
+                                        </div>
+
+                                        <!--Image input-->
+                                        <div class="addImages">
+                                            <div style="text-align: center">
+                                                <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
+                                            </div>
+                                            <input type="file" name="addImages[]" id="" multiple="" style="width: 100%">
+                                        </div>
+
+                                        <!--Submit header-->
+                                        <div class="submitTitle" style="text-align: center;">
+                                            <h2>Submit (obviously)</h2>
+                                        </div>
+
+                                        <div class="submit">
+                                            <input type="submit" value="Submit" name="newExampleRecord" class = "updateButton" style="width: 100%">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!--The div that contains the education edit. Shown by default-->
                 <div id="editEducation" style="display: block">
-
                     <?php
                     //Perform the query to get the grades. Done here so that it is not repeated every time
                     $dropdownGradeQuery = $con->prepare("SELECT grade.grade FROM grade ");
@@ -295,9 +433,7 @@
                     if ($recordCount == 0) {
                         ?>
                         <div style="text-align: center">
-                        <h1>
-                        Nothing to see here.
-                        </h1>
+                            <h1>Nothing to see here.</h1>
                         </div>
                         <?php
                     } else {
@@ -305,11 +441,6 @@
                             //Calculates if any rounding of the examples div is required
                             $classHeader = "";
                             $classContent = "";
-                            if ($count == 0) {
-                                $classHeader = "roundTop";
-                            } else {
-                                $classHeader = "";
-                            }
 
                             if ($count == $recordCount - 1) {
                                 $classContent = "education-grid-container-edit roundBottom";
@@ -339,7 +470,7 @@
                                     <!--Display the column titles-->
                                     <div class="education-Titles-Large-Edit">
                                         <div>
-                                            <p class="alignTextLeft">Update</p>
+                                            <p class="alignTextLeft">Update/Delete</p>
                                         </div>
                                         <div>
                                             <p class="alignTextLeft">Code</p>
@@ -375,16 +506,25 @@
                             <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
                                 <!--The update button-->
                                 <div class="education-Update">
-                                    <!--Show the update div-->
-                                    <button id="updateEducation<?php echo $uniqueKey; ?>button"
-                                    onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide')">
-                                    Update
-                                    </button>
-                                    <!--Show the delete button-->
-                                    <form method="post" action="process.php">
-                                        <input type="hidden" value="<?php echo $uniqueKey; ?>" name="uniqueKey">
-                                        <input type="submit" value="Delete" name="deleteEducationRecord">
-                                    </form>
+                                    <div class="updateDelete-container">
+                                        <div class="delete">
+                                            <!--Show the delete button-->
+                                            <!--todo make delete button a trash can icon and red-->
+                                            <form method="post" action="process.php">
+                                                <input type="hidden" value="<?php echo $uniqueKey; ?>" name="uniqueKey">
+                                                <button type="submit" class="deleteButton" name="deleteEducationRecord" style="padding: 0;">
+                                                    <img src="images/bin.png">
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div class="update">
+                                            <!--Show the update div-->
+                                            <button id="updateEducation<?php echo $uniqueKey; ?>button" class="updateButton"
+                                                onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide')">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!--Display the title on a small screen-->
@@ -482,34 +622,95 @@
 
                             <div id="updateEducation<?php echo $uniqueKey; ?>" style="display:none;">
                                 <form autocomplete="off" method="post" action="process.php">
-                                    <div class="add-grid-container">
-                                        <div class="add-Institution autocomplete">
-                                            <input id="updateEducationInstitution<?php echo $uniqueKey; ?>" class="textInput"
-                                            type="text" name="institution" value="<?php echo $institution; ?>" required>
+                                    <div class="addEducationContainer">
+                                        <!--Institution header-->
+                                        <div class="institutionTitle" style="text-align: center;">
+                                            <h2>Institution</h2>
                                         </div>
-                                        <div class="add-Subject autocomplete">
-                                            <input id="updateEducationSubject<?php echo $uniqueKey; ?>" class="textInput"
-                                            type="text" name="subject" value="<?php echo $subject; ?>" required>
+
+                                        <!--Institution-->
+                                        <div class="addInstitution">
+                                            <div class="add-Institution autocomplete">
+                                                <input id="updateEducationInstitution<?php echo $uniqueKey; ?>" class="textInput"
+                                                       type="text" name="institution" value="<?php echo $institution; ?>" required>
+                                            </div>
                                         </div>
-                                        <div class="add-Subject-Year autocomplete">
-                                            <input id="updateEducationYear<?php echo $uniqueKey; ?>" class="textInput"
-                                            type="number" name="subjectYear" value="<?php echo $relevantYear; ?>" required>
+
+                                        <!--Subject level header-->
+                                        <div class="levelTitle" style="text-align: center">
+                                            <h2>Level</h2>
                                         </div>
-                                        <div class="add-Subject-Level autocomplete">
-                                            <input id="updateEducationSubjectLevel<?php echo $uniqueKey; ?>" class="textInput"
-                                            type="text" name="subjectLevel" value="<?php echo $subjectLevel; ?>" required>
+
+                                        <!--Subject Level-->
+                                        <div class="addLevel">
+                                            <div class="add-Subject-Level autocomplete">
+                                                <input id="updateEducationSubjectLevel<?php echo $uniqueKey; ?>" class="textInput"
+                                                       type="text" name="subjectLevel" value="<?php echo $subjectLevel; ?>" required>
+                                            </div>
                                         </div>
-                                        <div class="add-Code autocomplete">
-                                            <input id="updateEducationCode<?php echo $uniqueKey; ?>" class="textInput"
-                                            type="text" name="code" value="<?php echo $code; ?>" required>
+
+                                        <!--Year header-->
+                                        <div class="yearTitleNewEducation" style="text-align: center">
+                                            <h2>Year</h2>
                                         </div>
-                                        <div class="add-Code-Extension autocomplete">
-                                            <input id="updateEducationCodeExtension<?php echo $uniqueKey; ?>" class="textInput"
-                                            type="text" name="codeExtension" value="<?php echo $codeExtension; ?> " required>
+
+                                        <!--The year-->
+                                        <div class="addYear">
+                                            <div class="add-Subject-Year autocomplete">
+                                                <input id="updateEducationYear<?php echo $uniqueKey; ?>" class="textInput"
+                                                       type="number" name="subjectYear" value="<?php echo $relevantYear; ?>" required>
+                                            </div>
                                         </div>
-                                        <div class="add-Grade">
+
+                                        <!--Subject header-->
+                                        <div class="subjectTitleNew" style="text-align: center">
+                                            <h2>Subject</h2>
+                                        </div>
+
+                                        <!--The subject-->
+                                        <div class="addSubject">
+                                            <div class="add-Subject autocomplete">
+                                                <input id="updateEducationSubject<?php echo $uniqueKey; ?>" class="textInput"
+                                                type="text" name="subject" value="<?php echo $subject; ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Code header-->
+                                        <div class="codeTitleNew" style="text-align: center;">
+                                            <h2>Code</h2>
+                                        </div>
+
+                                        <!--The code-->
+                                        <div class="addCode">
+                                            <div class="add-Code autocomplete">
+                                                <input id="updateEducationCode<?php echo $uniqueKey; ?>" class="textInput"
+                                                       type="text" name="code" value="<?php echo $code; ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Code extension header-->
+                                        <div class="codeExtensionTitle" style="text-align: center">
+                                            <h2>Code Extension</h2>
+                                        </div>
+
+                                        <!--Code extension-->
+                                        <div class="addCodeExtension">
+                                            <div class="add-Code-Extension autocomplete">
+                                                <input id="updateEducationCodeExtension<?php echo $uniqueKey; ?>" class="textInput"
+                                                       type="text" name="codeExtension" value="<?php echo $codeExtension; ?> " required>
+                                            </div>
+                                        </div>
+
+                                        <!--Grade type header-->
+                                        <div class="gradeTypeTitle" style="text-align: center">
+                                            <h2>Grade Type</h2>
+                                        </div>
+
+                                        <!--Grade type-->
+                                        <div class="addGradeType">
+                                            <div class="add-Grade">
                                             <!--Allow the user to select the type of grade. Set to the current grade type by default-->
-                                            <select onchange="showCreditsGpa(this.value)">
+                                            <select onchange="showCreditsGpa(this.value)" class="textInput">
                                                 <?php
                                                 //Set the default order
                                                 if ($credits != 0) {
@@ -541,26 +742,43 @@
                                                 </option>
                                             </select>
 
+                                        </div>
+                                        </div>
+
+                                        <!--Grade header-->
+                                        <div class="gradeTitleNew" style="text-align: center">
+                                            <h2>Grade/Credits</h2>
+                                        </div>
+
+                                        <!--Grade-->
+                                        <div class="addGrade">
                                             <div id="showUpdateEducationCreditsDiv<?php echo $uniqueKey; ?>" style="display: <?php echo $displayDivCredits; ?>">
-                                                <p>Credits</p>
                                                 <input id="updateEducationCredits<?php echo $uniqueKey; ?>" class=textInput"
-                                                type="number" name="credits" placeholder="<?php echo $credits; ?>">
+                                                       type="number" name="credits" placeholder="<?php echo $credits; ?>">
                                                 <?php $isNumeric = false;?>
                                             </div>
                                             <div id="showUpdateEducationGpaDiv<?php echo $uniqueKey; ?>" style="display: <?php echo $displayDivGpa; ?>">
-                                                <p>GPA</p>
                                                 <div class="autocomplete">
                                                     <input id="updateEducationGrade<?php echo $uniqueKey; ?>" class=textInput"
-                                                    type="text" name="gpa" placeholder="<?php echo $grade; ?>">
+                                                           type="text" name="gpa" placeholder="<?php echo $grade; ?>">
                                                 </div>
                                             </div>
-
                                         </div>
-                                        <div class="save-Record">
-                                            <input name="uniqueKey" value="<?php echo $uniqueKey; ?>" type="hidden">
-                                            <input name="submitEducationUpdate" value="Submit" type="submit">
+
+                                        <!--Submit header-->
+                                        <div class="submitTitleNew" style="text-align: center">
+                                            <h2>Submit</h2>
+                                        </div>
+
+                                        <!--Submit-->
+                                        <div class="submit">
+                                            <div class="save-Record">
+                                                <input name="uniqueKey" value="<?php echo $uniqueKey; ?>" type="hidden">
+                                                <input name="submitEducationUpdate" value="Submit" type="submit" class="textInput updateButton">
+                                            </div>
                                         </div>
                                     </div>
+                                    <br>
                                 </form>
                             </div>
                             <?php
@@ -571,7 +789,6 @@
 
                 <!--The div that contains the projects edit-->
                 <div id="editProjects" style="display: none">
-                    <p>Projects</p>
                     <?php
                     //The query which shows the examples
                     $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.description, 
@@ -594,9 +811,7 @@
                         while ($row = $experienceQuery->fetch()) {
                             //Calculates if any rounding of the examples div is required
                             $class = "";
-                            if ($count == 0) {
-                                $class = "examples-grid-container roundTop";
-                            } elseif ($count == $recordCount - 1) {
+                            if ($count == $recordCount - 1) {
                                 $class = "examples-grid-container roundBottom";
                             } else {
                                 $class = "examples-grid-container";
@@ -833,108 +1048,154 @@
                                 <p>This is the update div</p>
                                 <!--Form for updating the examples-->
                                 <form method="post" action="process.php" autocomplete="off">
-                                    <!--The project title-->
-                                    <div class="autocomplete">
-                                        <input id="updateExampleName<?php echo $uniqueKey; ?>" type="text" name="exampleName" value="<?php echo $name; ?>" required>
+                                    <div class="addExampleContainer">
+                                        <!--Project title header-->
+                                        <div class="nameTitle" style="text-align: center">
+                                            <h2>Project Name</h2>
+                                        </div>
+
+                                        <!--The project title-->
+                                        <div class="addName">
+                                            <div class="autocomplete">
+                                                <input id="updateExampleName<?php echo $uniqueKey; ?>" type="text" name="exampleName" value="<?php echo $name; ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <!--The year header-->
+                                        <div class="yearTitleNewExample" style="text-align: center">
+                                            <h2>Year</h2>
+                                        </div>
+
+                                        <!--The year-->
+                                        <div class="addYear">
+                                            <div class="autocomplete">
+                                                <input id="updateExampleYear<?php echo $uniqueKey; ?>" class="textInput" type="number"
+                                                       name="exampleYear" value="<?php echo $relevantYear; ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Links header-->
+                                        <div class="linksTitle" style="text-align: center">
+                                            <h2>Links</h2>
+                                        </div>
+
+                                        <!--The link-->
+                                        <div class="addLink">
+                                            <?php
+                                            //Auto check if there is a link
+                                            $checked = "";
+                                            $displayLinkDiv = "none";
+                                            $linkToDisplay = "";
+                                            $placeholder = "Link";
+                                            if ($link != null) {
+                                                $checked = "checked";
+                                                $displayLinkDiv = "block";
+                                                $linkToDisplay = $link;
+                                                $placeholder = "";
+                                            }
+                                            ?>
+                                            <div style="text-align: center">
+                                                <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey; ?>')" name = "updateLinkInput" class="checkbox" type="checkbox" id="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked; ?>>
+                                                <label for="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>">Link</label>
+                                            </div>
+
+                                            <!--Div that shows the link-->
+                                            <div id="updateExamplesLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
+                                                <input type="text" name = "updateLinkEntry" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
+                                            </div>
+                                        </div>
+
+                                        <!--Github-->
+                                        <div class="addGithub">
+                                            <?php
+                                            //Auto check if there is a link
+                                            $checked = "";
+                                            $displayLinkDiv = "none";
+                                            $linkToDisplay = "";
+                                            $placeholder = "Github link";
+                                            if ($github != null) {
+                                                $checked = "checked";
+                                                $displayLinkDiv = "block";
+                                                $linkToDisplay = $github;
+                                                $placeholder = "";
+                                            }
+                                            ?>
+                                            <div style="text-align: center">
+                                                <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey; ?>')"  name = "updateGithubInput" class="checkbox" type="checkbox" id="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked ?>>
+                                                <label for="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>">Github</label>
+                                            </div>
+
+                                            <!--The div that shows the github link-->
+                                            <div id="updateGithubLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
+                                                <input name = "updateGithubEntry" type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
+                                            </div>
+                                        </div>
+
+                                        <!--Languages header-->
+                                        <div class="languagesTitle" style="text-align: center">
+                                            <h2>Languages</h2>
+                                        </div>
+
+                                        <!--The languages-->
+                                        <div class="addLanguages">
+                                            <!--Todo ensure that the user cannot select more than five languages-->
+                                            <?php
+                                            //Create a checkbox for each language
+                                            for ($i = 0; $i < sizeof($languageArray); $i++) {
+                                                //todo add an option for adding new languages
+                                                //Checking if the language matches one of the languages used in the example
+                                                $checked = "";
+                                                if ($languageArray[$i] == $langOne || $languageArray[$i] == $langTwo || $languageArray[$i] == $langThree ||
+                                                    $languageArray[$i] == $langFour || $languageArray[$i] == $langFive) {
+                                                    $checked = "checked";
+                                                }
+
+                                                ?>
+                                                <div>
+                                                    <input type="checkbox" id="<?php echo $languageArray[$i]; ?>"
+                                                           name="<?php echo $languageArray[$i]; ?>" class="checkbox" value="<?php echo $languageArray[$i]; ?>" <?php echo $checked; ?>>
+                                                    <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+
+                                        <!--Option that allows the user to add their own code-->
+                                        <div class="addNewLanguage">
+                                            <input type="checkbox" class="checkbox" name = "updateLanguageInput" id = "newLanguage<?php echo $uniqueKey;?>" onchange="showUpdateLinkInput('newLanguageDiv<?php echo $uniqueKey;?>')">
+                                            <label for="newLanguage<?php echo $uniqueKey;?>">Other</label>
+
+                                            <!--Input box for the new language-->
+                                            <div id = "newLanguageDiv<?php echo $uniqueKey;?>" style="display:none;">
+                                                <input type="text" name = "updateLanguageEntry" placeholder="New Language">
+                                            </div>
+                                        </div>
+
+                                        <!--Description header-->
+                                        <div class="descriptionTitle" style="text-align: center">
+                                            <h2>Description</h2>
+                                        </div>
+
+                                        <!--The description-->
+                                        <div class="addDescription">
+                                            <textarea name="exampleDescription" style="width: 100%; height: auto" required> <?php echo $examplesDescription;?> </textarea>
+                                        </div>
+
+                                        <!--Submit header-->
+                                        <div class="submitTitle" style="text-align: center">
+                                            <h2>Submit</h2>
+                                        </div>
+
+                                        <!--The submit button-->
+                                        <div class="submit">
+                                            <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
+                                            <input type="submit" name="submitExampleUpdate" value="Update" class="updateButton">
+                                        </div>
                                     </div>
-
-                                    <!--The year-->
-                                    <div class="autocomplete">
-                                        <input id="updateExampleYear<?php echo $uniqueKey; ?>" class="textInput" type="number"
-                                        name="exampleYear" value="<?php echo $relevantYear; ?>" required>
-                                    </div>
-
-                                    <!--The languages-->
-                                    <!--Todo ensure that the user cannot select more than five languages-->
-                                    <?php
-                                    //Create a checkbox for each language
-                                    for ($i = 0; $i < sizeof($languageArray); $i++) {
-                                        //todo add an option for adding new languages
-                                        //Checking if the language matches one of the languages used in the example
-                                        $checked = "";
-                                        if ($languageArray[$i] == $langOne || $languageArray[$i] == $langTwo || $languageArray[$i] == $langThree ||
-                                            $languageArray[$i] == $langFour || $languageArray[$i] == $langFive) {
-                                            $checked = "checked";
-                                        }
-
-                                        ?>
-                                        <br>
-                                        <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
-                                        <input type="checkbox" id="<?php echo $languageArray[$i]; ?>"
-                                        name="<?php echo $languageArray[$i]; ?>" value="<?php echo $languageArray[$i]; ?>" <?php echo $checked; ?>>
-                                        <?php
-                                    }
-                                    ?>
-                                    <!--Option that allows the user to add their own code-->
-                                    <br>
-                                    <label for="newLanguage<?php echo $uniqueKey;?>">Other</label>
-                                    <input type="checkbox" name = "updateLanguageInput" id = "newLanguage<?php echo $uniqueKey;?>" onchange="showUpdateLinkInput('newLanguageDiv<?php echo $uniqueKey;?>')">
-
-                                    <!--Input box for the new language-->
-                                    <div id = "newLanguageDiv<?php echo $uniqueKey;?>" style="display:none;">
-                                        <input type="text" name = "updateLanguageEntry" placeholder="New Language">
-                                    </div>
-
-                                    <!--The link-->
-                                    <?php
-                                    //Auto check if there is a link
-                                    $checked = "";
-                                    $displayLinkDiv = "none";
-                                    $linkToDisplay = "";
-                                    $placeholder = "Link";
-                                    if ($link != null) {
-                                        $checked = "checked";
-                                        $displayLinkDiv = "block";
-                                        $linkToDisplay = $link;
-                                        $placeholder = "";
-                                    }
-                                    ?>
-                                    <br>
-                                    <label for="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>">Link</label>
-                                    <input onchange="showUpdateLinkInput('updateExamplesLink<?php echo $uniqueKey; ?>')"
-                                    name = "updateLinkInput";
-                                    type="checkbox" id="updateExamplesLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked; ?>>
-
-                                    <!--Div that shows the link-->
-                                    <div id="updateExamplesLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input type="text" name = "updateLinkEntry" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
-                                    </div>
-
-                                    <!--Github-->
-                                    <?php
-                                    //Auto check if there is a link
-                                    $checked = "";
-                                    $displayLinkDiv = "none";
-                                    $linkToDisplay = "";
-                                    $placeholder = "Github link";
-                                    if ($github != null) {
-                                        $checked = "checked";
-                                        $displayLinkDiv = "block";
-                                        $linkToDisplay = $github;
-                                        $placeholder = "";
-                                    }
-                                    ?>
-
-                                    <br>
-                                    <label for="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>">Github</label>
-                                    <input onchange="showUpdateLinkInput('updateGithubLink<?php echo $uniqueKey; ?>')"
-                                    name = "updateGithubInput"
-                                    type="checkbox" id="updateGithubLinkCheckbox<?php echo $uniqueKey; ?>" <?php echo $checked ?>>
-
-                                    <!--The div that shows the github link-->
-                                    <div id="updateGithubLink<?php echo $uniqueKey; ?>" style="display: <?php echo $displayLinkDiv; ?>">
-                                        <input name = "updateGithubEntry" type="text" value="<?php echo $linkToDisplay; ?>" placeholder="<?php echo $placeholder;?>">
-                                    </div>
-
-                                    <!--The description-->
-                                    <textarea name="exampleDescription" style="width: 100%; height: auto" required>
-                                        <?php echo $examplesDescription;?>
-                                    </textarea>
-
-                                    <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
-                                    <input type="submit" name="submitExampleUpdate" value="Update">
                                 </form>
 
+                                <!--Todo style the image gallery-->
                                 <!--The image gallery. Only display if there are images-->
                                 <?php
                                 if ($fileCount != 0) {
@@ -1103,12 +1364,12 @@
             //alert(show);
             //Show the relevant element
             if (show === "addEducation") {
-                document.getElementById("addProjectTab").style.backgroundColor = null;
-                document.getElementById("addEducationTab").style.backgroundColor = "#D3D3D3";
+                document.getElementById("addProjectTab").style.backgroundColor = 'white';
+                document.getElementById("addEducationTab").style.backgroundColor = null;
                 hideElement('addProject');
             } else if (show === 'addProject') {
-                document.getElementById("addEducationTab").style.backgroundColor = null;
-                document.getElementById("addProjectTab").style.backgroundColor = "#D3D3D3";
+                document.getElementById("addEducationTab").style.backgroundColor = 'white';
+                document.getElementById("addProjectTab").style.backgroundColor = null;
                 hideElement('addEducation');
             } else if (show === "editEducation") {
                 document.getElementById("projectTab").style.backgroundColor = null;

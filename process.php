@@ -743,14 +743,6 @@ if (isset($_POST['newExampleRecord'])) {
 
     //A flag used to explain that the record was created but something went wrong with the images
     $recordCreated = "The record was created but... ";
-
-    ?><br><?php
-    ?><br><?php
-    ?><br><?php
-    ?><br><?php
-    ?><br><?php
-    echo "First Image Name: " . $_FILES['userFiles']['name'][0];
-    ?><br><?php
     //die(var_dump($_FILES['userFiles']));
 
     //Handle file uploads
