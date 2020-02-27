@@ -2,15 +2,45 @@
 <!--Pulls in the head and other required pages-->
 <?php
 require("head.php");
-    
-    //todo add section where people can find my contact informa i.e. email addresss.
+
+//todo add section where people can find my contact informa i.e. email addresss.
 ?>
-<body class="background-img">
+<body onload="showPrivacy()" class="background-img">
 <div class="page-grid-container">
-    <div>
-        <button id = "show" style="display: block; border: none" class="roundTop indexButton" onclick="showElement('privacy')">Show my cookie and privacy policy</button>
+    <div class="roundAll" style="background-color: white; opacity: 80%">
+        <!--The grid which contains the main content of the page-->
+        <div style="text-align: center;">
+            <h1>
+                About Me
+            </h1>
+        </div>
+        <p style="padding: 10px">
+            <img class="aboutMeImg" src="images/profile pic.png" alt="Me">
+
+            I have chosen to go down the software development route because I feel that the teamwork environment that
+            the industry provides is a natural fit for my personality. I enjoy working as part of a team (especially
+            sports and development teams).
+            <br><br>
+            I find coding a program with constraints to be an excellent learning opportunity and an enjoyable challenge.
+            I have been programming for five-plus years. This has included learning languages such as python, PHP, SQL,
+            CSS and HTML.
+            <br><br>
+            I am currently at University and practising the languages C++, Python and Java. I can bring an element of
+            leadership and teamwork
+            as well a hard-working, motivated personality to any role.
+            <br><br>
+            While in the New Zealand Cadet Corp I was a Flight Sargent which meant that I regularly had to deliver
+            forty-five-minute lessons to thirteen and fourteen-year-olds. This involved planning the lessons while
+            working around the tasks that I have from University and a part-time job as a waiter. This has taught me
+            valuable leadership, communication and time management skills which I think would be a great fit for any
+            company.
+
+        </p>
+        <button id="show" style="display: block;" class="hidePrivacy roundBottom" onclick="showElement('privacy')">Show my
+            cookie and privacy policy
+        </button>
         <!-- Privacy policy. Hidden by default-->
-        <div id="privacy" style="display: none">
+        <div id="privacy" onload="" style="display: none">
             <h3 class="alignTextLeft">Cookies Policy</h3>
             <p class="alignTextLeft">Last updated: (27/01/2020)</p>
             <p class="alignTextLeft">luke.dx.am uses cookies on luke.dx.am. By using the Service, you consent to the use
@@ -58,55 +88,44 @@ require("head.php");
                 </li>
             </ul>
             <br><br>
-            <button onclick="hideElement('privacy')" style = "border-radius: 0; border: none" class="indexButton">Hide</button>
+            <button onclick="hideElement('privacy')" class="roundBottom hidePrivacy">Hide
+            </button>
         </div>
-        <script>
-            function showElement(id) {
-                if (id === "privacy") {
-                    hideElement('show');
-                }
-                document.getElementById(id).style.display = "block";
-            }
-
-            function hideElement(id) {
-                //Check if the show button needs to be re-enabled
-                if (document.getElementById("show").style.display === "none" && document.getElementById("privacy").style.display === "block") {
-                    document.getElementById("show").style.display = "block";
-                }
-
-                document.getElementById(id).style.display = "none";
-            }
-        </script>
-        <!--The grid which contains the main content of the page-->
-        <div style="text-align: center;">
-            <h1>
-                About Me
-            </h1>
-        </div>
-        <p style="padding: 10px">
-            <img class="aboutMeImg" src="images/profile pic.png" alt="Me">
-
-            I have chosen to go down the software development route because I feel that the teamwork environment that
-            the industry provides is a natural fit for my personality. I enjoy working as part of a team (especially
-            sports and development teams).
-            <br><br>
-            I find coding a program with constraints to be an excellent learning opportunity and an enjoyable challenge.
-            I have been programming for five-plus years. This has included learning languages such as python, PHP, SQL,
-            CSS and HTML.
-            <br><br>
-            I am currently at University and practising the languages C++, Python and Java. I can bring an element of
-            leadership and teamwork
-            as well a hard-working, motivated personality to any role.
-            <br><br>
-            While in the New Zealand Cadet Corp I was a Flight Sargent which meant that I regularly had to deliver
-            forty-five-minute lessons to thirteen and fourteen-year-olds. This involved planning the lessons while
-            working around the tasks that I have from University and a part-time job as a waiter. This has taught me
-            valuable leadership, communication and time management skills which I think would be a great fit for any
-            company.
-
-        </p>
-
     </div>
+    <script>
+        //Shows the privacy if necessary
+        function showPrivacy() {
+            var urlString = window.location.href;
+            var url = new URL(urlString);
+            var c = url.searchParams.get('privacy');
+
+            console.log(URL.searchParams);
+
+            if (c) {
+                showElement("privacy");
+                document.getElementById('privacy').scrollIntoView();
+            }
+        }
+
+        function showElement(id) {
+            if (id === "privacy") {
+                hideElement('show');
+            }
+            document.getElementById(id).style.display = "block";
+
+            var privacy = document.getElementById('privacy');
+            privacy.scrollIntoView();
+        }
+
+        function hideElement(id) {
+            //Check if the show button needs to be re-enabled
+            if (document.getElementById("show").style.display === "none" && document.getElementById("privacy").style.display === "block") {
+                document.getElementById("show").style.display = "block";
+            }
+
+            document.getElementById(id).style.display = "none";
+        }
+    </script>
 </div>
 </body>
 <!--Called last so that it renders at the top-->

@@ -60,6 +60,12 @@ input[type=checkbox] {
   display: inline;
 }
 
+/*Control the size of the bin image*/
+.binImage {
+  width: 35px;
+  height: 35px;
+}
+
 /*Style some links on hover*/
 .onHover:hover {
   color: #ffcf00;
@@ -214,7 +220,7 @@ button {
   background-color: #9A9591;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: ". . .";
   opacity: 100%;
@@ -275,6 +281,58 @@ button {
 }
 
 
+.topnav {
+  overflow: hidden;
+  background-color: #9a9591;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #69696B;
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
+
+
 
 
 /*THE FOOTER*/
@@ -309,13 +367,11 @@ button {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: "." ".";
-  padding-bottom: 0;
+  padding-bottom: 75px;
   width: 90%;
   margin: 150px 5% 75px;
-
   opacity: 80%;
   border-radius: 20px;
-  background-color: white;
 }
 
 .header-nav-container {
@@ -373,6 +429,7 @@ button {
   background: none;
   padding: 10px;
   transition: 0.5s;
+  height: 75px;
 }
 
 /*Hover effects for the buttons on the index page*/
@@ -383,6 +440,28 @@ button {
   text-decoration-color: aquamarine;
   color: #ffcf00;
 }
+
+/*The hide privacy button*/
+.hidePrivacy {
+  border: none;
+  background: none;
+  padding: 10px;
+  transition: 0.5s;
+  height: 75px;
+}
+
+/*Hover effects for the hide privacy button*/
+.hidePrivacy:hover {
+  border: none;
+  background-color: #9A9591;
+  transition: 0.5s;
+  text-decoration-color: aquamarine;
+  color: #ffcf00;
+}
+
+
+
+
 
 
 /*THE EDUCATION GRID*/
@@ -508,6 +587,7 @@ button {
   grid-template-columns: 20% 80%;
   grid-template-rows: 1fr;
   grid-template-areas: "delete update";
+  padding-top: 20px;
 }
 
 .delete { grid-area: delete;
@@ -522,7 +602,7 @@ button {
 }
 
 .deleteButton {
-  background-color: #e97e51;
+  background-color: var(--bgColour);
   border: none;
   transition: 0.5s;
 }
@@ -541,32 +621,6 @@ button {
   background-color: #2661e9;
 }
 
-
-/*GRID THAT CONTAINS ALL OF THE EDIT FIELDS*/
-/*.add-grid-container {*/
-/*  display: grid;*/
-/*  grid-template-columns: auto auto auto auto;*/
-/*  grid-template-rows: 1fr 1fr;*/
-/*  grid-template-areas: "add-Institution add-Subject add-Subject-Year add-Subject-Level"*/
-/*  "add-Code add-Code-Extension add-Grade save-Record";*/
-/*}*/
-
-/*.add-Institution { grid-area: add-Institution; }*/
-
-/*.add-Subject { grid-area: add-Subject; }*/
-
-/*.add-Subject-Year { grid-area: add-Subject-Year; }*/
-
-/*.add-Subject-Level { grid-area: add-Subject-Level; }*/
-
-/*.add-Code { grid-area: add-Code; }*/
-
-/*.add-Code-Extension { grid-area: add-Code-Extension; }*/
-
-/*.add-Grade { grid-area: add-Grade; }*/
-
-/*.save-Record { grid-area: save-Record; }*/
-
 /*GRID THAT CONTAINS ALL OF THE FIELDS FOR ADDING/EDITING A NEW EDUCATION RECORD*/
 .addEducationContainer {
   display: grid;
@@ -580,6 +634,62 @@ button {
   "addSubject addCode addCodeExtension"
   "gradeTypeTitle gradeTitleNew submitTitleNew"
   "addGradeType addGrade submit";
+}
+
+/*Styling for tablets*/
+@media (max-width: 1000px) {
+  .addEducationContainer {
+    display: grid;
+    grid-gap: 15px 0;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas:
+            "institutionTitle levelTitle"
+            "addInstitution addLevel"
+            "yearTitleNewEducation subjectTitleNew"
+            "addYear addSubject"
+            "codeTitleNew codeExtensionTitle"
+            "addCode addCodeExtension"
+            "gradeTypeTitle gradeTitleNew"
+            "addGradeType addGrade"
+            "submitTitleNew submitTitleNew"
+            "submit submit";
+  }
+}
+
+/*Styling for mobile*/
+@media (max-width: 600px) {
+  .addEducationContainer {
+    display: grid;
+    grid-gap: 0 15px;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    grid-template-areas:
+    "institutionTitle"
+    "addInstitution"
+    "levelTitle"
+    "addLevel"
+    "yearTitleNewEducation"
+    "addYear"
+    "subjectTitleNew"
+    "addSubject"
+    "codeTitleNew"
+    "addCode"
+    "codeExtensionTitle"
+    "addCodeExtension"
+    "gradeTypeTitle"
+    "addGradeType"
+    "gradeTitleNew"
+    "addGrade"
+    "submitTitleNew"
+    "submit"
+  }
 }
 
 .institutionTitle { grid-area: institutionTitle; }
@@ -623,6 +733,34 @@ button {
   "submit submit submit";
 }
 
+/*Styling for mobile*/
+@media (max-width: 600px) {
+  .addExampleContainer {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    grid-template-areas:
+    "nameTitle"
+    "addName"
+    "yearTitleNewExample"
+    "addYear"
+    "linksTitle"
+    "addLink"
+    "addGithub"
+    "languagesTitle"
+    "addLanguages"
+    "addNewLanguage"
+    "descriptionTitle"
+    "addDescription"
+    "imagesTitle"
+    "addImages"
+    "submitTitle"
+    "submit";
+  }
+}
+
 .nameTitle { grid-area: nameTitle; }
 .yearTitleNewExample { grid-area: yearTitleNewExample; }
 .addName { grid-area: addName; margin-right: 5px}
@@ -646,6 +784,36 @@ button {
 .submitTitle { grid-area: submitTitle; }
 .submit { grid-area: submit; }
 
+/*Styling for mobile*/
+@media (max-width: 1000px) {
+  .addLanguages {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: ". . .";
+    grid-area: addLanguages;
+  }
+}
+
+@media (max-width: 750px) {
+  .addLanguages {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: ". .";
+    grid-area: addLanguages;
+  }
+}
+
+@media (max-width: 500px) {
+  .addLanguages {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: ".";
+    grid-area: addLanguages;
+  }
+}
 
 
 /*THE EXPERIENCE GRID*/
@@ -676,7 +844,7 @@ button {
 @media (max-width: 750px) {
   .examples-grid-container {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas: "name" "year" "languages" "link" "description" "image";
   }
@@ -692,24 +860,32 @@ button {
 @media (max-width: 750px) {
   .examples-name, .examples-year, .examples-language, .examples-link {
     text-align: center;
+    word-break: break-word;
   }
 }
 
 /*THE GALLERY OF IMAGES ON THE EDIT PAGE*/
+.gallery-container {
+  background-color: white;
+}
+
 @media (min-width: 750px) {
   .gallery-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: ". . . .";
+    grid-template-areas: ". . .";
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
   }
 }
 
 @media (max-width: 750px) {
   .gallery-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: ". .";
+    grid-template-columns: auto;
+    grid-template-areas: ".";
   }
 }
 
@@ -720,6 +896,20 @@ button {
     grid-template-areas: ".";
   }
 }
+
+/*GRID THAT HOLDS THE IMAGE TO BE DELETE AND ITS DELETE BUTTON*/
+.deleteImageContainer {
+  display: grid;
+  grid-template-columns: 250px;
+  grid-template-rows: auto auto;
+  grid-template-areas: "displayImage" "displayDelete";
+  margin-left: calc((100% - 250px) / 2);
+  margin-right: calc((100% - 250px) / 2);
+}
+
+.displayImage { grid-area: displayImage; }
+
+.displayDelete { grid-area: displayDelete; }
 
 /*GRID THAT HOLDS THE EDIT TABS*/
 .edit-tabs {
@@ -874,8 +1064,6 @@ button {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
@@ -902,6 +1090,83 @@ button {
   color: #d90029;
   text-decoration: none;
   cursor: pointer;
+}
+
+/*POPUP TEMPLATE*/
+.popup-container {
+  margin-top: 200px;
+  top: 0;
+  position: absolute;
+  margin-left: 5%;
+  margin-right: 5%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 90%;
+  grid-template-rows: 40px auto;
+  grid-template-areas:
+          "close"
+          "content";
+}
+
+.popup-close { grid-area: close;
+float: left;}
+
+.popup-content { grid-area: content;
+background-color: white}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: left;
+  font-size: 60px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*EDIT IMAGES MODAL*/
+/* The Modal (background) */
+.editAddImageModal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: auto; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+}
+
+/* The Close Button */
+.closeEditAddModal {
+  color: #aaaaaa;
+  float: left;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.editAddImageModalContent {
+  padding-top: 30px;
+}
+
+.closeEditAddModal:hover,
+.closeEditAddModal:focus {
+  color: #d90029;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*Styling specific to the add images modal*/
+.addImagesModal {
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
 }
 
 

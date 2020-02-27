@@ -7,6 +7,19 @@ require("connect.php");
 <body class=background-img>
 <div class="page-grid-container">
     <?php
+    //Function to check if a directory is empty
+    function dir_is_empty($dir) {
+        $handle = opendir($dir);
+        while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+                closedir($handle);
+                return FALSE;
+            }
+        }
+        closedir($handle);
+        return TRUE;
+    }
+
     //The query which shows the examples
     $experienceQuery = $con->prepare("SELECT examples.uniqueKey, examples.name, year.year, examples.description, 
     examples.link, examples.github FROM examples LEFT JOIN year ON examples.yearFk = year.yearPK ORDER BY year.year DESC");
@@ -105,7 +118,7 @@ require("connect.php");
                         $progress = 2;
                         foreach (glob($directoryName . "/*") as $file) {
                             //Don't show the primary image
-                            if ($file != $primaryImage) {
+                            if ($file != $primaryImage && $fileCount > 1) {
                                 ?>
                                 <!-- Load the secondary image -->
                                 <div class="<?php echo $slideshowID; ?>">
@@ -124,7 +137,7 @@ require("connect.php");
                         }
 
                         //Only show the next and previous buttons if there are images to be displayed
-                        if ($primaryImage != "images/examples/no image.png") {
+                        if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
                             ?>
                             <!--navigation buttons for the sideshow -->
                             <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
