@@ -11,7 +11,7 @@
     <?php
         require("head.php");
         require("connect.php");
-    
+
         //Todo add default records that the user can use when using cookies
 
         //Todo only run this if logged in
@@ -100,7 +100,7 @@
                     <!-- Trigger/Open The Modal -->
                     <br>
                     <div style="text-align: center;">
-                        <button onclick="showPopup('popup')" class="indexButton newItemButton">Create New Item</button>
+                        <button onclick="showPopup('popup')" class="newItemButton">Create New Item</button>
                     </div>
                     <br>
                 </div>
@@ -212,21 +212,28 @@
                             <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
                                 <!--The update button-->
                                 <div class="education-Update">
-                                    <div class="updateDelete-container">
-                                        <div class="delete">
+                                    <div class="updateDelete-container educationUpdateDelete">
+                                        <div class="delete" id = "deleteEducation<?php echo $uniqueKey;?>">
                                             <!--Show the delete button-->
                                             <!--todo make delete button a trash can icon and red-->
                                             <form method="post" action="process.php">
                                                 <input type="hidden" value="<?php echo $uniqueKey; ?>" name="uniqueKey">
-                                                <button type="submit" class="deleteButton" name="deleteEducationRecord" style="padding: 0; --bgColour: <?php echo $colour;?>">
-                                                    <img src="images/bin.png" class="binImage">
+                                                <?php
+                                                    //If it is the last record round the lower left corner
+                                                    $round = "";
+                                                    if ($count == $recordCount ) {
+                                                        $round = "0 0 0 20px";
+                                                    }
+                                                ?>
+                                                <button type="submit" class="deleteButton" name="deleteEducationRecord" style="padding: 0; --bgColour: <?php echo $colour;?>; border-radius: <?php echo $round;?>">
+                                                    <img src="images/bin.png" class="binImage" style="border-radius: <?php echo $round;?>">
                                                 </button>
                                             </form>
                                         </div>
                                         <div class="update">
                                             <!--Show the update div-->
                                             <button id="updateEducation<?php echo $uniqueKey; ?>button" class="updateButton"
-                                                onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide')">
+                                                onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide', 'deleteEducation<?php echo $uniqueKey;?>')">
                                                 Update
                                             </button>
                                         </div>
@@ -323,7 +330,7 @@
                                 </div>
                             </div>
                             <!--This form is used to update the records-->
-                            <div id="updateEducation<?php echo $uniqueKey; ?>" style="display:none;">
+                            <div id="updateEducation<?php echo $uniqueKey; ?>" style="display:none; background-color: <?php echo $colour;?>">
                                 <form autocomplete="off" method="post" action="process.php">
                                     <div class="addEducationContainer">
                                         <!--Institution header-->
@@ -562,57 +569,6 @@
                             ?>
 
                             <div style="background-color: <?php echo $colour; ?>;" class="<?php echo $class; ?>">
-                                <div class="examples-image">
-                                    <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
-                                        <!-- Load the primary image -->
-                                        <div class="<?php echo $slideshowID; ?>">
-                                            <div class="slideProgress" style="align-content: center">
-                                                <p>
-                                                    <?php
-                                                    //Only show the next and previous buttons if there are images to be displayed
-                                                    if ($primaryImage != "images/examples/no image.png") {
-                                                        ?>
-                                                        1 / <?php echo $fileCount; ?>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                </p>
-                                            </div>
-                                            <img class="center roundAll" src="<?php echo $primaryImage; ?>" alt="Image of the project">
-                                        </div>
-
-                                        <!--Load the next images -->
-                                        <?php
-                                        //Load the sub images
-                                        $progress = 2;
-                                        foreach (glob($directoryName . "/*") as $file) {
-                                            //Don't show the primary image
-                                            if ($file != $primaryImage && $fileCount > 1) {
-                                                ?>
-                                                <!-- Load the secondary image -->
-                                                <div class="<?php echo $slideshowID; ?>">
-                                                    <div class="slideProgress">
-                                                        <p><?php echo $progress . " / " . $fileCount; ?></p>
-                                                    </div>
-                                                    <img class="center roundAll" src="<?php echo $file; ?>" alt="Image of the project">
-                                                </div>
-                                                <?php
-                                                //Increment the progress
-                                                $progress += 1;
-                                            }
-                                        }
-
-                                        //Only show the next and previous buttons if there are images to be displayed
-                                        if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
-                                            ?>
-                                            <!--navigation buttons for the sideshow -->
-                                            <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
-                                            <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
-                                            <?php
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
                                 <div class="examples-name">
                                     <h1><?php echo $name;?></h1>
                                 </div>
@@ -734,11 +690,62 @@
                                     </p>
                                 </div>
                                 <div class="examples-description alignTextLeft">
-                                    <p><?php echo $examplesDescription;?></p>
+                                    <div style="padding-right: 10px; float: left">
+                                        <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
+                                            <!-- Load the primary image -->
+                                            <div class="<?php echo $slideshowID; ?>">
+                                                <div class="slideProgress" style="align-content: center">
+                                                    <p>
+                                                        <?php
+                                                        //Only show the next and previous buttons if there are images to be displayed
+                                                        if ($primaryImage != "images/examples/no image.png") {
+                                                            ?>
+                                                            1 / <?php echo $fileCount; ?>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </p>
+                                                </div>
+                                                <img class="center roundAll" src="<?php echo $primaryImage; ?>" alt="Image of the project">
+                                            </div>
+
+                                            <!--Load the next images -->
+                                            <?php
+                                            //Load the sub images
+                                            $progress = 2;
+                                            foreach (glob($directoryName . "/*") as $file) {
+                                                //Don't show the primary image
+                                                if ($file != $primaryImage && $fileCount > 1) {
+                                                    ?>
+                                                    <!-- Load the secondary image -->
+                                                    <div class="<?php echo $slideshowID; ?>">
+                                                        <div class="slideProgress">
+                                                            <p><?php echo $progress . " / " . $fileCount; ?></p>
+                                                        </div>
+                                                        <img class="center roundAll" src="<?php echo $file; ?>" alt="Image of the project">
+                                                    </div>
+                                                    <?php
+                                                    //Increment the progress
+                                                    $progress += 1;
+                                                }
+                                            }
+
+                                            //Only show the next and previous buttons if there are images to be displayed
+                                            if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
+                                                ?>
+                                                <!--navigation buttons for the sideshow -->
+                                                <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
+                                                <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <p style="padding-top: 30px"><?php echo $examplesDescription;?></p>
                                 </div>
 
-                                <div class="updateDelete-container">
-                                    <div class="delete">
+                                <div class="updateDelete-container examplesUpdateDelete">
+                                    <div class="delete" id = "deleteExample<?php echo $uniqueKey;?>">
                                         <!--Allow the user to delete the record-->
                                         <form method="post" action="process.php">
                                             <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
@@ -749,13 +756,11 @@
                                     </div>
                                     <div class="update">
                                         <button id="updateExample<?php echo $uniqueKey; ?>button" class="updateButton"
-                                                onclick="showUpdateDiv('updateExample<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide')">
+                                                onclick="showUpdateDiv('updateExample<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide', 'deleteExample<?php echo $uniqueKey;?>')">
                                             Update
                                         </button>
                                     </div>
                                 </div>
-
-
                             </div>
 
                             <!-- The div that is used to edit the example-->
@@ -903,20 +908,23 @@
 
                                         <!--Image input-->
                                         <div class="addImages">
-                                            <!--Todo style the image gallery-->
                                             <!--The image gallery. Only display if there are images-->
                                             <?php
                                             if ($fileCount != 0) {
                                                 ?>
-                                                <button type="button" id  = "editImages<?php echo $uniqueKey;?>button" onclick="showEditImageModal('<?php echo $uniqueKey;?>')">
+                                                <button class="indexButton imageButton" type="button" id  = "editImages<?php echo $uniqueKey;?>button"
+                                                        onclick="showUniqueElement('editImages<?php echo $uniqueKey;?>', 'editImages<?php echo $uniqueKey;?>button', 'Edit Images', 'Hide Edit Images');
+                                                                hideSubmit('submit<?php echo $uniqueKey;?>', 'submitTitle<?php echo $uniqueKey;?>');
+                                                                document.getElementById('hideAddImages<?php echo $uniqueKey;?>')">
                                                     Edit Images
                                                 </button>
                                                 <?php
                                             } else {
                                                 echo "There are no images to be edited. Click the button below to add some.";
                                                 ?>
-                                                <button type="button" id="addImages<?php echo $uniqueKey; ?>button"
-                                                        onclick="showAddImageModal(<?php echo $uniqueKey;?>)">
+                                                <button class="indexButton imageButton" type="button" id  = "addImages<?php echo $uniqueKey;?>button"
+                                                        onclick="showUniqueElement('addImages<?php echo $uniqueKey;?>', 'addImages<?php echo $uniqueKey;?>button', 'Add Images', 'Hide Add Images');
+                                                                hideSubmit('submit<?php echo $uniqueKey;?>', 'submitTitle<?php echo $uniqueKey;?>')">
                                                     Add Images
                                                 </button>
                                                 <?php
@@ -926,82 +934,68 @@
                                         </div>
 
                                         <!--Submit header-->
-                                        <div class="submitTitle" style="text-align: center">
+                                        <div class="submitTitle" style="text-align: center" id = "submitTitle<?php echo $uniqueKey;?>">
                                             <h2>Submit</h2>
                                         </div>
 
                                         <!--The submit button-->
-                                        <div class="submit">
+                                        <div class="submit" id = "submit<?php echo $uniqueKey;?>">
                                             <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
                                             <input type="submit" name="submitExampleUpdate" value="Update" class="updateButton">
                                         </div>
                                     </div>
                                 </form>
-
-                                <!-- The edit image modal -->
-                                <div id="editImageModal<?php echo $uniqueKey;?>" class="editAddImageModal">
-                                    <div class="addImagesModal editAddImageModalContent">
-                                        <div style="padding-bottom: 30px">
-                                            <span class="closeEditImageModal<?php echo $uniqueKey;?> closeEditAddModal">&times;</span>
-                                        </div>
-                                        <div style="background-color: #d3d3d3" class="roundAll">
-                                            <!--Form that allows the user to add images-->
-                                            <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
-                                            Select image to upload:
-                                            <form action="process.php" method="post" enctype="multipart/form-data">
-                                                <input type="file" name="updateImages[]" id="" multiple="">
-                                                <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
-                                                <input type="submit" name="addImages" value="Submit Images" class="roundBottom up">
-                                            </form>
-                                        </div>
+                                <!--Allow the user to add new images-->
+                                <div id="addImages<?php echo $uniqueKey;?>" style="display: none; width: 90%; margin-left: 5%; margin-right: 5%; padding-bottom: 20px;">
+                                    <!--Hide the add images-->
+                                    <button class="imageButton" type="button" id  = "hideAddImages<?php echo $uniqueKey;?>button"
+                                            onclick="hideElement('addImages<?php echo $uniqueKey;?>')" style="display: none">
+                                        Hide Add Images
+                                    </button>
+                                    <div style="text-align: center">
+                                        <!--Form that allows the user to add images-->
+                                        <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
+                                        Select image to upload:
+                                        <form action="process.php" method="post" enctype="multipart/form-data">
+                                            <div style="text-align: center;">
+                                                <input type="file" name="updateImages[]" id="" multiple="" style="background: none; margin: 0 auto; width: auto">
+                                            </div>
+                                            <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
+                                            <input type="submit" name="addImages" value="Submit Images" class="updateButton">
+                                        </form>
                                     </div>
                                 </div>
-<!--                                    <div id = "editImageModal--><?php //echo $uniqueKey;?><!--" class="popup-container" style="display:none;">-->
-<!--                                        <div class="popup-close">-->
-<!--                                            <span class="closeEditImageModal--><?php //echo $uniqueKey;?><!-- closeEditAddModal">&times;</span>-->
-<!--                                        </div>-->
-<!--                                        <div class="popup-content">-->
-                                               <!--Div that displays all the images for editing-->
-<!--                                                <div class="gallery-container roundAll">-->
-<!--                                                    --><?php
-//                                                    foreach (glob($directoryName . "/*") as $file) {
-//                                                        ?>
-<!--                                                        <div class="deleteImageContainer">-->
-<!--                                                            <div class="displayImage">-->
-<!--                                                                <img src="--><?php //echo $file; ?><!--" style="width: 250px">-->
-<!--                                                            </div>-->
-<!---->
-<!--                                                            <div class="displayDelete">-->
-                                                                <!--The delete image form-->
-<!--                                                                <form method="post" action="process.php">-->
-<!--                                                                    <input name="file" type="hidden" value="--><?php //echo $file; ?><!--">-->
-<!--                                                                    <input name="uniqueKey" type="hidden" value="--><?php //echo $uniqueKey;?><!--">-->
-<!--                                                                    <input type="submit" name="deleteImage" value="Delete" class="deleteButton">-->
-<!--                                                                </form>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                        --><?php
-//                                                    }
-//                                                    ?>
-<!--                                                </div>-->
-<!--                                    </div>-->
-<!--                                    </div>-->
-                                <!--The add image modal-->
-                                <div id="addImageModal<?php echo $uniqueKey;?>" class="editAddImageModal">
-                                    <div class="addImagesModal editAddImageModalContent">
-                                        <div style="padding-bottom: 30px">
-                                            <span class="closeAddImageModal<?php echo $uniqueKey;?> closeEditAddModal">&times;</span>
-                                        </div>
-                                        <div style="background-color: #d3d3d3" class="roundAll">
-                                            <!--Form that allows the user to add images-->
-                                            <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
-                                            Select image to upload:
-                                            <form action="process.php" method="post" enctype="multipart/form-data">
-                                                <input type="file" name="updateImages[]" id="" multiple="">
-                                                <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey;?>">
-                                                <input type="submit" name="addImages" value="Submit Images" class="roundBottom up">
-                                            </form>
-                                        </div>
+
+                                <!--Allow the user to update existing images-->
+                                <div id="editImages<?php echo $uniqueKey;?>" style="display: none; padding-bottom: 20px;">
+                                    <!--Option that allows the user to add some more images-->
+                                    <div style="text-align: center">
+                                        <button class="indexButton imageButton" type="button" id  = "addImages<?php echo $uniqueKey;?>button"
+                                                onclick="showUniqueElement('addImages<?php echo $uniqueKey;?>', 'addImages<?php echo $uniqueKey;?>button', 'Add Images', 'Hide Add Images')">
+                                            Add Images
+                                        </button>
+                                    </div>
+                                    <!--Form that allows the user to add images-->
+                                    <div class="gallery-container roundAll">
+                                        <?php
+                                        foreach (glob($directoryName . "/*") as $file) {
+                                            ?>
+                                            <div class="deleteImageContainer">
+                                                <div class="displayImage">
+                                                    <img src="<?php echo $file; ?>" style="width: 250px">
+                                                </div>
+
+                                                <div class="displayDelete">
+                                                    <form method="post" action="process.php">
+                                                        <input name="file" type="hidden" value="<?php echo $file; ?>">
+                                                        <input name="uniqueKey" type="hidden" value="<?php echo $uniqueKey;?>">
+                                                        <input type="submit" name="deleteImage" value="Delete" class="deleteButton">
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -1011,9 +1005,8 @@
                     }
                     ?>
                 </div>
-
-                <a href="logout.php">Logout</a>
             </div>
+        </div>
         </div>
     </body>
     <div id = "popup" class="popup-container roundAll" style="display: none; margin-bottom: 50px;">
@@ -1288,8 +1281,8 @@
                         <div class="addImages">
                             <div style="text-align: center">
                                 <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
+                                <input type="file" name="addImages[]" id="" multiple="" style="width: 100%">
                             </div>
-                            <input type="file" name="addImages[]" id="" multiple="" style="width: 100%">
                         </div>
 
                         <!--Submit header-->
@@ -1298,7 +1291,7 @@
                         </div>
 
                         <div class="submit">
-                            <input type="submit" value="Submit" name="newExampleRecord" class = "updateButton" style="width: 100%">
+                            <input type="submit" value="Submit" name="newExampleRecord" class = "updateButton" style="width: auto; margin: 0 auto;">
                         </div>
                     </div>
                 </form>
@@ -1347,7 +1340,7 @@
             // Get the <span> element that closes the modal
             var span = document.getElementsByClassName("closeAddImageModal" + key)[0];
 
-            modal.style.display = "block";
+            modal.style.display = "grid";
 
             // When the user clicks on <span> (x), close the modal
             span.onclick = function() {
@@ -1371,14 +1364,14 @@
             var modal = document.getElementById("editImageModal" + key);
 
             // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("closeEditImageModal" + key)[0];
+            // var span = document.getElementsByClassName("closeEditImageModal" + key)[0];
 
             modal.style.display = "block";
 
             // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
+            // span.onclick = function() {
+            //     modal.style.display = "none";
+            // }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
@@ -1401,16 +1394,24 @@
         }
 
         //Hides and shows the update div for education and examples
-        function showUpdateDiv(divName, key, showText, hideText) {
+        function showUpdateDiv(divName, key, showText, hideText, deleteID) {
             var x = document.getElementById(divName);
+
+            //The element id hidden. Display it
             if (x.style.display === "none") {
                 x.style.display = "block";
+
+                //hide delete button
+                document.getElementById(deleteID).style.display = "none";
 
                 //Change the button text to hide
                 updateButton(divName + 'button', hideText)
             } else {
                 x.style.display = "none";
                 updateButton(divName + 'button', showText);
+
+                //show delete button
+                document.getElementById(deleteID).style.display = "block";
             }
 
             //Load the autocomplete
@@ -1426,17 +1427,54 @@
             document.querySelector('#' + id).innerText = text;
         }
 
+        //Hides the appropriate submit button and title
+        function hideSubmit(submitId, titleId) {
+            //If the button is already hidden call a function to show it
+            if (document.getElementById(submitId).style.display != "none") {
+                document.getElementById(submitId).style.display = "none";
+                document.getElementById(titleId).style.display = "none";
+            } else {
+                showSubmit(submitId, titleId);
+            }
+        }
 
+        //Shows the appropriate submit button
+        function showSubmit(submitId, titleId) {
+            alert("Called submit");
+            document.getElementById(submitId).style.display = "block";
+            document.getElementById(titleId).style.display = "block";
+        }
+
+        //Shows a single occurrence of an element that may occur several times on the page
+        function showUniqueElement(element, button, showMsg, hideMsg){
+            console.log("Looking for element: " + element);
+            if (!document.getElementById(element)) {
+                console.log("Could not find element");
+            }
+
+            //If the element is not visible
+            if (document.getElementById(element).style.display == "none") {
+                document.getElementById(element).style.display = "block";
+                updateButton(button, hideMsg);
+            } else {
+                //Hide the element
+                document.getElementById(element).style.display = "none";
+                updateButton(button, showMsg);
+            }
+
+        }
+
+        //Show elements that do not occur more than once on the page
         function showElement(show) {
             //alert(show);
             //Show the relevant element
             if (show === "addEducation") {
                 document.getElementById("addProjectTab").style.backgroundColor = 'white';
-                document.getElementById("addEducationTab").style.backgroundColor = null;
+                document.getElementById("addEducationTab").style.backgroundColor = '#D3D3D3';
                 hideElement('addProject');
             } else if (show === 'addProject') {
                 document.getElementById("addEducationTab").style.backgroundColor = 'white';
-                document.getElementById("addProjectTab").style.backgroundColor = null;
+                document.getElementById("addProjectTab").style.backgroundColor = '#D3D3D3';
                 hideElement('addEducation');
             } else if (show === "editEducation") {
                 document.getElementById("projectTab").style.backgroundColor = null;

@@ -380,6 +380,7 @@ button {
   top: 0;
   left: 0;
   height: auto;
+  box-shadow: 0px 0px 10px 0px;
 }
 
 /*BUTTONS ON THE INDEX PAGE*/
@@ -415,10 +416,13 @@ button {
   width: 50%;
   border: none;
   font-size: 15px;
+  color: #cea702;
+  background: none;
+  transition: 0.5s;
 }
 
 .newItemButton:hover {
-  color: #ffcf00;
+  color: #d90029;
 }
 
 /*Styling for buttons on the index page*/
@@ -459,7 +463,12 @@ button {
   color: #ffcf00;
 }
 
-
+/*used to position the logout button in the upper right corner of the page*/
+.topCorner{
+  position:absolute;
+  top:0;
+  right:0;
+}
 
 
 
@@ -584,7 +593,6 @@ button {
 .updateDelete-container {
   height: 100%;
   display: grid;
-  grid-template-columns: 20% 80%;
   grid-template-rows: 1fr;
   grid-template-areas: "delete update";
   padding-top: 20px;
@@ -599,6 +607,15 @@ button {
 .update { grid-area: update;
   height: 100%;
   width: 100%;
+}
+
+/*DEFINE PARTICULAR STYLES FOR THE EXAMPLES AND EDUCATION UPDATE DELETE BUTTON*/
+.examplesUpdateDelete {
+  grid-template-columns: 250px 1fr;
+}
+
+.educationUpdateDelete {
+  grid-template-columns: 30% 70%;
 }
 
 .deleteButton {
@@ -709,7 +726,8 @@ button {
 .submitTitleNew { grid-area: submitTitleNew; }
 .addGradeType { grid-area: addGradeType; }
 .addGrade { grid-area: addGrade; }
-.submit { grid-area: submit; }
+.submit { grid-area: submit;
+padding-bottom: 20px;}
 
 /*GRID CONTAINING ALL THE FIELDS FOR ADDING A NEW EXAMPLE RECORD*/
 .addExampleContainer {
@@ -782,7 +800,8 @@ button {
 .imagesTitle { grid-area: imagesTitle; }
 .addImages { grid-area: addImages; }
 .submitTitle { grid-area: submitTitle; }
-.submit { grid-area: submit; }
+.submit { grid-area: submit;
+padding-bottom: 20px;}
 
 /*Styling for mobile*/
 @media (max-width: 1000px) {
@@ -815,17 +834,6 @@ button {
   }
 }
 
-
-/*THE EXPERIENCE GRID*/
-.examples-grid-container {
-  display: grid;
-    padding: 5%;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  grid-template-areas: "name image" "year image" "languages image" "link image" "description image";
-}
-
-
 /*Rounds only the top corners. called for the first instance of the experience and education div*/
 .roundTop {
   border-radius: 20px 20px 0 0;
@@ -834,6 +842,19 @@ button {
 /*Rounds only the bottom corners. called for the first instance of the experience div*/
 .roundBottom {
   border-radius: 0 0 20px 20px;
+}
+
+/*THE EXPERIENCE GRID*/
+.examples-grid-container {
+  display: grid;
+    padding: 5%;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-template-areas: "name"
+  "year"
+  "languages"
+  "link"
+  "description";
 }
 
 /*Rounds all the corners*/
@@ -846,12 +867,12 @@ button {
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: auto;
-    grid-template-areas: "name" "year" "languages" "link" "description" "image";
+    grid-template-areas: "name" "year" "languages" "link" "description";
   }
 }
 
-.examples-image { grid-area: image;}
-.examples-name { grid-area: name; }
+.examples-name { grid-area: name;
+  text-align: center;}
 .examples-year { grid-area: year;}
 .examples-language {grid-area: languages;}
 .examples-link { grid-area: link;}
@@ -866,13 +887,13 @@ button {
 
 /*THE GALLERY OF IMAGES ON THE EDIT PAGE*/
 .gallery-container {
-  background-color: white;
+  padding-bottom: 20px;
 }
 
 @media (min-width: 750px) {
   .gallery-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 33.3% 33.3% 33.3%;
     grid-template-rows: 1fr;
     grid-template-areas: ". . .";
     width: 95%;
@@ -1092,16 +1113,32 @@ button {
   cursor: pointer;
 }
 
+/*BUTTON USED WHEN CALLING FUNCTION TO SHOW/EDIT IMAGES*/
+.imageButton {
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+  font-size: 14px;
+  padding: 5px;
+  border: none;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+
 /*POPUP TEMPLATE*/
 .popup-container {
-  margin-top: 200px;
+  overflow: scroll;
+  margin-top: 100px;
+  max-height: 65%;
+/* bottom: 0; */
   top: 0;
-  position: absolute;
+  position: fixed;
   margin-left: 5%;
   margin-right: 5%;
-  width: 100%;
+  width: 90%;
   display: grid;
-  grid-template-columns: 90%;
+  grid-template-columns: 100%;
   grid-template-rows: 40px auto;
   grid-template-areas:
           "close"
@@ -1109,14 +1146,16 @@ button {
 }
 
 .popup-close { grid-area: close;
-float: left;}
+float: left;
+width: 100%}
 
 .popup-content { grid-area: content;
-background-color: white}
+background-color: white;
+width: 100%;}
 
 /* The Close Button */
 .close {
-  color: #aaaaaa;
+  color: #aa5521;
   float: left;
   font-size: 60px;
   font-weight: bold;
@@ -1124,7 +1163,7 @@ background-color: white}
 
 .close:hover,
 .close:focus {
-  color: #000;
+  color: #d90029;
   text-decoration: none;
   cursor: pointer;
 }

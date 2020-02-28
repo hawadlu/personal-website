@@ -9,6 +9,14 @@
         <a href="examples.php">Examples</a>
         <a href="education.php">Education</a>
         <a href="edit.php">Play Around</a>
+        <?
+        //Check if logged in. Place a logout button if required
+        if (isset($_SESSION['loggedin'])) {
+            ?>
+            <a href="logout.php" class="topCorner" style="color: #d90029">Logout</a>
+            <?php
+        }
+        ?>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
             <img src="images/hamburger%20icon.png">
         </a>

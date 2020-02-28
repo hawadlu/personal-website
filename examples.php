@@ -43,10 +43,10 @@ require("connect.php");
         while ($row=$experienceQuery->fetch()) {
             //Calculates if any rounding of the examples div is required
             $class = "";
-            if ($count == 0) {
-                $class = "examples-grid-container roundTop";
-            } elseif ($count == $recordCount - 1) {
+            if ($count == $recordCount - 1) {
                 $class = "examples-grid-container roundBottom";
+            } else if ($count == 0) {
+                $class = "examples-grid-container roundTop";
             } else {
                 $class = "examples-grid-container";
             }
@@ -65,7 +65,7 @@ require("connect.php");
             $directoryName = "images/examples/" . str_replace(" ", "", $name);
 
             //Avoid errors if the file or folder does not exist
-            if (is_dir($directoryName) && !dir_is_empty($directoryName)) {
+            if (file_exists($directoryName) && !dir_is_empty($directoryName)) {
                 $files = scandir($directoryName);
                 $primaryImage = $files[2];
 
@@ -91,143 +91,79 @@ require("connect.php");
 
             $imgWidth = getimagesize($primaryImage)[0];
             ?>
+
             <div style="background-color: <?php echo $colour; ?>;" class="<?php echo $class; ?>">
-                <div class="examples-image">
-                    <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
-                        <!-- Load the primary image -->
-                        <div class="<?php echo $slideshowID; ?>">
-                            <div class="slideProgress" style="align-content: center">
-                                <p>
-                                    <?php
-                                    //Only show the next and previous buttons if there are images to be displayed
-                                    if ($primaryImage != "images/examples/no image.png") {
-                                        ?>
-                                        1 / <?php echo $fileCount; ?>
-                                        <?php
-                                    }
-                                    ?>
-                                </p>
-                            </div>
-                            <img class="center rounded" src="<?php echo $primaryImage; ?>"
-                                 alt="Image of the project" style="width: 250px; height 250px;">
-                        </div>
-
-                        <!--Load the next images -->
-                        <?php
-                        //Load the sub images
-                        $progress = 2;
-                        foreach (glob($directoryName . "/*") as $file) {
-                            //Don't show the primary image
-                            if ($file != $primaryImage && $fileCount > 1) {
-                                ?>
-                                <!-- Load the secondary image -->
-                                <div class="<?php echo $slideshowID; ?>">
-                                    <div class="slideProgress">
-                                        <p>
-                                            <?php echo $progress . " / " . $fileCount; ?>
-                                        </p>
-                                    </div>
-                                    <img class="center rounded" src="<?php echo $file; ?>"
-                                         alt="Image of the project">
-                                </div>
-                                <?php
-                                //Increment the progress
-                                $progress += 1;
-                            }
-                        }
-
-                        //Only show the next and previous buttons if there are images to be displayed
-                        if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
-                            ?>
-                            <!--navigation buttons for the sideshow -->
-                            <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
-                            <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                </div>
                 <div class="examples-name">
-                    <h1>
-                        <?php
-                        echo $name;
-                        ?>
-                    </h1>
+                    <h1><?php echo $name;?></h1>
                 </div>
                 <div class="examples-year">
-                    <p class="alignTextLeft">
-                        Year:
-                        <?php
-                        echo $relevantYear;
-                        ?>
-                    </p>
+                    <p class="alignTextLeft">Year:<?php echo $relevantYear;?></p>
                 </div>
                 <div class="examples-language">
                     <?php
                     $key = $uniqueKey;
 
                     //Define queries to get the languages
-                    $LangOneQuery = $con->prepare("SELECT languages.languages
-                            FROM examples
-                            LEFT JOIN languages ON examples.languageOneFK = languages.languagesPK
-                            WHERE examples.uniqueKey LIKE $key
-                            ");
+                    $langOneQuery = $con->prepare("SELECT languages.languages
+                                            FROM examples
+                                            LEFT JOIN languages ON examples.languageOneFK = languages.languagesPK
+                                            WHERE examples.uniqueKey LIKE $key
+                                            ");
 
-                    $LangTwoQuery = $con->prepare("SELECT languages.languages
-                            FROM examples
-                            LEFT JOIN languages ON examples.languageTwoFK = languages.languagesPK
-                            WHERE examples.uniqueKey LIKE $key
-                            ");
+                    $langTwoQuery = $con->prepare("SELECT languages.languages
+                                            FROM examples
+                                            LEFT JOIN languages ON examples.languageTwoFK = languages.languagesPK
+                                            WHERE examples.uniqueKey LIKE $key
+                                            ");
 
-                    $LangThreeQuery = $con->prepare("SELECT languages.languages
-                            FROM examples
-                            LEFT JOIN languages ON examples.languageThreeFK = languages.languagesPK
-                            WHERE examples.uniqueKey LIKE $key
-                            ");
+                    $langThreeQuery = $con->prepare("SELECT languages.languages
+                                            FROM examples
+                                            LEFT JOIN languages ON examples.languageThreeFK = languages.languagesPK
+                                            WHERE examples.uniqueKey LIKE $key
+                                            ");
 
-                    $LangFourQuery = $con->prepare("SELECT languages.languages
-                            FROM examples
-                            LEFT JOIN languages ON examples.languageFourFK = languages.languagesPK
-                            WHERE examples.uniqueKey LIKE $key
-                            ");
+                    $langFourQuery = $con->prepare("SELECT languages.languages
+                                            FROM examples
+                                            LEFT JOIN languages ON examples.languageFourFK = languages.languagesPK
+                                            WHERE examples.uniqueKey LIKE $key
+                                            ");
 
-                    $LangFiveQuery = $con->prepare("SELECT languages.languages
-                            FROM examples
-                            LEFT JOIN languages ON examples.languageFiveFK = languages.languagesPK
-                            WHERE examples.uniqueKey LIKE $key
-                            ");
+                    $langFiveQuery = $con->prepare("SELECT languages.languages
+                                            FROM examples
+                                            LEFT JOIN languages ON examples.languageFiveFK = languages.languagesPK
+                                            WHERE examples.uniqueKey LIKE $key
+                                            ");
 
                     //Execute each query
-                    $LangOneQuery -> execute();
-                    $LangOneQuery -> bind_result($langOne);
-                    $LangOneQuery -> store_result();
-                    $LangOneQuery -> fetch();
+                    $langOneQuery->execute();
+                    $langOneQuery->bind_result($langOne);
+                    $langOneQuery->store_result();
+                    $langOneQuery->fetch();
 
-                    $LangTwoQuery -> execute();
-                    $LangTwoQuery -> bind_result($langTwo);
-                    $LangTwoQuery -> store_result();
-                    $LangTwoQuery -> fetch();
+                    $langTwoQuery->execute();
+                    $langTwoQuery->bind_result($langTwo);
+                    $langTwoQuery->store_result();
+                    $langTwoQuery->fetch();
 
-                    $LangThreeQuery -> execute();
-                    $LangThreeQuery -> bind_result($langThree);
-                    $LangThreeQuery -> store_result();
-                    $LangThreeQuery -> fetch();
+                    $langThreeQuery->execute();
+                    $langThreeQuery->bind_result($langThree);
+                    $langThreeQuery->store_result();
+                    $langThreeQuery->fetch();
 
-                    $LangFourQuery -> execute();
-                    $LangFourQuery -> bind_result($langFour);
-                    $LangFourQuery -> store_result();
-                    $LangFourQuery -> fetch();
+                    $langFourQuery->execute();
+                    $langFourQuery->bind_result($langFour);
+                    $langFourQuery->store_result();
+                    $langFourQuery->fetch();
 
-                    $LangFiveQuery -> execute();
-                    $LangFiveQuery -> bind_result($langFive);
-                    $LangFiveQuery -> store_result();
-                    $LangFiveQuery -> fetch();
-
+                    $langFiveQuery->execute();
+                    $langFiveQuery->bind_result($langFive);
+                    $langFiveQuery->store_result();
+                    $langFiveQuery->fetch();
 
 
                     ?>
                     <p class="alignTextLeft">
-                        Language(s):
+                        language(s):
                         <?php
                         $languages = "";
                         if ($langOne != null) {
@@ -256,17 +192,12 @@ require("connect.php");
                         if ($link != null) {
                             ?>
                             Link:
-                            <a class="pageLink" href="<?php echo $link; ?>">
-                                <?php
-                                echo $link;
-                                ?>
-                            </a>
+                            <a class="pageLink" href="<?php echo $link; ?>"><?php echo $link;?></a>
                             <?php
                         } else {
                             echo "Sorry, there is no link to be displayed.";
                         }
                         ?>
-
                     </p>
                     <p class="alignTextLeft">
                         <?php
@@ -274,12 +205,8 @@ require("connect.php");
                         if ($github != null) {
                             ?>
                             GitHub:
-                                <a class="pageLink" href="<?php echo $github; ?>">
-                                    <?php
-                                    echo $github;
-                                    ?>
-                                </a>
-                                <?php
+                            <a class="pageLink" href="<?php echo $github; ?>"><?php echo $github;?> </a>
+                            <?php
                         } else {
                             echo "Sorry, there is no github link.";
                         }
@@ -287,15 +214,62 @@ require("connect.php");
                     </p>
                 </div>
                 <div class="examples-description alignTextLeft">
-                    <p>
-                        <?php
-                        echo $examplesDescription;
-                        ?>
-                    </p>
+                    <div style="padding-right: 10px; float: left">
+                        <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
+                            <!-- Load the primary image -->
+                            <div class="<?php echo $slideshowID; ?>">
+                                <div class="slideProgress" style="align-content: center">
+                                    <p>
+                                        <?php
+                                        //Only show the next and previous buttons if there are images to be displayed
+                                        if ($primaryImage != "images/examples/no image.png") {
+                                            ?>
+                                            1 / <?php echo $fileCount; ?>
+                                            <?php
+                                        }
+                                        ?>
+                                    </p>
+                                </div>
+                                <img class="center roundAll" src="<?php echo $primaryImage; ?>" alt="Image of the project">
+                            </div>
+
+                            <!--Load the next images -->
+                            <?php
+                            //Load the sub images
+                            $progress = 2;
+                            foreach (glob($directoryName . "/*") as $file) {
+                                //Don't show the primary image
+                                if ($file != $primaryImage && $fileCount > 1) {
+                                    ?>
+                                    <!-- Load the secondary image -->
+                                    <div class="<?php echo $slideshowID; ?>">
+                                        <div class="slideProgress">
+                                            <p><?php echo $progress . " / " . $fileCount; ?></p>
+                                        </div>
+                                        <img class="center roundAll" src="<?php echo $file; ?>" alt="Image of the project">
+                                    </div>
+                                    <?php
+                                    //Increment the progress
+                                    $progress += 1;
+                                }
+                            }
+
+                            //Only show the next and previous buttons if there are images to be displayed
+                            if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
+                                ?>
+                                <!--navigation buttons for the sideshow -->
+                                <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
+                                <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <p style="padding-top: 30px"><?php echo $examplesDescription;?></p>
                 </div>
             </div>
-            <?php
-        }
+                <?php
+            }
     }
     ?>
 </div>

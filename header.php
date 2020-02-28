@@ -26,5 +26,6 @@
         <?php
             require("nav.php");
         ?>
+
     </div>
 </html>
