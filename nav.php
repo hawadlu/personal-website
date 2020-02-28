@@ -1,67 +1,36 @@
 <html lang="English">
-    <!--Allows the nav to scale for mobile devices-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--Allows the nav to scale for mobile devices-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="styles.css">
 
-    <?php
-    //Gets the current file name. Used to determine the opacity of the header and nav.
-    if (basename($_SERVER["PHP_SELF"]) == "index.php") {
-        $opacityNav = "50%";
-    } else {
-        $opacityNav = "100%";
-    }
-    ?>
-
-    <div style="text-align: center;">
-        <div class="dropdown">
-            <!--Display hamburger menu icon if required-->
-            <div class="hamburger">
-                <img class="hamburgerImg" src="images/hamburger icon.png" alt = "Hamburger menu icon">
-            </div>
-            <div class="dropdown-content">
-
-                <div class="nav-grid-container" style="--navOpacity: <?php echo $opacityNav;?>;">
-                    <div class="hover-effect">
-                        <div style="text-align: center;">
-                            <a href="index.php">
-                                <p>
-                                    Home
-                                </p>
-                            </a>
-                        </div>
-
-                    </div>
-                    <div class="hover-effect">
-                        <div style="text-align: center;">
-                            <a href="about.php">
-                                <p>
-                                    About Me
-                                </p>
-                            </a>
-                        </div>
-
-                    </div>
-                    <div class="hover-effect">
-                        <div style="text-align: center;">
-                            <a href="examples.php">
-                                <p>
-                                    Examples
-                                </p>
-                            </a>
-                        </div>
-
-                    </div>
-                    <div class="hover-effect">
-                        <div style="text-align: center;">
-                            <a href="education.php">
-                                <p>
-                                    Education
-                                </p>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="topnav" id="myTopnav">
+        <a href="index.php" class="active">Home</a>
+        <a href="about.php">About Me</a>
+        <a href="examples.php">Examples</a>
+        <a href="education.php">Education</a>
+        <a href="edit.php">Play Around</a>
+        <?
+        //Check if logged in. Place a logout button if required
+        if (isset($_SESSION['loggedin'])) {
+            ?>
+            <a href="logout.php" class="topCorner" style="color: #d90029">Logout</a>
+            <?php
+        }
+        ?>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <img src="images/hamburger%20icon.png">
+        </a>
     </div>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            if (x.className === "topnav") {
+                x.className += " responsive";
+            } else {
+                x.className = "topnav";
+            }
+        }
+    </script>
 </html>
 
