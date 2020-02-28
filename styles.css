@@ -961,7 +961,7 @@ padding-bottom: 20px;}
 .next {
   cursor: pointer;
   position: absolute;
-  bottom: 0;
+  bottom: 90px;
   width: auto;
   padding: 16px;
   color: orange;

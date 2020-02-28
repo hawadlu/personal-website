@@ -222,10 +222,10 @@
                                                     //If it is the last record round the lower left corner
                                                     $round = "";
                                                     if ($count == $recordCount ) {
-                                                        $round = "0 0 0 20px";
+                                                        $round = "roundBottomLeft";
                                                     }
                                                 ?>
-                                                <button type="submit" class="deleteButton" name="deleteEducationRecord" style="padding: 0; --bgColour: <?php echo $colour;?>; border-radius: <?php echo $round;?>">
+                                                <button type="submit" class="deleteButton <?php echo $round;?>" name="deleteEducationRecord" style="padding: 0; --bgColour: <?php echo $colour;?>">
                                                     <img src="images/bin.png" class="binImage" style="border-radius: <?php echo $round;?>">
                                                 </button>
                                             </form>
@@ -547,12 +547,13 @@
 
                                 if (!file_exists($directoryName . "/" . $primaryImage)) {
                                     //If the image does not exist, this is the default file path.
-                                    $primaryImage = "images/examples/no image.png";
+                                    $primaryImage = null;
                                 } else {
                                     $primaryImage = $directoryName . "/" . $primaryImage;
+                                    $imgWidth = getimagesize($primaryImage)[0];
                                 }
                             } else {
-                                $primaryImage = "images/examples/no image.png";
+                                $primaryImage = null;
                             }
 
                             //Get the number of other files in the directory
@@ -563,10 +564,7 @@
                             }
 
                             //Create the slideshow id
-                            $slideshowID = "ssID" . $count;
-
-                            $imgWidth = getimagesize($primaryImage)[0];
-                            ?>
+                            $slideshowID = "ssID" . $count; ?>
 
                             <div style="background-color: <?php echo $colour; ?>;" class="<?php echo $class; ?>">
                                 <div class="examples-name">
@@ -690,57 +688,57 @@
                                     </p>
                                 </div>
                                 <div class="examples-description alignTextLeft">
-                                    <div style="padding-right: 10px; float: left">
-                                        <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
-                                            <!-- Load the primary image -->
-                                            <div class="<?php echo $slideshowID; ?>">
-                                                <div class="slideProgress" style="align-content: center">
-                                                    <p>
-                                                        <?php
-                                                        //Only show the next and previous buttons if there are images to be displayed
-                                                        if ($primaryImage != "images/examples/no image.png") {
-                                                            ?>
-                                                            1 / <?php echo $fileCount; ?>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                    </p>
-                                                </div>
-                                                <img class="center roundAll" src="<?php echo $primaryImage; ?>" alt="Image of the project">
-                                            </div>
-
-                                            <!--Load the next images -->
-                                            <?php
-                                            //Load the sub images
-                                            $progress = 2;
-                                            foreach (glob($directoryName . "/*") as $file) {
-                                                //Don't show the primary image
-                                                if ($file != $primaryImage && $fileCount > 1) {
-                                                    ?>
-                                                    <!-- Load the secondary image -->
-                                                    <div class="<?php echo $slideshowID; ?>">
-                                                        <div class="slideProgress">
-                                                            <p><?php echo $progress . " / " . $fileCount; ?></p>
-                                                        </div>
-                                                        <img class="center roundAll" src="<?php echo $file; ?>" alt="Image of the project">
-                                                    </div>
-                                                    <?php
-                                                    //Increment the progress
-                                                    $progress += 1;
-                                                }
-                                            }
-
-                                            //Only show the next and previous buttons if there are images to be displayed
-                                            if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
-                                                ?>
-                                                <!--navigation buttons for the sideshow -->
-                                                <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
-                                                <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
-                                                <?php
-                                            }
+                                    <?php
+                                        //Only display images if there are images to display
+                                        if (!is_null($primaryImage)) {
                                             ?>
-                                        </div>
-                                    </div>
+                                            <div style="padding-right: 10px; float: left">
+                                                <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
+                                                    <!-- Load the primary image -->
+                                                    <div class="<?php echo $slideshowID; ?>">
+                                                        <div class="slideProgress" style="align-content: center">
+                                                            <p>
+                                                                1 / <?php echo $fileCount; ?>
+                                                            </p>
+                                                        </div>
+                                                        <img class="center roundAll" src="<?php echo $primaryImage; ?>" alt="Image of the project">
+                                                    </div>
+
+                                                    <!--Load the next images -->
+                                                    <?php
+                                                    //Load the sub images
+                                                    $progress = 2;
+                                                    foreach (glob($directoryName . "/*") as $file) {
+                                                        //Don't show the primary image
+                                                        if ($file != $primaryImage && $fileCount > 1) {
+                                                            ?>
+                                                            <!-- Load the secondary image -->
+                                                            <div class="<?php echo $slideshowID; ?>">
+                                                                <div class="slideProgress">
+                                                                    <p><?php echo $progress . " / " . $fileCount; ?></p>
+                                                                </div>
+                                                                <img class="center roundAll" src="<?php echo $file; ?>" alt="Image of the project">
+                                                            </div>
+                                                            <?php
+                                                            //Increment the progress
+                                                            $progress += 1;
+                                                        }
+                                                    }
+
+                                                    //Only show the next and previous buttons if there are images to be displayed
+                                                    if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
+                                                        ?>
+                                                        <!--navigation buttons for the sideshow -->
+                                                        <a class="prev" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
+                                                        <a class="next" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            <?
+                                        }
+                                    ?>
                                     <p style="padding-top: 30px"><?php echo $examplesDescription;?></p>
                                 </div>
 

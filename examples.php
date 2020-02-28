@@ -71,12 +71,13 @@ require("connect.php");
 
                 if (!file_exists($directoryName . "/" . $primaryImage)) {
                     //If the image does not exist, this is the default file path.
-                    $primaryImage = "images/examples/no image.png";
+                    $primaryImage = null;
                 } else {
                     $primaryImage = $directoryName . "/" . $primaryImage;
+                    $imgWidth = getimagesize($primaryImage)[0];
                 }
             } else {
-                $primaryImage = "images/examples/no image.png";
+                $primaryImage = null;
             }
 
             //Get the number of other files in the directory
@@ -88,8 +89,6 @@ require("connect.php");
 
             //Create the slideshow id
             $slideshowID = "ssID" . $count;
-
-            $imgWidth = getimagesize($primaryImage)[0];
             ?>
 
             <div style="background-color: <?php echo $colour; ?>;" class="<?php echo $class; ?>">
@@ -214,20 +213,17 @@ require("connect.php");
                     </p>
                 </div>
                 <div class="examples-description alignTextLeft">
-                    <div style="padding-right: 10px; float: left">
+                    <!--Only show the images if there are images to display-->
+                    <?php
+                    if (!is_null($primaryImage)) {
+                        ?>
+                        <div style="padding-right: 10px; float: left">
                         <div class="slideshowContainer" style="--width: <?php echo $imgWidth; ?>;">
                             <!-- Load the primary image -->
                             <div class="<?php echo $slideshowID; ?>">
                                 <div class="slideProgress" style="align-content: center">
                                     <p>
-                                        <?php
-                                        //Only show the next and previous buttons if there are images to be displayed
-                                        if ($primaryImage != "images/examples/no image.png") {
-                                            ?>
-                                            1 / <?php echo $fileCount; ?>
-                                            <?php
-                                        }
-                                        ?>
+                                        1 / <?php echo $fileCount; ?>
                                     </p>
                                 </div>
                                 <img class="center roundAll" src="<?php echo $primaryImage; ?>" alt="Image of the project">
@@ -258,13 +254,16 @@ require("connect.php");
                             if ($primaryImage != "images/examples/no image.png" && $fileCount > 1) {
                                 ?>
                                 <!--navigation buttons for the sideshow -->
-                                <a class="prev roundBottomLeft" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
-                                <a class="next roundBottomRight" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
+                                <a class="prev" onclick="plusDivs(-1, <?php echo $count - 1; ?>)">&#10094;</a>
+                                <a class="next" onclick="plusDivs(+1, <?php echo $count - 1; ?>)">&#10095;</a>
                                 <?php
                             }
                             ?>
                         </div>
                     </div>
+                        <?php
+                    }
+                    ?>
                     <p style="padding-top: 30px"><?php echo $examplesDescription;?></p>
                 </div>
             </div>
