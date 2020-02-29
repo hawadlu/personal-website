@@ -34,8 +34,6 @@ if (isset($_POST['submitEducationUpdate'])) {
     $postedGrade = stripSpaces($_POST['gpa']);
     $uniqueKey = $_POST['uniqueKey'];
 
-    //echo "Update record.";
-
     //Error check all the values. Include each value, the field name, a flag of the expected type in the array and the max length.
     findInvalid([[$postedInstitution, 'institution', 'string', 40, false],
         [$postedSubject, 'subject', 'string', 100, false],
@@ -63,31 +61,8 @@ if (isset($_POST['submitEducationUpdate'])) {
         }
     }
 
-    //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
-            if (!is_null($toInsert[$i][$j])) {
-                echo $toInsert[$i][$j] . ", ";
-            } else {
-                echo "Set to null, ";
-            }
-        }
-    }
-
     $toInsert = updateValues($toInsert, $con);
 
-    //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
-            if (!is_null($toInsert[$i][$j])) {
-                echo $toInsert[$i][$j] . ", ";
-            } else {
-                echo "Set to null, ";
-            }
-        }
-    }
 
     //Build a select query to check for duplicates
     $query = "SELECT * FROM education WHERE ";
@@ -98,8 +73,6 @@ if (isset($_POST['submitEducationUpdate'])) {
         }
         $query = $query . $toAppend;
     }
-    ?><br><?php
-    echo $query;
 
     //Run the query
     $query = runAndReturn($query, $con);
@@ -128,8 +101,6 @@ if (isset($_POST['submitEducationUpdate'])) {
         }
     }
 
-    ?><br><?php
-    echo $insert . " WHERE education.uniqueKey = " . $uniqueKey;
     $query = $insert . " WHERE education.uniqueKey = " . $uniqueKey;
 
     //Execute the query
@@ -144,30 +115,6 @@ if (isset($_POST['submitEducationUpdate'])) {
 
 //Creating new education records
 if (isset($_POST["newEducationRecord"])) {
-//    $insert = "INSERT INTO education (uniqueKey, ";
-//    $values = "VALUES (NULL, ";
-//
-//
-//    for ($i = 0; $i < sizeof($toInsert); $i++) {
-//
-//        if ($i != sizeof($toInsert) - 1) {
-//            $insert = $insert . $toInsert[$i][1] . ", ";
-//            $values = $values . "'" . $toInsert[$i][2] . "', ";
-//
-//        } else {
-//            $insert = $insert . $toInsert[$i][1] . ") ";
-//            $values = $values . "'" . $toInsert[$i][2] . "')";
-//        }
-//    }
-//
-//    ?><!--<br>--><?php
-//    echo $insert . $values;
-
-
-
-
-    //echo "New Record";
-    ?><br><?php
 
     //Set variables for the posted values
     $postedNewInstitution = $_POST['newInstitution'];
@@ -202,13 +149,11 @@ if (isset($_POST["newEducationRecord"])) {
         ['codeExtensionFK', $postedNewCodeExtension, 'codeExtension']];
 
     for ($i = 0; $i < sizeof($toInsert); $i++) {
-        echo "Empty: " . empty($toInsert[$i][1]);
         if (empty($toInsert[$i][1])) {
             $toInsert[$i][1] = 'NULL';
         }
     }
 
-    echo print_r($toInsert);
 
     //Run function to insert the record
     insertValues($toInsert, $con, 'education');
@@ -220,15 +165,12 @@ if (isset($_POST["newEducationRecord"])) {
 
 //Deleting education records
 if (isset($_POST['deleteEducationRecord'])) {
-    //echo "Delete record";
 
     //Perform a query to get the record to be deleted. This allows the foreign keys to be gathered so that their corresponding values can also be deleted if required
     $getRecordQuery = "SELECT * 
     FROM education
     WHERE education.uniqueKey = " . $_POST['uniqueKey'];
 
-    ?><br><?php
-    //echo "Query: " . $getRecordQuery;
 
     $getRecordQuery = $con->prepare($getRecordQuery);
     $getRecordQuery->execute();
@@ -243,15 +185,10 @@ if (isset($_POST['deleteEducationRecord'])) {
 
     //Check to see if the foreign keys are used anywhere else
     for ($i = 0; $i < sizeof($keysToCheck); $i++) {
-        ?><br><?php
-        //echo "Query: " . "SELECT * FROM education WHERE education." . $tablesToCheckEducation[$i] . "FK = " . $keysToCheck[$i];
-        ?><br><?php
         $recordCount = numTimesFkUsedEducation("SELECT * FROM education WHERE education." . $tablesToCheckEducation[$i] . "FK = " . $keysToCheck[$i], $con);
-        //echo "Record count: " . $recordCount;
 
         //If the record count is one it is safe to delete from the linked table
         if ($recordCount == 1) {
-            ?><br><?php
             runQuery("DELETE FROM " . $tablesToCheckEducation[$i] . " WHERE " . $tablesToCheckEducation[$i] . "PK = " . $keysToCheck[$i], $con);
         }
     }
@@ -266,48 +203,42 @@ if (isset($_POST['deleteEducationRecord'])) {
 
 //Updates examples
 if (isset($_POST['submitExampleUpdate'])) {
-    echo "Updating example";
-    echo "<br>";
-    echo var_dump($_POST);
     $value = null;
     $foreignKeys = [];
 
     //looking for a checked update language and an empty update language entry
     if (!empty($_POST['updateLanguageInput']) && empty($_POST['updateLanguageEntry'])) {
-        ?><br><?php
         die("You checked 'other' but did not enter a update language");
 
         //Looking for a update language entry and an unchecked update language checkbox
     } else if (empty($_POST['updateLanguageInput']) && !empty($_POST['updateLanguageEntry'])) {
-        ?><br><?php
         die("You entered a language but did not check 'other'");
 
         //Looking for a checked github and no github link
     } else if (!empty($_POST['updateGithubInput']) && empty($_POST['updateGithubEntry'])) {
-        ?><br><?php
         die("You checked 'github' but did not enter a link");
 
         //Looking for a github link and no checked github
     } else if (empty($_POST['updateGithubInput']) && !empty($_POST['updateGithubEntry'])) {
-        ?><br><?php
         die("You entered a github link but did not check 'github'");
 
         //Looking for a checked link but no link provided
     } else if (!empty($_POST['updateLinkInput']) && empty($_POST['updateLinkEntry'])) {
-        ?><br><?php
         die("You checked 'link' and did not enter a link");
 
         //Looking for link and no check link
     } else if (empty($_POST['updateLinkInput']) && !empty($_POST['updateLinkEntry'])) {
-        ?><br><?php
         die("You entered a link but did not check 'link'");
     }
+
+    //Validate the links
+    validateLink($_POST['updateLinkEntry']);
+    validateLink($_POST['updateGithubEntry']);
 
     //Get all the posted variables
     $postedExampleName = $_POST['exampleName'];
     $postedExampleYear = $_POST['exampleYear'];
     $postedExampleLink = $_POST['updateLinkEntry'];
-    echo "Empty: " . empty($_POST['updateLinkEntry']);
     $postedExampleGithub = $_POST['updateGithubEntry'];
     $postedExampleDescription = $_POST['exampleDescription'];
     $uniqueKey = $_POST['uniqueKey'];
@@ -334,8 +265,6 @@ if (isset($_POST['submitExampleUpdate'])) {
     while ($row = $query->fetch()) {
         array_push($languageArray, $value);
     }
-    ?><br><?php
-    echo sizeof($languageArray) . " languages were found in the database.";
 
     $languagesUsed = []; //Array of languages that the user wants to add
 
@@ -355,8 +284,6 @@ if (isset($_POST['submitExampleUpdate'])) {
             //Increment the counter and add the language to the used array
             $languageCount++;
             array_push($languagesUsed, $languageArray[$i]);
-            ?><br><?php
-            echo $languageArray[$i] . " found";
 
             //Add each language to the array to be tested. This to make sure that no html inputs have been tampered with
             array_push($invalidArray, [$_POST[str_replace(' ', '_', $languageArray[$i])], $languageArray[$i], 'string', 20]);
@@ -426,30 +353,7 @@ if (isset($_POST['submitExampleUpdate'])) {
         }
     }
 
-    //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
-            if (!is_null($toInsert[$i][$j])) {
-                echo $toInsert[$i][$j] . ", ";
-            } else {
-                echo "Set to null, ";
-            }
-        }
-    }
-
     $toInsert = updateValues($toInsert, $con);
-
-    //Print for debugging
-//    for ($i = 0; $i < sizeof($toInsert); $i++) {
-//        for ($j = 0; $j < sizeof($toInsert[$i]); $j++) {
-//            if (!is_null($toInsert[$i][$j])) {
-//                echo $toInsert[$i][$j] . ", ";
-//            } else {
-//                echo "Set to null, ";
-//            }
-//        }
-//    }
 
     //Generate the insert statement
     $insert = "UPDATE examples SET ";
@@ -464,10 +368,7 @@ if (isset($_POST['submitExampleUpdate'])) {
         }
     }
 
-    ?><br><?php
-    //echo $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
     $query = $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
-    //echo $query;
 
     //Execute the query
     runQuery($query, $con);
@@ -484,8 +385,13 @@ if (isset($_POST['submitExampleUpdate'])) {
         $newDirectory = stripSpaces($postedExampleName);
         $newDirectory = 'images/examples/' . $newDirectory;
 
-        //Rename the old directory
-        rename($originalDirectory, $newDirectory);
+        //If the old directory exists rename it
+        if (is_dir($originalDirectory)) {
+            rename($originalDirectory, $newDirectory);
+        } else {
+            //make a new directory
+            mkdir($newDirectory);
+        }
     }
 
     //Redirect the user
@@ -504,9 +410,7 @@ if (isset($_POST['deleteExample'])) {
     }
 
     //Delete the record
-    ?><br><?php
     $query = "DELETE FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
-    echo $query;
     runQuery($query, $con);
 
     //Setup the array that will be used when cleaning the database
@@ -519,7 +423,6 @@ if (isset($_POST['deleteExample'])) {
 
 //Adds images
 if (isset($_POST['addImages'])) {
-    echo "Adding images. Key: " . $_POST['uniqueKey'];
     $uniqueKey = $_POST['uniqueKey'];
     //Handle file uploads
     //Check a file has been uploaded in the form
@@ -539,13 +442,10 @@ if (isset($_POST['addImages'])) {
 
 //Deletes single images
 if (isset($_POST['deleteImage'])) {
-    echo "Delete image: " . $_POST['file'];
-
     //Get the expected filepath. This is used to help verify that the user has not tampered with the file to be deleted
     $originalDirectory = getExampleDirectory($_POST['uniqueKey'], $con);
 
     //Make sure that the image path is valid
-    ?><br><?php
     if (strpos($_POST['file'], $originalDirectory) !== false && isImage($_POST['file'])) {
         //Delete the image
         unlink($_POST['file']);
@@ -559,42 +459,38 @@ if (isset($_POST['deleteImage'])) {
 
 //Creates new examples
 if (isset($_POST['newExampleRecord'])) {
-    echo "Updating example";
-    echo "<br>";
-    echo var_dump($_POST);
     $value = null;
     $foreignKeys = [];
 
     //looking for a checked new language and an empty new language entry
     if (!empty($_POST['newLanguageInput']) && empty($_POST['newLanguageEntry'])) {
-        ?><br><?php
         redirectWithError("You checked 'other' but did not enter a new language", 'edit.php');
 
         //Looking for a new language entry and an unchecked new language checkbox
     } else if (empty($_POST['newLanguageInput']) && !empty($_POST['newLanguageEntry'])) {
-        ?><br><?php
         redirectWithError("You entered a new language but did not check 'other'", 'edit.php');
 
         //Looking for a checked github and no github link
     } else if (!empty($_POST['newGithubInput']) && empty($_POST['newGithubEntry'])) {
-        ?><br><?php
         redirectWithError("You checked 'github' but did not enter a link", 'edit.php');
 
         //Looking for a github link and no checked github
     } else if (empty($_POST['newGithubInput']) && !empty($_POST['newGithubEntry'])) {
-        ?><br><?php
         redirectWithError("You entered a new github link but did not check 'github'", 'edit.php');
 
         //Looking for a checked link but no link provided
     } else if (!empty($_POST['newLinkInput']) && empty($_POST['newLinkEntry'])) {
-        ?><br><?php
         redirectWithError("You checked 'link' and did not enter a link", 'edit.php');
 
         //Looking for link and no check link
     } else if (empty($_POST['newLinkInput']) && !empty($_POST['newLinkEntry'])) {
-        ?><br><?php
         redirectWithError("You entered a new link but did not check 'link'", 'edit.php');
     }
+
+    //Validate the links
+    validateLink($_POST['newLinkEntry']);
+    validateLink($_POST['newGithubEntry']);
+
 
     //Get all the posted variables
     $postedNewExampleName = $_POST['newExampleName'];
@@ -630,9 +526,6 @@ if (isset($_POST['newExampleRecord'])) {
     while ($row = $query->fetch()) {
         array_push($languageArray, $value);
     }
-    ?><br><?php
-    echo sizeof($languageArray) . " languages were found in the database.";
-
     $languagesUsed = []; //Array of languages that the user wants to add
 
     if ($_POST['newLanguageEntry'] != "") {
@@ -651,8 +544,6 @@ if (isset($_POST['newExampleRecord'])) {
             //Increment the counter and add the language to the used array
             $languageCount++;
             array_push($languagesUsed, $languageArray[$i]);
-            ?><br><?php
-            echo $languageArray[$i] . " found";
 
             //Add each language to the array to be tested. This to make sure that no html inputs have been tampered with
             array_push($invalidArray, [$_POST[str_replace(' ', '_', $languageArray[$i])], $languageArray[$i], 'string', 20]);
@@ -684,8 +575,6 @@ if (isset($_POST['newExampleRecord'])) {
         ['github', $postedNewExampleGithub]];
 
     //If the language array is < 5 add default values
-    ?><br><?php
-    echo "Language array size: " . sizeof($languagesUsed);
     if (sizeof($languagesUsed) < 5) {
         for ($i = sizeof($languagesUsed); $i < 5; $i++) {
             //push the default null value to the array
@@ -694,8 +583,6 @@ if (isset($_POST['newExampleRecord'])) {
     }
 
 
-    ?><br><?php
-    echo "Languages used array: " . print_r($languagesUsed);
 
     //Add the languages to the insert array
     for ($i = 0; $i < sizeof($languagesUsed); $i++) {
@@ -723,21 +610,6 @@ if (isset($_POST['newExampleRecord'])) {
         }
     }
 
-    ?><br><?php
-    echo $languageCount . " languages have been used.";
-    ?><br><?php
-    echo "Insert array";
-    //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
-    }
-
-    ?><br><?php
-    ?><br><?php
-    ?><br><?php
-    //echo print_r($toInsert);
-
     //Insert the record
     insertValues($toInsert, $con, 'examples');
 
@@ -762,6 +634,18 @@ if (isset($_POST['newExampleRecord'])) {
     //Print a success message
     redirectWithSuccess("The record was created and images uploaded (if any).", 'edit.php');
 }
+
+//Takes a link and validates it
+function validateLink($link)
+{
+//Validate the links
+    if (!empty($link)) {
+        if (strpos((string)$link, 'http://') === false && strpos((string)$link, 'https://') === false) {
+            redirectWithError("Link must contain http:// or https:// for value: " . (string)$link, 'edit.php');
+        }
+    }
+}
+
 
 //Takes the required directory and file array and uploads the image. Returns error if needed
 function uploadImages($directory, $toUploadArray)
@@ -808,7 +692,6 @@ function uploadImages($directory, $toUploadArray)
                 //Check if the file already exists in the directory
                 if (!file_exists("images/examples/" . $file_array[$i]["name"])) {
                     //Move the file from the temporary directory to the intended directory. Resize at the same time
-                    ?><br><?php
                     move_uploaded_file($file_array[$i]["tmp_name"], $directory . "/" .$file_array[$i]["name"]);
 
                 } else {
@@ -853,26 +736,24 @@ function isImage($path)
 
 //Deletes an entire directory (recursively)
 function deleteDirectory($filePath) {
-    //Check to see if the supplied filepath exists
-    if (!is_dir($filePath)) {
-        redirectWithError('Failed to remove images. Contact admin.', 'edit.php');
-    }
+    //Only remove if the directory exists
+    if (is_dir($filePath)) {
+        //Look for new folders
+        $files = glob($filePath . '*', GLOB_MARK);
 
-    //Look for new folders
-    $files = glob($filePath . '*', GLOB_MARK);
-
-    //Loop through the contents
-    foreach ($files as $file) {
-        //If the file is a directory call the function again
-        if (is_dir($file)) {
-            deleteDirectory($file);
-        } else {
-            unlink($file);
+        //Loop through the contents
+        foreach ($files as $file) {
+            //If the file is a directory call the function again
+            if (is_dir($file)) {
+                deleteDirectory($file);
+            } else {
+                unlink($file);
+            }
         }
-    }
 
-    //Remove the directory
-    rmdir($filePath);
+        //Remove the directory
+        rmdir($filePath);
+    }
 }
 
 //Calculates and returns the directory where the example images are stored for a record
@@ -893,13 +774,6 @@ function getExampleDirectory($uniqueKey, mysqli $con)
     //Strip the spaces from the directory
     $originalDirectory = 'images/examples/' . stripSpaces($originalDirectory);
 
-    //Check to see if the directory exists
-//    if (is_dir($originalDirectory)) {
-//        ?><!--<br>--><?php
-//        echo "Directory found";
-//
-//        //If the directory cannot be found set the directory to null
-//    }
     return $originalDirectory;
 }
 
@@ -931,8 +805,6 @@ function setCleanupEducation($key, mysqli $con)
 //Create a 2d array of the FK column's and their respective keys
     $uniqueKey = $institutionFK = $subject = $gradeFK = $subjectLevelFK = $yearFK = $subjectCodeFK = $creditsFK = $codeExtensionFK = null;
     $query = "SELECT * FROM education WHERE education.uniqueKey = " . $key;
-    ?><br><?php
-    echo $query;
     $query = runAndReturn($query, $con);
     $query->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFK, $subjectCodeFK, $creditsFK, $codeExtensionFK);
     $query->store_result();
@@ -994,23 +866,13 @@ function cleanUpFK($toClean, $con){
 //Looks for any invalid values that the user may have entered. Takes education/project and an array of all the values
 function findInvalid($values)
 {
-    echo print_r($values);
     $gradeValid = false; //flag used to determine if the grade is valid
-    ?><br><?php
-    //echo "Check invalid for type: " . $type;
-    ?><br><?php
-    //echo "Check for values of array size: " . sizeof($values);
-    ?><br><?php
     for ($i = 0; $i < sizeof($values); $i++) {
-        ?><br><?php
-//        echo $i . ": " . $values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2] . ", " . $values[$i][3] . ", " . $values[$i][4];
-
         //Array used when checking the length of the string. Declared here to avoid multiple function calls
         $checkLenArray = checkLength($values[$i][0], $values[$i][3]);
 
         //Look for illegal characters
         if (containsIllegalCharacter($values[$i][0]) != null) {
-            ?><br><?php
 
             //Set the cookie and redirect
             redirectWithError("Illegal character (" . containsIllegalCharacter($values[$i][0]) . "). For value: " . $values[$i][0], 'edit.php');
@@ -1019,31 +881,23 @@ function findInvalid($values)
         } else if ($checkLenArray[0] == false) {
             redirectWithError("Input too large. For value: " . $checkLenArray[2] . "(" . $checkLenArray[1] . "). Max length for field " . $values[$i][1] . " is " . $values[$i][3], 'edit.php');
 
+
             //Check to see if credits and grade are valid
         } else if (($values[$i][1] == 'credits' || $values[$i][1] == 'grade') && !$gradeValid) {
-            ?><br><?php
-            //echo "Looking at: " . $values[$i][1];
-            ?><br><?php
 
             //Validating the grade and credits
             //First check to see if both fields are empty
             $creditsPos = findIn2dArray($values, 'credits');
             $gradePos = findIn2dArray($values, 'grade');
 
-            //echo "Credits at: " . $creditsPos . " empty = " . isEmpty($values[$creditsPos][0]);
-            ?><br><?php
-            //echo "Grades at: " . $gradePos . " empty = " . isEmpty($values[$gradePos][0]);
-            ?><br><?php
 
             //No grades have been entered
             if (isEmpty($values[$creditsPos][0]) && isEmpty($values[$gradePos][0])) {
-                ?><br><?php
                 redirectWithError("You must fill in at least one type of grade", 'edit.php');
                 //die("Grade cannot be empty!");
 
                 //Both grades have been entered
             } else if (!isEmpty($values[$creditsPos][0]) && !isEmpty($values[$gradePos][0])) {
-                ?><br><?php
                 redirectWithError("You can only enter one credits/grade value. For credits: " . $values[$creditsPos][0] . " and grade: " . $values[$gradePos][0], 'edit.php');
                 //die("You can only enter one grade!");
 
@@ -1052,25 +906,21 @@ function findInvalid($values)
                 if ($values[$i][1] == 'credits' && !isEmpty($values[$i][0])) {
                     //Check that the credits are numeric.
                     if (!isType($values[$i][2], $values[$i][0])) {
-                        ?><br><?php
                         redirectWithError("Credits must be numeric. For credits: " . $values[$creditsPos][0], 'edit.php');
                         //die("Credits must be numeric");
 
                         //Check for any decimal points
                     } else if (strpos($values[$i][0], '.') !== false) {
-                        ?><br><?php
                         redirectWithError("Credits must be a whole number: For credits: " . $values[$creditsPos][0], 'edit.php');
                         //die("Credits must be a whole number");
 
                         //Look for negative numbers
                     } else if ((int)$values[$i][0] < 0) {
-                        ?><br><?php
                         redirectWithError("Credits cannot be negative. For credits: " . $values[$creditsPos][0], 'edit.php');
                         //die("Credits cannot be negative");
 
                         //Look for numbers that are too high
                     } else if ((int)$values[$i][0] > 50) {
-                        ?><br><?php
                         redirectWithError("Credits cannot be greater than 50. For value: " . $values[$creditsPos][0], 'edit.php');
                         //die("That's too many credits!");
                     } else {
@@ -1078,14 +928,11 @@ function findInvalid($values)
                     }
                 } else if ($values[$i][1] == 'grade' && !isEmpty($values[$i][0])) {
                     $gpaGrades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'E', 'F'];
-                    //echo "Checking grade";
                     //Check that the grades are not numeric
                     if (!isType($values[$i][2], $values[$i][0])) {
-                        ?><br><?php
                         redirectWithError("GPA cannot be numeric. For value: " . $values[$gradePos][0], 'edit.php');
                         //die("Grades cannot be numeric");
                     } else if (!isMemberOf($values[$i][0], $gpaGrades)) {
-                        ?><br><?php
                         //Compile the error message
                         $errorMsg = $gpaGrades[0];
                         for ($i = 1; $i < sizeof($gpaGrades); $i++) {
@@ -1101,15 +948,10 @@ function findInvalid($values)
 
             //Test to see if the value is empty ignore if a valid grade has been entered
         } else if (isEmpty($values[$i][0]) && !$gradeValid && $values[$i][4] == false) {
-            ?><br><?php
             redirectWithError("Value cannot be empty. For field: " . $values[$i][1], 'edit.php');
-            //die("You cannot have an empty value!");
 
             //Look for values that do not match their specified type
         } else if (!isType($values[$i][2], $values[$i][0])) {
-            ?><br><?php
-            echo "Failed at: " . $i;
-            ?><br><?php
             redirectWithError("Invalid type. For value: " . $values[$i][0] . ". " . $values[$i][1] . " should be of type " . $values[$i][2], 'edit.php');
             //die($values[$i][0] . ", " . $values[$i][1] . ", " . $values[$i][2] . ", " . $values[$i][3] . ", " . $values[$i][4]);
             //Error checking the year
@@ -1127,8 +969,6 @@ function findInvalid($values)
             }
         }
     }
-
-    echo "No errors were found!";
 }
 
 //Update records for education and examples. Takes an array of values and uses them to insert a record.
@@ -1137,28 +977,20 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
 
 //Loop through the array updating the values so that they can easily be used to generate SQL
     for ($i = 0; $i < sizeof($toInsert); $i++) {
-        ?><br><?php
-        ?><br><?php
         //If the value is null and an FK set a default value
         if ($toInsert[$i][1] == 'NULL' && strpos($toInsert[$i][0], 'FK')) {
             $toInsert[$i][1] = 0;
 
             //Check to see if the field should contain a foreign key.
         } else if (strpos($toInsert[$i][0], 'FK')) {
-//            ?><!--<br>--><?php
-//            echo "Get FK for field: " . $toInsert[$i][0] . " value: " . $toInsert[$i][1];
 
             //Run a query to check if the value already exists in a linked table. Look for null value if necessary
             $selectQuery = "SELECT * FROM " . $toInsert[$i][2] . " WHERE " . $toInsert[$i][2] . "." . $toInsert[$i][2] . " = '" . $toInsert[$i][1] . "'";
-//            ?><!--<br>--><?php
-//            echo "Select Query: " . $selectQuery;
 
             if (recordCount($selectQuery, $con) == 0) {
                 //The record does not exist. Create it
-                ?><br><?php
                 //When inserting the FK has to be converted to PK
 
-                echo "Insert Query: " . "INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] . ") VALUES (NULL , '" . $toInsert[$i][1] . "')";
                 runQuery("INSERT INTO " . $toInsert[$i][2] . " (" . $toInsert[$i][2] . "PK, " . $toInsert[$i][2] . ") VALUES (NULL , '" . $toInsert[$i][1] . "')", $con);
             }
             //Run a query to get the primary key of the value
@@ -1168,22 +1000,10 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
             if (empty($key)) {
                 $key = 0;
             }
-            echo "The key is: " . $key;
 
             //Update the value in the insert array
             $toInsert[$i][1] = $key;
         }
-    }
-
-    ?><br><?php
-    ?><br><?php
-    ?><br><?php
-    echo "Insert array";
-    //Print for debugging
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-
-    ?><br><?php
-        echo $toInsert[$i][0] . ", " . $toInsert[$i][1];
     }
 
     //Generate the insert statement
@@ -1191,8 +1011,6 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
     $values = "VALUES (NULL, ";
     $duplicateSelect = "SELECT * FROM " . $tableToUpdate;
     $duplicateWhere = " WHERE ";
-
-    echo "Size: " . sizeof($toInsert);
 
     for ($i = 0; $i < sizeof($toInsert); $i++) {
         //Generate the fields
@@ -1232,8 +1050,6 @@ function updateValues(array $toInsert, mysqli $con) {
     for ($i = 0; $i < sizeof($toInsert); $i++) {
         //Ignore tables that have no associated foreign key
         if (!is_null($toInsert[$i][0])) {
-//            ?><!--<br>--><?php
-//            echo "Look for updates: " . $toInsert[$i][0];
 
             //Look for the value in the linked table
             //If the value is null the foreign key should be set to 0
@@ -1246,13 +1062,10 @@ function updateValues(array $toInsert, mysqli $con) {
 
                 $PK = getPK($selectQuery, $con);
                 if ($PK != false) {
-                    //echo "PK: " . $PK;
 
                     //The record exists in this table. Update the insert array
                     $toInsert[$i][2] = $PK;
                 } else {
-                    echo "PK: is false";
-
                     //The record does not exist in this table. Perform a query to create it
                     $insertQuery = "INSERT INTO " . $toInsert[$i][0] . " (" . $toInsert[$i][0] . "PK, " . $toInsert[$i][0] . ")" . " VALUES (NULL, '" . $toInsert[$i][2] . "')";
                     runQuery($insertQuery, $con);
@@ -1282,20 +1095,10 @@ function reArrayFiles($file_post)
     return $file_ary;
 }
 
-//Same as print_r surrounded with <pre></pre> HTML tags for better array readability
-function pre_r($array)
-{
-    echo '<pre>';
-    print_r($array);
-    echo '</pre>';
-}
-
 //Takes a query and returns a single value (the PK)
 function getPK($query, $con)
 {
     $primary = $val = null;
-//    ?><!--<br>--><?php
-//    echo "Single val query: " . $query;
     $query = $con->prepare($query);
 
     //Look for errors
@@ -1315,7 +1118,6 @@ function getPK($query, $con)
 
     $key = "";
     while ($row = $query->fetch()) {
-//        ?><!--<br>--><?php
         $key = $primary;
     }
     return $key;
@@ -1326,8 +1128,6 @@ function redirectWithError($cookieValue, $redirectTo)
 {
     //Add a flag to the front of the cookie describing what it is
     $cookieValue = "ERROR: " . $cookieValue;
-
-    //echo "called redirect";
 
     //Set the cookie
     setcookie('errorMsg', $cookieValue);
@@ -1385,9 +1185,6 @@ function isMemberOf($value, $parameters)
 //Checks to see if a value is of the specified type. Returns true if it is, false otherwise
 function isType($type, $value)
 {
-    ?><br><?php
-    //echo "Checking type: " . $type;
-
     //Checking for strings that should be an int
     if ($type == 'int') {
         //Remove any spaces
@@ -1407,12 +1204,10 @@ function isType($type, $value)
 //Takes a value and checks if it contains any illegal characters mark of any kind. Returns the illegal character if it does, true if it does not
 function containsIllegalCharacter($value)
 {
-    ////echo " Checking value " . $value . " for illegal characters";
     $characters = ['“', '”', '"', '"', '‘', '’', "'", "'", '«', '»', '「', '」', '`'];
     for ($i = 0; $i < sizeof($characters); $i++) {
         //Check if the character is contained in the value
         if (strpos($value, $characters[$i]) !== false) {
-            ////echo " contains: " . $characters[$i];
             return $characters[$i];
         }
     }
@@ -1449,7 +1244,6 @@ function findIn2dArray($array, $value)
 function updateTableValue($table, $column, $value, $conditionalColumn, $key, $con)
 {
     $query = "UPDATE " . $table . " SET " . $column . " = '" . $value . "' WHERE " . $conditionalColumn . " = " . $key;
-    //echo "Update column query: " . $query;
 
     $query = $con->prepare($query);
     $query->execute();
@@ -1494,8 +1288,6 @@ function numTimesFkUsedEducation($query, $con)
 //Checks if a record exists in a linked table. Returns the number of records
 function recordCount($query, $con)
 {
-    ?><br><?php
-    echo "Record count: " . $query;
     $key = "";
     $result = "";
     $query = $con->prepare($query);
@@ -1510,18 +1302,12 @@ function recordCount($query, $con)
 //Returns true if a duplicate is found
 function findDuplicate($query, $con)
 {
-//
-    ?><!--<br>--><?php
-//    echo "Duplicate query: " . $query;
 
     //Run the query and get the number of rows
     $recordCount = 0;
     foreach ($con->query($query) as $row) {
         $recordCount++;
     }
-//
-    ?><!--<br>--><?php
-//    echo "Number of rows: " . $recordCount;
     return $recordCount;
 }
 
@@ -1529,24 +1315,17 @@ function findDuplicate($query, $con)
 //Function that executes a query and returns the foreign key
 function getFK($table, $value, $con)
 {
-    //echo "Value: " . $value;
-    ?><br><?php
     $primary = null;
     $val = null;
     $foreignKeyQuery = "SELECT * FROM " . $table . " WHERE " . $table . "." . $table . " = '" . $value . "'";
-    echo "FK QUERY: " . $foreignKeyQuery;
     $foreignKeyQuery = $con->prepare($foreignKeyQuery);
     $foreignKeyQuery->execute();
     $foreignKeyQuery->bind_result($primary, $val);
     $foreignKeyQuery->store_result();
     $key = "";
     while ($row = $foreignKeyQuery->fetch()) {
-        ?><br><?php
         $key = $primary;
     }
-    ?><br><?php
-    //echo "FK: " . $key;
-    ?><br><?php
     return $key;
 }
 

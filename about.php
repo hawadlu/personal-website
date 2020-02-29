@@ -15,7 +15,7 @@ require("head.php");
             </h1>
         </div>
         <p style="padding: 10px">
-            <img class="aboutMeImg" src="images/profile pic.png" alt="Me">
+            <img class="aboutMeImg" src="images/Profile Pic.png" alt="Me">
 
             I have chosen to go down the software development route because I feel that the teamwork environment that
             the industry provides is a natural fit for my personality. I enjoy working as part of a team (especially

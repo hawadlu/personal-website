@@ -1153,6 +1153,13 @@ width: 100%}
 background-color: white;
 width: 100%;}
 
+/*Add some padding for larger screens*/
+@media (min-width: 1000px) {
+  .popup-content {
+    padding-bottom: 50px;
+  }
+}
+
 /* The Close Button */
 .close {
   color: #aa5521;

@@ -5,14 +5,11 @@
         header('Location: login.php');
         exit();
     }
-?>
-<html lang="English">
-    <!--Pulls in the head and other required pages-->
-    <?php
-        require("head.php");
-        require("connect.php");
 
-        //Todo add default records that the user can use when using cookies
+    //Get the connect.php page
+    require("connect.php");
+
+    //Todo add default records that the user can use when using cookies
 
         //Todo only run this if logged in
         //Run several php queries to get arrays of each field of the education
@@ -27,28 +24,6 @@
         //Run queries to get arrays for each examples field
         $exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
         $languageArray = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
-
-    //Check to see if an error message has been set
-    $errorMessage = null;
-    if (isset($_COOKIE['errorMsg'])) {
-        //Only output if the value is not a number
-        if (!is_numeric($_COOKIE['errorMsg'])) {
-            $errorMessage = $_COOKIE['errorMsg'];
-        }
-
-        //Delete the cookie
-        setcookie('errorMsg', time() - 3600);
-    }
-
-    $successMessage = null;
-    if (isset($_COOKIE['successMsg'])) {
-        //Only output if it is not a number
-        if (!is_numeric($_COOKIE['successMsg'])) {
-            $successMessage = $_COOKIE['successMsg'];
-        }
-
-        setcookie('successMsg', time() - 3600);
-    }
 
     //Gets an array of values from the database. Used for autocomplete
     function getArray($query, $con) {
@@ -79,7 +54,32 @@
         return TRUE;
     }
 
+//Check to see if an error message has been set
+$errorMessage = null;
+if (isset($_COOKIE['errorMsg'])) {
+    //Only output if the value is not a number
+    if (!is_numeric($_COOKIE['errorMsg'])) {
+        $errorMessage = $_COOKIE['errorMsg'];
+    }
+
+    //Delete the cookie
+    setcookie('errorMsg', time() - 3600);
+}
+
+$successMessage = null;
+if (isset($_COOKIE['successMsg'])) {
+    //Only output if it is not a number
+    if (!is_numeric($_COOKIE['successMsg'])) {
+        $successMessage = $_COOKIE['successMsg'];
+    }
+
+    setcookie('successMsg', time() - 3600);
+}
+
+    //get the head
+    require("head.php");
 ?>
+<html lang="English">
     <!-- The new project Modal -->
     <body id = "body" class="background-img">
         <div id = "pageGrid" class="page-grid-container">
@@ -100,7 +100,7 @@
                     <!-- Trigger/Open The Modal -->
                     <br>
                     <div style="text-align: center;">
-                        <button onclick="showPopup('popup')" class="newItemButton">Create New Item</button>
+                        <button onclick="showPopup('popup'); loadNewEducationRecordAutocomplete(); loadNewExampleRecordAutocomplete()" class="newItemButton">Create New Item</button>
                     </div>
                     <br>
                 </div>
@@ -233,7 +233,8 @@
                                         <div class="update">
                                             <!--Show the update div-->
                                             <button id="updateEducation<?php echo $uniqueKey; ?>button" class="updateButton"
-                                                onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide', 'deleteEducation<?php echo $uniqueKey;?>')">
+                                                onclick="showUpdateDiv('updateEducation<?php echo $uniqueKey; ?>', '<?php echo $uniqueKey; ?>', 'Update', 'Hide', 'deleteEducation<?php echo $uniqueKey;?>');
+                                                        loadAutocompleteForEducationUpdate(<?php echo $uniqueKey;?>)">
                                                 Update
                                             </button>
                                         </div>
@@ -881,7 +882,7 @@
                                         <!--Option that allows the user to add their own code-->
                                         <div class="addNewLanguage">
                                             <input type="checkbox" class="checkbox" name = "updateLanguageInput" id = "newLanguage<?php echo $uniqueKey;?>" onchange="showUpdateLinkInput('newLanguageDiv<?php echo $uniqueKey;?>')">
-                                            <label for="newLanguage<?php echo $uniqueKey;?>">Other</label>
+                                            <label for="newLanguage<?php echo $uniqueKey;?>">Add Another Language</label>
 
                                             <!--Input box for the new language-->
                                             <div id = "newLanguageDiv<?php echo $uniqueKey;?>" style="display:none;">
@@ -1016,10 +1017,10 @@
             <div class="edit-tabs">
                 <div class="Education">
                     <!--Make button grey by default-->
-                    <button id="addEducationTab" class="indexButton" style="display: block; border: none; border-radius: 20px 0 0 0; background-color: #d3d3d3" onclick="showElement('addEducation')">Education</button>
+                    <button id="addEducationTab" class="indexButton" style="display: block; border: none; border-radius: 20px 0 0 0; background-color: white" onclick="showElement('addEducation')">Education</button>
                 </div>
                 <div class="Projects">
-                    <button id="addProjectTab" class="indexButton" style="display: block; border: none; border-radius: 0 20px 0 0; background-color: white" onclick="showElement('addProject')">Projects </button>
+                    <button id="addProjectTab" class="indexButton" style="display: block; border: none; border-radius: 0 20px 0 0; background-color: #d3d3d3" onclick="showElement('addProject')">Projects </button>
                 </div>
             </div>
             <br>
@@ -1289,7 +1290,7 @@
                         </div>
 
                         <div class="submit">
-                            <input type="submit" value="Submit" name="newExampleRecord" class = "updateButton" style="width: auto; margin: 0 auto;">
+                            <input type="submit" value="Submit" name="newExampleRecord" class = "updateButton" style="width: 100%; margin: 0 auto;">
                         </div>
                     </div>
                 </form>
@@ -1320,12 +1321,16 @@
                 slideIndex[no] = 1
             }
             if (n < 1) {
-                slideIndex[no] = x.length
+                slideIndex[no] = x.length;
             }
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";
             }
-            x[slideIndex[no] - 1].style.display = "block";
+            try {
+                x[slideIndex[no] - 1].style.display = "block";
+            } catch (e) {
+                //
+            }
         }
 
         //Shows and hides the relevant add image modal
@@ -1438,18 +1443,12 @@
 
         //Shows the appropriate submit button
         function showSubmit(submitId, titleId) {
-            alert("Called submit");
             document.getElementById(submitId).style.display = "block";
             document.getElementById(titleId).style.display = "block";
         }
 
         //Shows a single occurrence of an element that may occur several times on the page
         function showUniqueElement(element, button, showMsg, hideMsg){
-            console.log("Looking for element: " + element);
-            if (!document.getElementById(element)) {
-                console.log("Could not find element");
-            }
-
             //If the element is not visible
             if (document.getElementById(element).style.display == "none") {
                 document.getElementById(element).style.display = "block";
@@ -1467,12 +1466,12 @@
             //alert(show);
             //Show the relevant element
             if (show === "addEducation") {
-                document.getElementById("addProjectTab").style.backgroundColor = 'white';
-                document.getElementById("addEducationTab").style.backgroundColor = '#D3D3D3';
+                document.getElementById("addProjectTab").style.backgroundColor = '#d3d3d3';
+                document.getElementById("addEducationTab").style.backgroundColor = 'white';
                 hideElement('addProject');
             } else if (show === 'addProject') {
-                document.getElementById("addEducationTab").style.backgroundColor = 'white';
-                document.getElementById("addProjectTab").style.backgroundColor = '#D3D3D3';
+                document.getElementById("addEducationTab").style.backgroundColor = '#d3d3d3';
+                document.getElementById("addProjectTab").style.backgroundColor = 'white';
                 hideElement('addEducation');
             } else if (show === "editEducation") {
                 document.getElementById("projectTab").style.backgroundColor = null;
@@ -1666,6 +1665,7 @@
         var grades = <?php echo json_encode($gradeArray);?>;
         var exampleNames = <?php echo json_encode($exampleNameArray);?>;
 
+
         //Load the autocompletes for new education items
         function loadNewEducationRecordAutocomplete() {
             //Autocomplete for new records
@@ -1708,6 +1708,11 @@
             }
             return array;
         }
+
+        //Set the error/success message timeout
+        $(document).ready(function(){
+            $('.alert').delay(10000).fadeOut(300);
+        });
     </script>
     <!--Called last so that it renders at the top-->
     <?php
@@ -1715,6 +1720,7 @@
     //Pull information from the footer page
     require("footer.php");
 
+    //Print error/success messages
     //Show any error messages if required
     if ($errorMessage != null) {
         ?>

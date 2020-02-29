@@ -18,7 +18,7 @@
         }
         ?>
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <img src="images/hamburger%20icon.png">
+            <img src="images/Hamburger Icon.png">
         </a>
     </div>
 

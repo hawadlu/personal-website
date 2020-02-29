@@ -33,13 +33,30 @@
                 //Redirect to the edit page
                 header("location: edit.php");
             } else {
+                redirectWithError('Incorrect username or password', 'login.php');
                 echo 'Incorrect password!';
             }
         } else {
-            echo 'Incorrect username!';
+            redirectWithError('Incorrect username or password', 'login.php');
         }
 
         $stmt->close();
     }
+
+//Redirects the user to the specified page with an error cookie set.
+function redirectWithError($cookieValue, $redirectTo)
+{
+    //Add a flag to the front of the cookie describing what it is
+    $cookieValue = "ERROR: " . $cookieValue;
+
+    //Set the cookie
+    setcookie('errorMsg', $cookieValue);
+
+    //Redirect
+    header("location: " . $redirectTo);
+
+    //Stop all execution
+    exit();
+}
 ?>
 

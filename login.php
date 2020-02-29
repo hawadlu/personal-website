@@ -10,7 +10,19 @@
         require("header.php");
 
         //Todo look into restricting the session time so that the user is automatically logged out. This link may be useful https://solutionfactor.net/blog/2014/02/08/implementing-session-timeout-with-php/
-    ?>
+
+        //Check to see if an error message has been set
+        $errorMessage = null;
+        if (isset($_COOKIE['errorMsg'])) {
+            //Only output if the value is not a number
+            if (!is_numeric($_COOKIE['errorMsg'])) {
+                $errorMessage = $_COOKIE['errorMsg'];
+            }
+
+            //Delete the cookie
+            setcookie('errorMsg', time() - 3600);
+        }
+?>
 
     <!--Disable scrolling-->
     <html lang="English">
@@ -36,8 +48,24 @@
             </form>
         </div>
     </body>
+    <script>
+        //Set the error/success message timeout
+        $(document).ready(function(){
+            $('.alert').delay(10000).fadeOut(300);
+        });
+    </script>
 
     <?php
         require("footer.php");
+
+    //Print error/success messages
+    //Show any error messages if required
+    if ($errorMessage != null) {
+        ?>
+        <div class="alert alert-danger" style="width: 100%; position: fixed">
+            <strong>Operation failed!</strong> <?php echo $errorMessage; ?>
+        </div>
+        <?
+    }
     ?>
 </html>
