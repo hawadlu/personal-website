@@ -1,5 +1,4 @@
 <?php
-//todo when deleting/renaming records ensure that the file paths are handled appropriately
 //todo review all prepared queries so that they comply with https://www.w3schools.com/php/php_mysql_prepared_statements.asp
 //todo close all queries when they are no longer required.
 
@@ -7,11 +6,13 @@
 //Check if the user is logged in
 session_start();
 if (!isset($_SESSION['loggedin'])) {
-    header('Location: login.php');
-    exit();
-}
+    //Set the logged in flag
+    $loggedIn = false;
 
-require("connect.php");
+} else {
+    $loggedIn = true;
+    require("connect.php");
+}
 
 //Table names from the DB
 $tablesToCheckEducation = ['institution', 'subjectLevel', 'year', 'subjectCode', 'codeExtension', 'grade'];
@@ -23,6 +24,7 @@ $tableColumnsExamples = ['name', 'yearFk', 'description', 'languageOneFK', 'lang
 
 //Updating education records
 if (isset($_POST['submitEducationUpdate'])) {
+
     //Variables for each posted value. Spaces stripped appropriately
     $postedInstitution = $_POST['institution'];
     $postedSubject = $_POST['subject'];
@@ -55,59 +57,67 @@ if (isset($_POST['submitEducationUpdate'])) {
         ['codeExtension', 'codeExtensionFK', $postedCodeExtension]];
 
     //Set any empty values to null
-    for ($i = 0; $i < sizeof($toInsert); $i ++) {
+    for ($i = 0; $i < sizeof($toInsert); $i++) {
         if (isEmpty($toInsert[$i][2])) {
             $toInsert[$i][2] = Null;
         }
     }
 
-    $toInsert = updateValues($toInsert, $con);
+    //Update the database if the user is logged in
+
+    if ($loggedIn == true) {
+        $toInsert = updateValues($toInsert, $con);
 
 
-    //Build a select query to check for duplicates
-    $query = "SELECT * FROM education WHERE ";
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        $toAppend = "education." . $toInsert[$i][1] . " = '" . $toInsert[$i][2] ."'";
-        if ($i != sizeof($toInsert) - 1) {
-            $toAppend = $toAppend . " AND ";
+        //Build a select query to check for duplicates
+        $query = "SELECT * FROM education WHERE ";
+        for ($i = 0; $i < sizeof($toInsert); $i++) {
+            $toAppend = "education." . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "'";
+            if ($i != sizeof($toInsert) - 1) {
+                $toAppend = $toAppend . " AND ";
+            }
+            $query = $query . $toAppend;
         }
-        $query = $query . $toAppend;
-    }
 
-    //Run the query
-    $query = runAndReturn($query, $con);
-    $recordCount = $query->num_rows();
-    $query->close();
+        //Run the query
+        $query = runAndReturn($query, $con);
+        $recordCount = $query->num_rows();
+        $query->close();
 
-    //If there is a row returned. Throw duplicate error
-    if ($recordCount > 0) {
-        redirectWithError('Duplicate record', 'edit.php');
-    }
-
-    //Build the cleanup array
-    $toClean = setCleanupEducation($uniqueKey, $con);
-
-    //Generate the insert statement
-    $insert = "UPDATE education SET ";
-
-
-
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-
-        if ($i != sizeof($toInsert) - 1) {
-            $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "', ";
-        } else {
-            $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "'";
+        //If there is a row returned. Throw duplicate error
+        if ($recordCount > 0) {
+            redirectWithError('Duplicate record', 'edit.php');
         }
+
+        //Build the cleanup array
+        $toClean = setCleanupEducation($uniqueKey, $con);
+
+        //Generate the insert statement
+        $insert = "UPDATE education SET ";
+
+
+        for ($i = 0; $i < sizeof($toInsert); $i++) {
+
+            if ($i != sizeof($toInsert) - 1) {
+                $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "', ";
+            } else {
+                $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "'";
+            }
+        }
+
+        $query = $insert . " WHERE education.uniqueKey = " . $uniqueKey;
+
+        //Execute the query
+        runQuery($query, $con);
+
+        //Clean the database
+        cleanUpFK($toClean, $con);
+    } else {
+        $location = findPlayAroundKeyLocation($uniqueKey, $_SESSION['playAroundEducation']);
+
+        //Update the value in the session array
+        $_SESSION['playAroundEducation'][$location] = [$uniqueKey, $postedInstitution, $postedSubject, $postedCode, $postedCodeExtension, $postedGrade, $postedCredits, $postedSubjectLevel, $postedSubjectYear];
     }
-
-    $query = $insert . " WHERE education.uniqueKey = " . $uniqueKey;
-
-    //Execute the query
-    runQuery($query, $con);
-
-    //Clean the database
-    cleanUpFK($toClean, $con);
 
     //Redirect the user
     redirectWithSuccess("Record has been updated!", 'edit.php');
@@ -155,8 +165,19 @@ if (isset($_POST["newEducationRecord"])) {
     }
 
 
-    //Run function to insert the record
-    insertValues($toInsert, $con, 'education');
+    if ($loggedIn == true) {
+
+        //Run function to insert the record into the databse
+        insertValues($toInsert, $con, 'education');
+
+    } else {
+        //Generate a new unique key
+        $uniqueKey = generatePlayAroundUniqueKey($_SESSION['playAroundEducation']);
+
+        //Add the record to the session array
+        $newArray = [$uniqueKey, $postedNewInstitution, $postedNewSubject, $postedNewSubjectCode, $postedNewCodeExtension, $postedNewGrade, $postedNewCredits, $postedNewSubjectLevel, $postedNewSubjectYear];
+        array_push($_SESSION['playAroundEducation'], $newArray);
+    }
 
     //Redirect the user
     redirectWithSuccess("Record has been created!", 'edit.php');
@@ -165,36 +186,43 @@ if (isset($_POST["newEducationRecord"])) {
 
 //Deleting education records
 if (isset($_POST['deleteEducationRecord'])) {
+    $uniqueKey = $_POST['uniqueKey'];
 
-    //Perform a query to get the record to be deleted. This allows the foreign keys to be gathered so that their corresponding values can also be deleted if required
-    $getRecordQuery = "SELECT * 
+    //Delete from the database if the user is logged in
+    if ($loggedIn == true) {
+        //Perform a query to get the record to be deleted. This allows the foreign keys to be gathered so that their corresponding values can also be deleted if required
+        $getRecordQuery = "SELECT * 
     FROM education
     WHERE education.uniqueKey = " . $_POST['uniqueKey'];
 
 
-    $getRecordQuery = $con->prepare($getRecordQuery);
-    $getRecordQuery->execute();
-    $getRecordQuery->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK);
-    $getRecordQuery->store_result();
+        $getRecordQuery = $con->prepare($getRecordQuery);
+        $getRecordQuery->execute();
+        $getRecordQuery->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK);
+        $getRecordQuery->store_result();
 
-    while ($row = $getRecordQuery->fetch()) {
-        //Add all the values to an array for easy iteration
-        $tablesToCheckEducation = ['institution', 'grade', 'subjectLevel', 'year', 'subjectCode', 'credits', 'codeExtension'];
-        $keysToCheck = [$institutionFK, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK];
-    }
-
-    //Check to see if the foreign keys are used anywhere else
-    for ($i = 0; $i < sizeof($keysToCheck); $i++) {
-        $recordCount = numTimesFkUsedEducation("SELECT * FROM education WHERE education." . $tablesToCheckEducation[$i] . "FK = " . $keysToCheck[$i], $con);
-
-        //If the record count is one it is safe to delete from the linked table
-        if ($recordCount == 1) {
-            runQuery("DELETE FROM " . $tablesToCheckEducation[$i] . " WHERE " . $tablesToCheckEducation[$i] . "PK = " . $keysToCheck[$i], $con);
+        while ($row = $getRecordQuery->fetch()) {
+            //Add all the values to an array for easy iteration
+            $tablesToCheckEducation = ['institution', 'grade', 'subjectLevel', 'year', 'subjectCode', 'credits', 'codeExtension'];
+            $keysToCheck = [$institutionFK, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK];
         }
-    }
 
-    //Delete the item in the education table
-    runQuery("DELETE FROM education WHERE education.uniqueKey = " . $uniqueKey, $con);
+        //Check to see if the foreign keys are used anywhere else
+        for ($i = 0; $i < sizeof($keysToCheck); $i++) {
+            $recordCount = numTimesFkUsedEducation("SELECT * FROM education WHERE education." . $tablesToCheckEducation[$i] . "FK = " . $keysToCheck[$i], $con);
+
+            //If the record count is one it is safe to delete from the linked table
+            if ($recordCount == 1) {
+                runQuery("DELETE FROM " . $tablesToCheckEducation[$i] . " WHERE " . $tablesToCheckEducation[$i] . "PK = " . $keysToCheck[$i], $con);
+            }
+        }
+
+        //Delete the item in the education table
+        runQuery("DELETE FROM education WHERE education.uniqueKey = " . $uniqueKey, $con);
+    } else {
+        $location = findPlayAroundKeyLocation($uniqueKey, $_SESSION['playAroundEducation']);
+        array_splice($_SESSION['playAroundEducation'], $location, 1);
+    }
 
     //Redirect the user
     redirectWithSuccess("Record has been deleted!", 'edit.php');
@@ -252,18 +280,22 @@ if (isset($_POST['submitExampleUpdate'])) {
         [$postedExampleGithub, 'exampleGithub', 'string', 100, true],
         [$postedExampleDescription, 'exampleDescription', 'string', 1000, false]];
 
-
-    //Get all the languages currently stored in the database
-    $value = null;
-    $query = $con->prepare("SELECT languages.languages FROM languages WHERE languages != ''");
-    $query->execute();
-    $query->bind_result($value);
-    $query->store_result();
-
     $languageArray = [];
 
-    while ($row = $query->fetch()) {
-        array_push($languageArray, $value);
+
+    if ($loggedIn == true) {
+        //Get all the languages currently stored in the database
+        $value = null;
+        $query = $con->prepare("SELECT languages.languages FROM languages WHERE languages != ''");
+        $query->execute();
+        $query->bind_result($value);
+        $query->store_result();
+
+        while ($row = $query->fetch()) {
+            array_push($languageArray, $value);
+        }
+    } else {
+        $languageArray = $_SESSION['sessionLanguages'];
     }
 
     $languagesUsed = []; //Array of languages that the user wants to add
@@ -308,90 +340,99 @@ if (isset($_POST['submitExampleUpdate'])) {
     //error check
     findInvalid($invalidArray);
 
-    //Check the database to see if the name already exists.
-    if (findDuplicate("SELECT * FROM examples WHERE name = '" . $postedExampleName . "' AND examples.uniqueKey != " . $uniqueKey, $con)) {
-        redirectWithError('Duplicate record', 'edit.php');
-    }
+    if ($loggedIn == true) {
 
-    $originalDirectory = getExampleDirectory($uniqueKey, $con);
-
-    //2d array of the fields, values and their linked tables (if required) to be inserted
-    $toInsert = [[null, 'name', $postedExampleName],
-        ['year', 'yearFK', $postedExampleYear],
-        [null, 'description', $postedExampleDescription],
-        [null, 'link', $postedExampleLink],
-        [null, 'github', $postedExampleGithub]];
-
-
-    //Add the languages to the insert array
-    for ($i = 0; $i < 5; $i++) {
-        //Set the language number
-        if ($i == 0) {
-            $langNum = "One";
-        } else if ($i == 1) {
-            $langNum = "Two";
-        } else if ($i == 2) {
-            $langNum = "Three";
-        } else if ($i == 3) {
-            $langNum = "Four";
-        } else {
-            $langNum = "Five";
+        //Check the database to see if the name already exists.
+        if (findDuplicate("SELECT * FROM examples WHERE name = '" . $postedExampleName . "' AND examples.uniqueKey != " . $uniqueKey, $con)) {
+            redirectWithError('Duplicate record', 'edit.php');
         }
 
-        if ($i < sizeof($languagesUsed)) {
-            //Add to the to insert array
-            array_push($toInsert, ['languages', 'language' . $langNum . 'FK', $languagesUsed[$i]]);
-        } else {
-            array_push($toInsert, ['languages', 'language' . $langNum . 'FK', null]);
+        $originalDirectory = getExampleDirectory($uniqueKey, $con);
+
+        //2d array of the fields, values and their linked tables (if required) to be inserted
+        $toInsert = [[null, 'name', $postedExampleName],
+            ['year', 'yearFK', $postedExampleYear],
+            [null, 'description', $postedExampleDescription],
+            [null, 'link', $postedExampleLink],
+            [null, 'github', $postedExampleGithub]];
+
+
+        //Add the languages to the insert array
+        for ($i = 0; $i < 5; $i++) {
+            //Set the language number
+            if ($i == 0) {
+                $langNum = "One";
+            } else if ($i == 1) {
+                $langNum = "Two";
+            } else if ($i == 2) {
+                $langNum = "Three";
+            } else if ($i == 3) {
+                $langNum = "Four";
+            } else {
+                $langNum = "Five";
+            }
+
+            if ($i < sizeof($languagesUsed)) {
+                //Add to the to insert array
+                array_push($toInsert, ['languages', 'language' . $langNum . 'FK', $languagesUsed[$i]]);
+            } else {
+                array_push($toInsert, ['languages', 'language' . $langNum . 'FK', null]);
+            }
         }
-    }
 
-    //Set any empty values to null
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        if (isEmpty($toInsert[$i][2])) {
-            $toInsert[$i][2] = Null;
+        //Set any empty values to null
+        for ($i = 0; $i < sizeof($toInsert); $i++) {
+            if (isEmpty($toInsert[$i][2])) {
+                $toInsert[$i][2] = Null;
+            }
         }
-    }
 
-    $toInsert = updateValues($toInsert, $con);
+        $toInsert = updateValues($toInsert, $con);
 
-    //Generate the insert statement
-    $insert = "UPDATE examples SET ";
+        //Generate the insert statement
+        $insert = "UPDATE examples SET ";
 
 
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
+        for ($i = 0; $i < sizeof($toInsert); $i++) {
 
-        if ($i != sizeof($toInsert) - 1) {
-            $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "', ";
-        } else {
-            $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "'";
+            if ($i != sizeof($toInsert) - 1) {
+                $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "', ";
+            } else {
+                $insert = $insert . $toInsert[$i][1] . " = '" . $toInsert[$i][2] . "'";
+            }
         }
-    }
 
-    $query = $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
+        $query = $insert . " WHERE examples.uniqueKey = " . $uniqueKey;
 
-    //Execute the query
-    runQuery($query, $con);
+        //Execute the query
+        runQuery($query, $con);
 
-    //Build the cleanup array
-    $toClean = setCleanupExamples($uniqueKey, $con);
+        //Build the cleanup array
+        $toClean = setCleanupExamples($uniqueKey, $con);
 
-    //Clean the database
-    cleanUpFK($toClean, $con);
+        //Clean the database
+        cleanUpFK($toClean, $con);
 
-    //Rename the directory where the images are stored. Done here so that any errors are caught before the directory is renamed
-    if (!is_null($originalDirectory)) {
-        //Calculate the new directory
-        $newDirectory = stripSpaces($postedExampleName);
-        $newDirectory = 'images/examples/' . $newDirectory;
+        //Rename the directory where the images are stored. Done here so that any errors are caught before the directory is renamed
+        if (!is_null($originalDirectory)) {
+            //Calculate the new directory
+            $newDirectory = stripSpaces($postedExampleName);
+            $newDirectory = 'images/examples/' . $newDirectory;
 
-        //If the old directory exists rename it
-        if (is_dir($originalDirectory)) {
-            rename($originalDirectory, $newDirectory);
-        } else {
-            //make a new directory
-            mkdir($newDirectory);
+            //If the old directory exists rename it
+            if (is_dir($originalDirectory)) {
+                rename($originalDirectory, $newDirectory);
+            } else {
+                //make a new directory
+                mkdir($newDirectory);
+            }
         }
+    } else {
+        $location = findPlayAroundKeyLocation($uniqueKey, $_SESSION['playAroundExamples']);
+
+        //Update the value in the session array (refence the previous version of this record because the images do not change here)
+        $_SESSION['playAroundExamples'][$location] = [$uniqueKey, $_SESSION['playAroundExamples'][$location][1], $postedExampleName, $languagesUsed, $postedExampleLink,
+            $postedExampleGithub, $postedExampleDescription, $postedExampleYear];
     }
 
     //Redirect the user
@@ -401,43 +442,79 @@ if (isset($_POST['submitExampleUpdate'])) {
 
 //Delete examples
 if (isset($_POST['deleteExample'])) {
-    //Get the path to where the images are stored
-    $originalDirectory = getExampleDirectory($_POST['uniqueKey'], $con);
+    $uniqueKey = $_POST['uniqueKey'];
 
-    //Delete the images
-    if (!is_null($originalDirectory)) {
-        deleteDirectory($originalDirectory);
+    if ($loggedIn == true) {
+        //Get the path to where the images are stored
+        $originalDirectory = getExampleDirectory($uniqueKey, $con);
+
+        //Delete the images
+        if (!is_null($originalDirectory)) {
+            deleteDirectory($originalDirectory);
+        }
+
+        //Delete the record
+        $query = "DELETE FROM examples WHERE examples.uniqueKey = " . $uniqueKey;
+        runQuery($query, $con);
+
+        //Setup the array that will be used when cleaning the database
+        $toClean = setCleanupExamples($uniqueKey, $con);
+
+        cleanUpFK($toClean, $con);
+    } else {
+        //Get the location
+        $location = findPlayAroundKeyLocation($uniqueKey, $_SESSION['playAroundExamples']);
+
+        //Remove from the array
+        array_splice($_SESSION['playAroundExamples'], $location, 1);
     }
-
-    //Delete the record
-    $query = "DELETE FROM examples WHERE examples.uniqueKey = " . $_POST['uniqueKey'];
-    runQuery($query, $con);
-
-    //Setup the array that will be used when cleaning the database
-    $toClean = setCleanupExamples($_POST['uniqueKey'], $con);
-
-    cleanUpFK($toClean, $con);
-
     redirectWithSuccess('Record deleted!', 'edit.php');
 }
 
 //Adds images
 if (isset($_POST['addImages'])) {
     $uniqueKey = $_POST['uniqueKey'];
-    //Handle file uploads
-    //Check a file has been uploaded in the form
-    if (isset($_FILES['updateImages']) && $_FILES['updateImages']['name'][0] != "") {
-        //Calculate the directory
-        $directory = getExampleDirectory($uniqueKey, $con);
 
-        $imageUpload = uploadImages($directory, $_FILES['updateImages']);
+    if ($loggedIn == true) {
+        //Handle file uploads
+        //Check a file has been uploaded in the form
+        if (isset($_FILES['updateImages']) && $_FILES['updateImages']['name'][0] != "") {
+            //Calculate the directory
+            $directory = getExampleDirectory($uniqueKey, $con);
 
-        //Return the error if necessary
-        if ($imageUpload != true) {
-            redirectWithError($imageUpload, 'edit.php');
+            $imageUpload = uploadImages($directory, $_FILES['updateImages']);
+
+            //Return the error if necessary
+            if ($imageUpload != true) {
+                redirectWithError($imageUpload, 'edit.php');
+            }
+        }
+    } else {
+        //Get all of the possible images
+        $path    = 'Images/userImages';
+        $files = scandir($path);
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        //Add to the images array
+        foreach ($files as $image) {
+            if (strpos($image, '.jpeg')) {
+                array_push($_SESSION['sessionImages'], "Images/userImages/" . $image);
+            }
+        }
+
+        //Check which images have been submitted
+        foreach ($files as $image) {
+            $image = "Images/userImages/" . $image;
+            if (isset($_POST[str_replace('.', '_', $image)])) {
+                $location = findPlayAroundKeyLocation($uniqueKey, $_SESSION['playAroundExamples']);
+
+                //Push to the examples array
+                array_push($_SESSION['playAroundExamples'][$location][1], str_replace('_', '.', $image));
+            }
         }
     }
     redirectWithSuccess('Images have been uploaded.', 'edit.php');
+
 }
 
 //Deletes single images
@@ -508,25 +585,32 @@ if (isset($_POST['newExampleRecord'])) {
         [$postedNewExampleGithub, 'exampleGithub', 'string', 100, true],
         [$postedNewExampleDescription, 'exampleDescription', 'string', 1000, false]];
 
-    //Check the database to see if the name already exists.
-    if (findDuplicate("SELECT * FROM examples WHERE name = '" . $postedNewExampleName . "'", $con)) {
-        redirectWithError('Duplicate record', 'edit.php');
-    }
-
-
-    //Get all the languages currently stored in the database
-    $value = null;
-    $query = $con->prepare("SELECT languages.languages FROM languages WHERE languages != ''");
-    $query->execute();
-    $query->bind_result($value);
-    $query->store_result();
-
-    $languageArray = [];
-
-    while ($row = $query->fetch()) {
-        array_push($languageArray, $value);
-    }
     $languagesUsed = []; //Array of languages that the user wants to add
+
+    //Perform language checks in the database
+    if ($loggedIn == true) {
+        //Check the database to see if the name already exists.
+        if (findDuplicate("SELECT * FROM examples WHERE name = '" . $postedNewExampleName . "'", $con)) {
+            redirectWithError('Duplicate record', 'edit.php');
+        }
+
+
+        //Get all the languages currently stored in the database
+        $value = null;
+        $query = $con->prepare("SELECT languages.languages FROM languages WHERE languages != ''");
+        $query->execute();
+        $query->bind_result($value);
+        $query->store_result();
+
+        $languageArray = [];
+
+        while ($row = $query->fetch()) {
+            array_push($languageArray, $value);
+        }
+
+    } else {
+        $languageArray = $_SESSION['sessionLanguages'];
+    }
 
     if ($_POST['newLanguageEntry'] != "") {
         //Start the language counter at 1
@@ -567,72 +651,135 @@ if (isset($_POST['newExampleRecord'])) {
     //error check
     findInvalid($invalidArray);
 
-    //2d array of the fields, values and their linked tables (if required) to be inserted
-    $toInsert = [['name', $postedNewExampleName],
-        ['yearFK', $postedNewExampleYear, 'year'],
-        ['description', $postedNewExampleDescription],
-        ['link', $postedNewExampleLink],
-        ['github', $postedNewExampleGithub]];
+    //Add to the database if the user is logged in
+    if ($loggedIn == true) {
+        //2d array of the fields, values and their linked tables (if required) to be inserted
+        $toInsert = [['name', $postedNewExampleName],
+            ['yearFK', $postedNewExampleYear, 'year'],
+            ['description', $postedNewExampleDescription],
+            ['link', $postedNewExampleLink],
+            ['github', $postedNewExampleGithub]];
 
-    //If the language array is < 5 add default values
-    if (sizeof($languagesUsed) < 5) {
-        for ($i = sizeof($languagesUsed); $i < 5; $i++) {
-            //push the default null value to the array
-            array_push($languagesUsed, "NULL");
-        }
-    }
-
-
-
-    //Add the languages to the insert array
-    for ($i = 0; $i < sizeof($languagesUsed); $i++) {
-        //Set the language number
-        if ($i == 0) {
-            $langNum = "One";
-        } else if ($i == 1) {
-            $langNum = "Two";
-        } else if ($i == 2) {
-            $langNum = "Three";
-        } else if ($i == 3) {
-            $langNum = "Four";
-        } else {
-            $langNum = "Five";
+        //If the language array is < 5 add default values
+        if (sizeof($languagesUsed) < 5) {
+            for ($i = sizeof($languagesUsed); $i < 5; $i++) {
+                //push the default null value to the array
+                array_push($languagesUsed, "NULL");
+            }
         }
 
-        //Add to the to insert array
-        array_push($toInsert, ['language' . $langNum . 'FK', $languagesUsed[$i], 'languages']);
-    }
 
-    //Replace empty values with null
-    for ($i = 0; $i < sizeof($toInsert); $i++) {
-        if (empty($toInsert[$i][1])) {
-            $toInsert[$i][1] = "NULL";
+        //Add the languages to the insert array
+        for ($i = 0; $i < sizeof($languagesUsed); $i++) {
+            //Set the language number
+            if ($i == 0) {
+                $langNum = "One";
+            } else if ($i == 1) {
+                $langNum = "Two";
+            } else if ($i == 2) {
+                $langNum = "Three";
+            } else if ($i == 3) {
+                $langNum = "Four";
+            } else {
+                $langNum = "Five";
+            }
+
+            //Add to the to insert array
+            array_push($toInsert, ['language' . $langNum . 'FK', $languagesUsed[$i], 'languages']);
         }
-    }
 
-    //Insert the record
-    insertValues($toInsert, $con, 'examples');
+        //Replace empty values with null
+        for ($i = 0; $i < sizeof($toInsert); $i++) {
+            if (empty($toInsert[$i][1])) {
+                $toInsert[$i][1] = "NULL";
+            }
+        }
+
+        //Insert the record
+        insertValues($toInsert, $con, 'examples');
+    }
 
     //A flag used to explain that the record was created but something went wrong with the images
     $recordCreated = "The record was created but... ";
     //die(var_dump($_FILES['userFiles']));
 
-    //Handle file uploads
-    //Check a file has been uploaded in the form
-    if (isset($_FILES['addImages']) && $_FILES['addImages']['name'][0] != "") {
-        //Calculate the directory
-        $directory = "images/examples/" . stripSpaces($postedNewExampleName);
+    //Handle file uploads if the user is logged if
+    if ($loggedIn == true) {
+        //Check a file has been uploaded in the form
+        if (isset($_FILES['addImages']) && $_FILES['addImages']['name'][0] != "") {
+            //Calculate the directory
+            $directory = "images/examples/" . stripSpaces($postedNewExampleName);
 
-        $imageUpload = uploadImages($directory, $_FILES['addImages']);
+            $imageUpload = uploadImages($directory, $_FILES['addImages']);
 
-        //Return the error if necessary
-        if ($imageUpload != true) {
-            redirectWithError($recordCreated . " " . $imageUpload, 'edit.php');
+            //Return the error if necessary
+            if ($imageUpload != true) {
+                redirectWithError($recordCreated . " " . $imageUpload, 'edit.php');
+            }
         }
+    } else {
+        $imageArray = []; // Array of images that the user has selected
+
+        //Get all of the possible images
+        $path    = 'Images/userImages';
+        $files = scandir($path);
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        //Add to the images array
+        foreach ($files as $image) {
+            if (strpos($image, '.jpeg')) {
+                array_push($_SESSION['sessionImages'], "Images/userImages/" . $image);
+            }
+        }
+
+        //Check which images have been submitted
+        foreach ($files as $image) {
+            $image = "Images/userImages/" . $image;
+            if (isset($_POST[str_replace('.', '_', $image)])) {
+                array_push($imageArray, $image);
+            }
+        }
+
+        //Set the new value
+        $key = generatePlayAroundUniqueKey($_SESSION['playAroundExamples']);
+        $newArray = [$key, $imageArray, $postedNewExampleName, $languagesUsed, $postedNewExampleLink, $postedNewExampleGithub, $postedNewExampleDescription, $postedNewExampleYear];
+        array_push($_SESSION['playAroundExamples'], $newArray);
     }
 
     //Print a success message
     redirectWithSuccess("The record was created and images uploaded (if any).", 'edit.php');
+}
+
+//Find the next available unique key in one of the session arrays
+function generatePlayAroundUniqueKey($array)
+{
+    //Get a list of all the keys already in use
+    $keysInUse = [];
+    for ($i = 0; $i < sizeof($array); $i++) {
+        array_push($keysInUse, $array[$i][0]);
+    }
+
+    //Find a key that is not being used
+    $key = 0;
+    while (true) {
+        if (!in_array($key, $keysInUse)) {
+            return $key;
+            exit();
+        } else {
+            $key++;
+        }
+    }
+}
+
+//Finds the unique key of a value in one of the play around arrays. Returns it's location, false if it was not found
+function findPlayAroundKeyLocation($key, $array)
+{
+    for ($i = 0; $i < sizeof($array); $i++) {
+        if ($array[$i][0] == $key) {
+            return $i;
+        }
+    }
+    return false;
 }
 
 //Takes a link and validates it
@@ -645,7 +792,6 @@ function validateLink($link)
         }
     }
 }
-
 
 //Takes the required directory and file array and uploads the image. Returns error if needed
 function uploadImages($directory, $toUploadArray)
@@ -692,7 +838,7 @@ function uploadImages($directory, $toUploadArray)
                 //Check if the file already exists in the directory
                 if (!file_exists("images/examples/" . $file_array[$i]["name"])) {
                     //Move the file from the temporary directory to the intended directory. Resize at the same time
-                    move_uploaded_file($file_array[$i]["tmp_name"], $directory . "/" .$file_array[$i]["name"]);
+                    move_uploaded_file($file_array[$i]["tmp_name"], $directory . "/" . $file_array[$i]["name"]);
 
                 } else {
                     //Print message stating that the file already exists
@@ -727,15 +873,15 @@ function isImage($path)
     $a = getimagesize($path);
     $image_type = $a[2];
 
-    if(in_array($image_type , array(IMAGETYPE_GIF , IMAGETYPE_JPEG ,IMAGETYPE_PNG , IMAGETYPE_BMP)))
-    {
+    if (in_array($image_type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP))) {
         return true;
     }
     return false;
 }
 
 //Deletes an entire directory (recursively)
-function deleteDirectory($filePath) {
+function deleteDirectory($filePath)
+{
     //Only remove if the directory exists
     if (is_dir($filePath)) {
         //Look for new folders
@@ -825,7 +971,8 @@ function setCleanupEducation($key, mysqli $con)
 
 //Takes a 2d array of foreign keys and cleans any that are no longer needed
 //ToClean = The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
-function cleanUpFK($toClean, $con){
+function cleanUpFK($toClean, $con)
+{
     //Go through each foreign key
     for ($i = 0; $i < sizeof($toClean); $i++) {
         $fkContained = false; //Assume that that foreign key does not exist anywhere else
@@ -1046,7 +1193,8 @@ function insertValues(array $toInsert, mysqli $con, $tableToUpdate)
 }
 
 //Update records for education and examples. Takes an array of values and uses them to update the appropriate record
-function updateValues(array $toInsert, mysqli $con) {
+function updateValues(array $toInsert, mysqli $con)
+{
     for ($i = 0; $i < sizeof($toInsert); $i++) {
         //Ignore tables that have no associated foreign key
         if (!is_null($toInsert[$i][0])) {
@@ -1056,7 +1204,7 @@ function updateValues(array $toInsert, mysqli $con) {
             if (is_null($toInsert[$i][2])) {
                 $toInsert[$i][2] = 0;
 
-            //Query the appropriate table to see if the record exists
+                //Query the appropriate table to see if the record exists
             } else {
                 $selectQuery = "SELECT * FROM " . $toInsert[$i][0] . " WHERE " . $toInsert[$i][0] . " = '" . $toInsert[$i][2] . "'";
 
@@ -1219,7 +1367,7 @@ function containsIllegalCharacter($value)
 //Takes a value and checks to see if it is empty. Return true if it is
 function isEmpty($value)
 {
-    if (sizeof($value) == 0 || $value == "" || empty($value) || $value =='') {
+    if (sizeof($value) == 0 || $value == "" || empty($value) || $value == '') {
         return true;
     }
     return false;
@@ -1336,7 +1484,8 @@ function stripSpaces($value)
 }
 
 //Takes an image file and adjusts the size
-function resize_image($file, $w, $h, $crop = true) {
+function resize_image($file, $w, $h, $crop = true)
+{
     list($width, $height) = getimagesize($file);
 
     $r = $width / $height;
@@ -1378,12 +1527,11 @@ function resize_image($file, $w, $h, $crop = true) {
 
 //Manual redirect.
 //todo add an auto redirect if the user enters the url manually
+header("refresh:5;url=index.php");
 ?>
-    <p>
-        Click <a href="edit.php">here</a> to go back to the edit page.
-    </p>
-<?php
+<p>You entered the url manually. You should be redirected to the home page in 5 seconds. Otherwise you can click the
+    link below</p>
 
-//redirect back to the previous page
-//header("Location: edit.php");
-?>
+<p>
+    Click <a href="edit.php">here</a> to go back to the edit page.
+</p>
