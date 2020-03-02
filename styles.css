@@ -791,6 +791,9 @@ button {
 }
 
 /*Rounds only the top corners. called for the first instance of the experience and education div*/
+.roundTop {
+  border-radius: 20px 20px 0 0;
+}
 
 /*Rounds only the bottom corners. called for the first instance of the experience div*/
 .roundBottom {

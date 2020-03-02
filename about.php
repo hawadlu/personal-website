@@ -38,7 +38,7 @@ require("head.php");
             <h3>Get in touch</h3>
             <p>Email: <a href="mailto:hawadlu@outlook.com">hawadlu@outlook.com</a></p>
         </div>
-        <button id="show" style="display: block;" class="hidePrivacy roundBottom" onclick="showElement('privacy')">Show my
+        <button id="show" style="display: block;" class="hidePrivacy roundBottom" onclick="showElementPrivacy('privacy')">Show my
             cookie and privacy policy
         </button>
         <!-- Privacy policy. Hidden by default-->
@@ -90,10 +90,11 @@ require("head.php");
                 </li>
             </ul>
             <br><br>
-            <button onclick="hideElement('privacy')" class="roundBottom hidePrivacy">Hide
+            <button onclick="hideElementPrivacy('privacy')" class="roundBottom hidePrivacy">Hide
             </button>
         </div>
     </div>
+    <script src="js/functions.js"></script>
     <script>
         //Shows the privacy if necessary
         function showPrivacy() {
@@ -104,28 +105,9 @@ require("head.php");
             console.log(URL.searchParams);
 
             if (c) {
-                showElement("privacy");
+                showElementPrivacy("privacy");
                 document.getElementById('privacy').scrollIntoView();
             }
-        }
-
-        function showElement(id) {
-            if (id === "privacy") {
-                hideElement('show');
-            }
-            document.getElementById(id).style.display = "block";
-
-            const privacy = document.getElementById('privacy');
-            privacy.scrollIntoView();
-        }
-
-        function hideElement(id) {
-            //Check if the show button needs to be re-enabled
-            if (document.getElementById("show").style.display === "none" && document.getElementById("privacy").style.display === "block") {
-                document.getElementById("show").style.display = "block";
-            }
-
-            document.getElementById(id).style.display = "none";
         }
     </script>
 </div>

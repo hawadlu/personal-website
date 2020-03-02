@@ -81,7 +81,7 @@ function getUniqueValuesForSession($array, $location)
     <!--Display a message to the user-->
     <div class="roundAll editMessage">
         <p>These are your records. You can edit them by clicking on the play around tab!</p>
-        <button id="showUserExamples" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElement('userExamples', 'showUserExamples', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
+        <button id="showUserExamples" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userExamples', 'showUserExamples', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
             Show me what I can mess with.
         </button>
     </div>
@@ -540,57 +540,9 @@ function getUniqueValuesForSession($array, $location)
 </div>
 
 <!-- Javascript -->
+<script src="js/functions.js"></script>
 <script>
-    //Controls for sideshows on records controlled by the user
-    const slideIndex = [];
-
-    //Pre-populate the list. Dynamically adjusts based on the number of instances of the grid class
-    const slideId = [];
-    for (let i = 0; i < document.querySelectorAll(".slideshow").length; i++) {
-        slideId.push("ssID" + (i + 1));
-        slideIndex.push(1);
-        showDivs(1, i);
-    }
-
-    function plusDivs(n, no) {
-        showDivs(slideIndex[no] += n, no);
-    }
-
-    function showDivs(n, no) {
-        let i;
-        const x = document.getElementsByClassName(slideId[no]);
-        console.log("Get element: " + slideId[no]);
-        if (n > x.length) {
-            slideIndex[no] = 1
-        }
-        if (n < 1) {
-            slideIndex[no] = x.length
-        }
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
-        }
-        console.log(slideIndex);
-        console.log(slideId);
-        console.log(x.length);
-        console.log(slideIndex[no] - 1);
-        console.log(x[slideIndex[no] - 1]);
-        x[slideIndex[no] - 1].style.display = "block";
-    }
-
-    //Hide and show the users records
-    function showElement(id, buttonId, showMessage, hideMessage) {
-        if (document.getElementById(id).style.display === "none") {
-            //Show the element and change the button text
-            document.getElementById(id).style.display = "block";
-            document.getElementById(buttonId).innerHTML = hideMessage;
-        } else if (document.getElementById(id).style.display === "block") {
-            //Hide the element and change the button text
-            document.getElementById(id).style.display = "none";
-            document.getElementById(buttonId).innerHTML = showMessage;
-        }
-    }
-
-
+    populateSlideshow('slideshow');
 </script>
 </body>
 <!--Load last so that it displays on top-->

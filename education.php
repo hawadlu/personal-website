@@ -100,7 +100,7 @@ function calculateClassHeader($count, $recordCount)
     <!--Display a message to the user-->
     <div class="roundAll editMessage">
         <p>These are your records. You can edit them by clicking on the play around tab!</p>
-        <button id="showUserEducation" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElement('userEducation', 'showUserEducation', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
+        <button id="showUserEducation" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userEducation', 'showUserEducation', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
             Show me what I can mess with.
         </button>
     </div>
@@ -505,19 +505,7 @@ function calculateClassHeader($count, $recordCount)
     ?>
 </div>
 </body>
-<script>
-    function showElement(id, buttonId, showMessage, hideMessage) {
-        if (document.getElementById(id).style.display === "none") {
-            //Show the element and change the button text
-            document.getElementById(id).style.display = "block";
-            document.getElementById(buttonId).innerHTML = hideMessage;
-        } else if (document.getElementById(id).style.display === "block") {
-            //Hide the element and change the button text
-            document.getElementById(id).style.display = "none";
-            document.getElementById(buttonId).innerHTML = showMessage;
-        }
-    }
-</script>
+<script src="js/functions.js"></script>
 
 <!--Called last so that it renders at the top-->
 <?php
