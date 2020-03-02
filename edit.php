@@ -19,7 +19,7 @@ if (!isset($_SESSION['loggedin'])) {
 
     //Run queries to get arrays for each examples field
     $exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
-    $languageArray = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
+    $languageArrayDB = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
 }
 
 //Gets an array of values from the database. Used for autocomplete
@@ -212,13 +212,13 @@ require("head.php");
             <div class="Education">
                 <!--Make button grey by default-->
                 <button id="educationTab" class="indexButton"
-                        style="display: block; border: none; border-radius: 20px 0 0 0;  background-color: white"
+                        style="display: block; border: none; border-radius: 20px 0 0 0;  background-color: #D3D3D3"
                         onclick="showElement('editEducation')">Education
                 </button>
             </div>
             <div class="Projects">
                 <button id="projectTab" class="indexButton"
-                        style="display: block; border: none; border-radius: 0 20px 0 0; background-color: #D3D3D3"
+                        style="display: block; border: none; border-radius: 0 20px 0 0; background-color: white"
                         onclick="showElement('editProjects')">Projects
                 </button>
             </div>
@@ -243,12 +243,6 @@ require("head.php");
             <!--The div that contains the education edit. Shown by default-->
             <div id="editEducation" style="display: block">
                 <?php
-                //Perform the query to get the grades. Done here so that it is not repeated every time
-                $dropdownGradeQuery = $con->prepare("SELECT grade.grade FROM grade ");
-                $dropdownGradeQuery->execute();
-                $dropdownGradeQuery->bind_result($dropdownGrade);
-                $dropdownGradeQuery->store_result();
-
                 //The query which shows the education history
                 $educationQuery = $con->prepare("SELECT education.uniqueKey, education.subject, codeExtension.codeExtension, credits.credits, grade.grade, institution.institution, 
                         year.year, subjectCode.subjectCode, subjectLevel.subjectLevel
@@ -351,7 +345,6 @@ require("head.php");
                                 <div class="updateDelete-container educationUpdateDelete">
                                     <div class="delete" id="deleteEducation<?php echo $uniqueKey; ?>">
                                         <!--Show the delete button-->
-                                        <!--todo make delete button a trash can icon and red-->
                                         <form method="post" action="process.php">
                                             <input type="hidden" value="<?php echo $uniqueKey; ?>" name="uniqueKey">
                                             <?php
@@ -364,8 +357,7 @@ require("head.php");
                                             <button type="submit" class="deleteButton <?php echo $round; ?>"
                                                     name="deleteEducationRecord"
                                                     style="padding: 0; --bgColour: <?php echo $colour; ?>">
-                                                <img src="images/bin.png" class="binImage"
-                                                     style="border-radius: <?php echo $round; ?>">
+                                                <img src="images/bin.png" class="binImage <?php echo $round; ?>">
                                             </button>
                                         </form>
                                     </div>
@@ -646,6 +638,7 @@ require("head.php");
                         </div>
                         <?php
                     }
+                    $educationQuery->close();
                 }
                 ?>
             </div>
@@ -734,58 +727,63 @@ require("head.php");
                                 $langOneQuery = $con->prepare("SELECT languages.languages
                                         FROM examples
                                         LEFT JOIN languages ON examples.languageOneFK = languages.languagesPK
-                                        WHERE examples.uniqueKey LIKE $key
-                                        ");
+                                        WHERE examples.uniqueKey LIKE ?");
+                                $langOneQuery->bind_param('i', $key);
 
                                 $langTwoQuery = $con->prepare("SELECT languages.languages
                                         FROM examples
                                         LEFT JOIN languages ON examples.languageTwoFK = languages.languagesPK
-                                        WHERE examples.uniqueKey LIKE $key
-                                        ");
+                                        WHERE examples.uniqueKey LIKE ? ");
+                                $langTwoQuery->bind_param('i', $key);
 
                                 $langThreeQuery = $con->prepare("SELECT languages.languages
                                         FROM examples
                                         LEFT JOIN languages ON examples.languageThreeFK = languages.languagesPK
-                                        WHERE examples.uniqueKey LIKE $key
-                                        ");
+                                        WHERE examples.uniqueKey LIKE ?");
+                                $langThreeQuery->bind_param('i', $key);
 
                                 $langFourQuery = $con->prepare("SELECT languages.languages
                                         FROM examples
                                         LEFT JOIN languages ON examples.languageFourFK = languages.languagesPK
-                                        WHERE examples.uniqueKey LIKE $key
-                                        ");
+                                        WHERE examples.uniqueKey LIKE ?");
+                                $langFourQuery->bind_param('i', $key);
 
                                 $langFiveQuery = $con->prepare("SELECT languages.languages
                                         FROM examples
                                         LEFT JOIN languages ON examples.languageFiveFK = languages.languagesPK
-                                        WHERE examples.uniqueKey LIKE $key
-                                        ");
+                                        WHERE examples.uniqueKey LIKE ?");
+                                $langFiveQuery->bind_param('i', $key);
 
                                 //Execute each query
                                 $langOneQuery->execute();
                                 $langOneQuery->bind_result($langOne);
                                 $langOneQuery->store_result();
                                 $langOneQuery->fetch();
+                                $langOneQuery->close();
 
                                 $langTwoQuery->execute();
                                 $langTwoQuery->bind_result($langTwo);
                                 $langTwoQuery->store_result();
                                 $langTwoQuery->fetch();
+                                $langTwoQuery->close();
 
                                 $langThreeQuery->execute();
                                 $langThreeQuery->bind_result($langThree);
                                 $langThreeQuery->store_result();
                                 $langThreeQuery->fetch();
+                                $langThreeQuery->close();
 
                                 $langFourQuery->execute();
                                 $langFourQuery->bind_result($langFour);
                                 $langFourQuery->store_result();
                                 $langFourQuery->fetch();
+                                $langFourQuery->close();
 
                                 $langFiveQuery->execute();
                                 $langFiveQuery->bind_result($langFive);
                                 $langFiveQuery->store_result();
                                 $langFiveQuery->fetch();
+                                $langFiveQuery->close();
 
 
                                 ?>
@@ -1024,11 +1022,9 @@ require("head.php");
 
                                     <!--The languages-->
                                     <div class="addLanguages">
-                                        <!--Todo ensure that the user cannot select more than five languages-->
                                         <?php
                                         //Create a checkbox for each language
                                         for ($i = 0; $i < sizeof($languageArray); $i++) {
-                                            //todo add an option for adding new languages
                                             //Checking if the language matches one of the languages used in the example
                                             $checked = "";
                                             if ($languageArray[$i] == $langOne || $languageArray[$i] == $langTwo || $languageArray[$i] == $langThree ||
@@ -1092,8 +1088,10 @@ require("head.php");
                                             </button>
                                             <?php
                                         } else {
-                                            echo "There are no images to be edited. Click the button below to add some.";
                                             ?>
+                                            <div style="text-align: center;">
+                                                <p>There are no images to be edited. Click the button below to add some.</p>
+                                            </div>
                                             <button class="indexButton imageButton" type="button"
                                                     id="addImages<?php echo $uniqueKey; ?>button"
                                                     onclick="showUniqueElement('addImages<?php echo $uniqueKey; ?>', 'addImages<?php echo $uniqueKey; ?>button', 'Add Images', 'Hide Add Images');
@@ -1186,6 +1184,7 @@ require("head.php");
 
                         <?php
                     }
+                    $experienceQuery->close();
                 }
                 ?>
             </div>
@@ -1308,7 +1307,6 @@ require("head.php");
                                 <div class="updateDelete-container educationUpdateDelete">
                                     <div class="delete" id="deleteEducation<?php echo $uniqueKey; ?>">
                                         <!--Show the delete button-->
-                                        <!--todo make delete button a trash can icon and red-->
                                         <form method="post" action="process.php">
                                             <input type="hidden" value="<?php echo $uniqueKey; ?>" name="uniqueKey">
                                             <?php
@@ -1321,8 +1319,7 @@ require("head.php");
                                             <button type="submit" class="deleteButton <?php echo $round; ?>"
                                                     name="deleteEducationRecord"
                                                     style="padding: 0; --bgColour: <?php echo $colour; ?>">
-                                                <img src="images/bin.png" class="binImage"
-                                                     style="border-radius: <?php echo $round; ?>">
+                                                <img src="images/bin.png" class="binImage <?php echo $round; ?>">
                                             </button>
                                         </form>
                                     </div>
@@ -1633,7 +1630,7 @@ require("head.php");
                         $examplesDescription = $examplesArray[$i][6];
 
                         //Check if there are images
-                        if ($examplesArray[$i][1] == "" || is_null($examplesArray[$i][1])) {
+                        if ($examplesArray[$i][1] == "" || is_null($examplesArray[$i][1]) || empty($examplesArray[$i][1])) {
                             $primaryImage = null;
                         } else {
                             $primaryImage = $examplesArray[$i][1][0];
@@ -1958,8 +1955,10 @@ require("head.php");
                                             </button>
                                             <?php
                                         } else {
-                                            echo "There are no images to be edited. Click the button below to add some.";
                                             ?>
+                                            <div style="text-align: center;">
+                                                <p>There are no images to be edited. Click the button below to add some.</p>
+                                            </div>
                                             <button class="indexButton imageButton" type="button"
                                                     id="addImages<?php echo $uniqueKey; ?>button"
                                                     onclick="showUniqueElement('addImages<?php echo $uniqueKey; ?>', 'addImages<?php echo $uniqueKey; ?>button', 'Add Images', 'Hide Add Images');
@@ -2320,16 +2319,28 @@ require("head.php");
                     <!--The languages-->
                     <div class="addLanguages">
                         <?php
-                        //Create a checkbox for each language
-                        for ($i = 0; $i < sizeof($languageArray); $i++) {
-                            ?>
-                            <div>
-                                <input type="checkbox" id="<?php echo $languageArray[$i]; ?>" class="checkbox"
-                                       name="<?php echo $languageArray[$i]; ?>"
-                                       value="<?php echo $languageArray[$i]; ?>">
-                                <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
-                            </div>
-                            <?php
+                        //Get languages from the database
+                        if ($loggedIn == true) {
+                            for ($i = 0; $i < sizeof($languageArrayDB); $i++) {
+                                ?>
+                                <div>
+                                    <input type="checkbox" id="<?php echo $languageArrayDB[$i]; ?>" class="checkbox" name="<?php echo $languageArrayDB[$i]; ?>" value="<?php echo $languageArrayDB[$i]; ?>">
+                                    <label for="<?php echo $languageArrayDB[$i]; ?>"><?php echo $languageArrayDB[$i] ?></label>
+                                </div>
+                                <?php
+                            }
+                        } else {
+                            //Create a checkbox for each language
+                            for ($i = 0; $i < sizeof($languageArray); $i++) {
+                                ?>
+                                <div>
+                                    <input type="checkbox" id="<?php echo $languageArray[$i]; ?>" class="checkbox"
+                                           name="<?php echo $languageArray[$i]; ?>"
+                                           value="<?php echo $languageArray[$i]; ?>">
+                                    <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
+                                </div>
+                                <?php
+                            }
                         }
                         ?>
                     </div>
@@ -2364,24 +2375,42 @@ require("head.php");
 
                     <!--Image input-->
                     <div class="addImages">
-                        <!--Allow the user to select which images they want-->
-                        <div class="gallery-container">
-                            <?php
-                            //Loop through all of the possible images
-                            foreach ($imageArray as $image) {
+                        <?php
+                            //Allow image upload if logged in
+                            if ($loggedIn == true) {
                                 ?>
-                                <div class="deleteImageContainer"">
-                                    <div class="displayImage">
-                                        <img src="<?php echo $image;?>">
-                                    </div>
-                                    <div class="displayDelete">
-                                        <input style="height: 40px;" type="checkbox" name="<?php echo $image;?>" value = "<?php echo $image;?>">
+                                <!--Image input-->
+                                <div class="addImages">
+                                    <div style="text-align: center">
+                                        <p><strong>Images that are not 1:1 (width and height the same) will be cropped!</strong></p>
+                                        <input type="file" name="addImages[]" id="" multiple="" style="width: 100%">
                                     </div>
                                 </div>
                                 <?php
+                            } else {
+                                    //Give the user a selection of images
+                                    ?>
+                                    <!--Allow the user to select which images they want-->
+                                    <div class="gallery-container">
+                                        <?php
+                                        //Loop through all of the possible images
+                                        foreach ($imageArray as $image) {
+                                        ?>
+                                        <div class="deleteImageContainer">
+                                        <div class="displayImage">
+                                            <img src="<?php echo $image;?>">
+                                        </div>
+                                        <div class="displayDelete">
+                                            <input style="height: 40px;" type="checkbox" name="<?php echo $image;?>" value = "<?php echo $image;?>">
+                                        </div>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                                </div>
+                                <?php
                             }
-                            ?>
-                        </div>
+                        ?>
                     </div>
 
                     <!--Submit header-->
@@ -2776,7 +2805,7 @@ require("head.php");
 
     //Load the autocomplete for new examples
     function loadNewExampleRecordAutocomplete() {
-        autocomplete(document.getElementById("newExampleName"), exampleNames);//todo remove this to decrease the chance of potential duplicates?
+        autocomplete(document.getElementById("newExampleName"), exampleNames);
         autocomplete(document.getElementById("newExampleYear"), years);
     }
 
@@ -2793,7 +2822,7 @@ require("head.php");
 
     //Loads autocomplete for updating examples
     function loadAutocompleteForExamplesUpdate(id) {
-        autocomplete(document.getElementById("updateExampleName" + id), exampleNames);//todo remove this to decrease the amount of potential duplicates?
+        autocomplete(document.getElementById("updateExampleName" + id), exampleNames);
         autocomplete(document.getElementById("updateExampleYear" + id), years);
     }
 

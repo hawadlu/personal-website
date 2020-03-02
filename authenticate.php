@@ -19,6 +19,7 @@
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($id, $password);
             $stmt->fetch();
+            $stmt->close();
             // Account exists, now we verify the password.
             // Note: remember to use password_hash in your registration file to store the hashed passwords.
 
@@ -31,7 +32,8 @@
                 $_SESSION['id'] = $id;
 
                 //Redirect to the edit page
-                header("location: edit.php");
+                redirectWithSuccess('Logged in.', 'login.php');
+
             } else {
                 redirectWithError('Incorrect username or password', 'login.php');
                 echo 'Incorrect password!';
@@ -58,5 +60,21 @@ function redirectWithError($cookieValue, $redirectTo)
     //Stop all execution
     exit();
 }
+
+function redirectWithSuccess($cookieValue, $redirectTo)
+{
+    //Add a flag to the front of the cookie describing what it is
+    $cookieValue = "Success: " . $cookieValue;
+
+    //Set the cookie
+    setcookie('successMsg', $cookieValue);
+
+    //Redirect
+    header("location: " . $redirectTo);
+
+    //Stop all execution
+    exit();
+}
+
 ?>
 

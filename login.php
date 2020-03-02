@@ -9,8 +9,6 @@
         require("head.php");
         require("header.php");
 
-        //Todo look into restricting the session time so that the user is automatically logged out. This link may be useful https://solutionfactor.net/blog/2014/02/08/implementing-session-timeout-with-php/
-
         //Check to see if an error message has been set
         $errorMessage = null;
         if (isset($_COOKIE['errorMsg'])) {

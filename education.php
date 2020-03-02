@@ -1,6 +1,5 @@
-<html lang="English">
-<!--Pulls in the head and other required pages-->
 <?php
+session_start();
 require("head.php");
 require("connect.php");
 
@@ -72,94 +71,204 @@ function getUniqueValuesForSession($array, $location)
 }
 
 ?>
-
+<html lang="English">
 <body class="background-img">
 <div class="page-grid-container">
 
     <!--Display a message to the user-->
-    <div style="background-color: white; opacity: 80%; height: 50px; line-height: 50px; text-align: center; margin-bottom: 20px" class="roundAll">
+    <div class="roundAll editMessage">
         <p>These are your records. You can edit them by clicking on the play around tab!</p>
+        <button id="showUserEducation" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElement('userEducation', 'showUserEducation', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
+            Show me what I can mess with.
+        </button>
     </div>
+    <div id="userEducation" style="display: none">
+        <!--Show the records that the user can edit-->
+        <?php
+        //Setting a variable so that the institution is only printed once
+        $currentInstitution = '';
+        $educationArray = $_SESSION['playAroundEducation'];
+        $count = 0;
+        $recordCount = sizeof($educationArray);
 
-    <!--Show the records that the user can edit-->
-    <?php
-    //Setting a variable so that the institution is only printed once
-    $currentInstitution = '';
-    $educationArray = $_SESSION['playAroundEducation'];
-    $count = 0;
-    $recordCount = sizeof($educationArray);
+        for ($i = 0; $i < sizeof($_SESSION['playAroundEducation']); $i++) {
+            $institution = $educationArray[$i][1];
+            $grade = $educationArray[$i][5];
+            $code = $educationArray[$i][3];
+            $codeExtension = $educationArray[$i][4];
+            $subject = $educationArray[$i][2];
+            $subjectLevel = $educationArray[$i][7];
+            $credits = $educationArray[$i][6];
+            $relevantYear = $educationArray[$i][8];
 
-    for ($i = 0; $i < sizeof($_SESSION['playAroundEducation']); $i++) {
-        $institution = $educationArray[$i][1];
-        $grade = $educationArray[$i][5];
-        $code = $educationArray[$i][3];
-        $codeExtension = $educationArray[$i][4];
-        $subject = $educationArray[$i][2];
-        $subjectLevel = $educationArray[$i][7];
-        $credits = $educationArray[$i][6];
-        $relevantYear = $educationArray[$i][8];
-
-        //Calculates if any rounding of the examples div is required
-        $classHeader = "";
-        $classContent = "";
-        if ($count == 0) {
-            $classHeader = "roundTop";
-        } else {
+            //Calculates if any rounding of the examples div is required
             $classHeader = "";
-        }
+            $classContent = "";
+            if ($count == 0) {
+                $classHeader = "roundTop";
+            } else {
+                $classHeader = "";
+            }
 
-        if ($count == $recordCount - 1) {
-            $classContent = "education-grid-container roundBottom";
-        } else {
-            $classContent = "education-grid-container";
-        }
+            if ($count == $recordCount - 1) {
+                $classContent = "education-grid-container roundBottom";
+            } else {
+                $classContent = "education-grid-container";
+            }
 
-        //Calculate the appropriate colour
-        if ($count % 2 == 0) {
-            //even
-            $colour = '#F7F7F7';
-        } else {
-            //odd
-            $colour = 'white';
-        }
+            //Calculate the appropriate colour
+            if ($count % 2 == 0) {
+                //even
+                $colour = '#F7F7F7';
+            } else {
+                //odd
+                $colour = 'white';
+            }
 
-        $count += 1;
+            $count += 1;
 
-        //Checking for a new institution
-        if ($institution != $currentInstitution) {
-            //Reset the institution
-            $currentInstitution = $institution;
+            //Checking for a new institution
+            if ($institution != $currentInstitution) {
+                //Reset the institution
+                $currentInstitution = $institution;
+                ?>
+                <div style="background-color: #D3D3D3; text-align: center" class="<?php echo $classHeader; ?>">
+                    <h1>
+                        <?php
+                        echo $institution;
+                        ?>
+                    </h1>
+
+                    <!--Display the column titles-->
+                    <div class="education-Titles-Large">
+                        <div>
+                            <p class="alignTextLeft">
+                                Code
+                            </p>
+                        </div>
+                        <div>
+                            <p class="alignTextLeft">
+                                Subject
+                            </p>
+                        </div>
+                        <div>
+                            <p>Grade</p>
+                        </div>
+                        <div>
+                            <p class="alignTextLeft">
+                                Subject Level
+                            </p>
+                        </div>
+                        <div>
+                            <p class="alignTextLeft">
+                                Year
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+
+            //Printing the education information
             ?>
-            <div style="background-color: #D3D3D3; text-align: center" class="<?php echo $classHeader; ?>">
-                <h1>
-                    <?php
-                    echo $institution;
-                    ?>
-                </h1>
-
-                <!--Display the column titles-->
-                <div class="education-Titles-Large">
-                    <div>
+            <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
+                <!--Display the title on a small screen-->
+                <div class="codeTitle">
+                    <p class="alignTextLeft">
+                        Code:
+                    </p>
+                </div>
+                <div class="education-Code">
+                    <div style="text-align: center;">
                         <p class="alignTextLeft">
-                            Code
+                            <?php
+                            //Add the code extension if possible
+                            $extension = "";
+                            if ($codeExtension != null) {
+                                $extension = $codeExtension;
+                            }
+                            echo $code . $extension;
+                            ?>
                         </p>
                     </div>
-                    <div>
+                </div>
+                <!--Display the title on a small screen-->
+                <div class="subjectTitle">
+                    <p class="alignTextLeft">
+                        Subject:
+                    </p>
+                </div>
+                <div class="education-Subject">
+                    <div style="text-align: center;">
                         <p class="alignTextLeft">
-                            Subject
+                            <?php
+                            echo $subject;
+                            ?>
                         </p>
                     </div>
-                    <div>
-                        <p>Grade</p>
-                    </div>
-                    <div>
+                </div>
+                <!--Display the title on a small screen-->
+                <div class="creditsTitle">
+                    <p class="alignTextLeft">
+                        <!--Determine weather the results are NCEA or Not-->
+                        <?php
+                        if ($grade == null) {
+                            echo "Credits:";
+                        } else {
+                            echo "grade:";
+                        }
+                        ?>
+                    </p>
+                </div>
+                <div class="education-Credits">
+                    <div style="text-align: center;">
                         <p class="alignTextLeft">
-                            Subject Level
+                            <?php
+                            //Checking if NCEA or uni results should be displayed
+                            if ($grade != null) {
+                                echo $grade;
+                            } else {
+                                echo $credits;
+                            }
+                            ?>
                         </p>
                     </div>
-                    <div>
+                </div>
+                <!--Display the title on a small screen-->
+                <div class="subjectLevelTitle">
+                    <p class="alignTextLeft">
+                        Level:
+                    </p>
+                </div>
+                <div class="education-subjectLevel">
+                    <div style="text-align: center;">
                         <p class="alignTextLeft">
-                            Year
+                            <?php
+                            if ($subjectLevel != null) {
+                                echo $subjectLevel;
+                            } else {
+                                echo "NA";
+                            }
+                            ?>
+                        </p>
+                    </div>
+                </div>
+                <!--Display the title on a small screen-->
+                <div class="yearTitle">
+                    <p class="alignTextLeft">
+                        Year:
+                    </p>
+                </div>
+                <div class="education-Year">
+                    <div style="text-align: center;">
+                        <p class="alignTextLeft">
+                            <?php
+                            if ($relevantYear != null) {
+                                echo $relevantYear;
+                            } else {
+                                echo "NA";
+                            }
+                            ?>
                         </p>
                     </div>
                 </div>
@@ -167,116 +276,10 @@ function getUniqueValuesForSession($array, $location)
             <?php
         }
 
-        //Printing the education information
         ?>
-        <div style="background-color: <?php echo $colour; ?>" class="<?php echo $classContent; ?>">
-            <!--Display the title on a small screen-->
-            <div class="codeTitle">
-                <p class="alignTextLeft">
-                    Code:
-                </p>
-            </div>
-            <div class="education-Code">
-                <div style="text-align: center;">
-                    <p class="alignTextLeft">
-                        <?php
-                        //Add the code extension if possible
-                        $extension = "";
-                        if ($codeExtension != null) {
-                            $extension = $codeExtension;
-                        }
-                        echo $code . $extension;
-                        ?>
-                    </p>
-                </div>
-            </div>
-            <!--Display the title on a small screen-->
-            <div class="subjectTitle">
-                <p class="alignTextLeft">
-                    Subject:
-                </p>
-            </div>
-            <div class="education-Subject">
-                <div style="text-align: center;">
-                    <p class="alignTextLeft">
-                        <?php
-                        echo $subject;
-                        ?>
-                    </p>
-                </div>
-            </div>
-            <!--Display the title on a small screen-->
-            <div class="creditsTitle">
-                <p class="alignTextLeft">
-                    <!--Determine weather the results are NCEA or Not-->
-                    <?php
-                    if ($grade == null) {
-                        echo "Credits:";
-                    } else {
-                        echo "grade:";
-                    }
-                    ?>
-                </p>
-            </div>
-            <div class="education-Credits">
-                <div style="text-align: center;">
-                    <p class="alignTextLeft">
-                        <?php
-                        //Checking if NCEA or uni results should be displayed
-                        if ($grade != null) {
-                            echo $grade;
-                        } else {
-                            echo $credits;
-                        }
-                        ?>
-                    </p>
-                </div>
-            </div>
-            <!--Display the title on a small screen-->
-            <div class="subjectLevelTitle">
-                <p class="alignTextLeft">
-                    Level:
-                </p>
-            </div>
-            <div class="education-subjectLevel">
-                <div style="text-align: center;">
-                    <p class="alignTextLeft">
-                        <?php
-                        if ($subjectLevel != null) {
-                            echo $subjectLevel;
-                        } else {
-                            echo "NA";
-                        }
-                        ?>
-                    </p>
-                </div>
-            </div>
-            <!--Display the title on a small screen-->
-            <div class="yearTitle">
-                <p class="alignTextLeft">
-                    Year:
-                </p>
-            </div>
-            <div class="education-Year">
-                <div style="text-align: center;">
-                    <p class="alignTextLeft">
-                        <?php
-                        if ($relevantYear != null) {
-                            echo $relevantYear;
-                        } else {
-                            echo "NA";
-                        }
-                        ?>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    ?>
+    </div>
     <!--Display a message to the user-->
-    <div style="background-color: white; opacity: 80%; height: 50px; line-height: 50px; text-align: center; margin-bottom: 20px; margin-top: 20px" class="roundAll">
+    <div class="roundAll editMessage">
         <p>These are my records. You should not be able to edit them. If you do figure it out, please let me know.</p>
     </div>
     <?php
@@ -500,10 +503,25 @@ function getUniqueValuesForSession($array, $location)
             <?php
         }
     }
+
+    //Close the statement
+    $educationQuery->close();
     ?>
 </div>
 </body>
->
+<script>
+    function showElement(id, buttonId, showMessage, hideMessage) {
+        if (document.getElementById(id).style.display === "none") {
+            //Show the element and change the button text
+            document.getElementById(id).style.display = "block";
+            document.getElementById(buttonId).innerHTML = hideMessage;
+        } else if (document.getElementById(id).style.display === "block") {
+            //Hide the element and change the button text
+            document.getElementById(id).style.display = "none";
+            document.getElementById(buttonId).innerHTML = showMessage;
+        }
+    }
+</script>
 
 <!--Called last so that it renders at the top-->
 <?php

@@ -1,7 +1,4 @@
 <?php
-//todo review all prepared queries so that they comply with https://www.w3schools.com/php/php_mysql_prepared_statements.asp
-//todo close all queries when they are no longer required.
-
 
 //Check if the user is logged in
 session_start();
@@ -166,7 +163,6 @@ if (isset($_POST["newEducationRecord"])) {
 
 
     if ($loggedIn == true) {
-
         //Run function to insert the record into the databse
         insertValues($toInsert, $con, 'education');
 
@@ -216,6 +212,8 @@ if (isset($_POST['deleteEducationRecord'])) {
                 runQuery("DELETE FROM " . $tablesToCheckEducation[$i] . " WHERE " . $tablesToCheckEducation[$i] . "PK = " . $keysToCheck[$i], $con);
             }
         }
+
+        $getRecordQuery->close();
 
         //Delete the item in the education table
         runQuery("DELETE FROM education WHERE education.uniqueKey = " . $uniqueKey, $con);
@@ -294,6 +292,8 @@ if (isset($_POST['submitExampleUpdate'])) {
         while ($row = $query->fetch()) {
             array_push($languageArray, $value);
         }
+
+        $query->close();
     } else {
         $languageArray = $_SESSION['sessionLanguages'];
     }
@@ -608,6 +608,8 @@ if (isset($_POST['newExampleRecord'])) {
             array_push($languageArray, $value);
         }
 
+        $query->close();
+
     } else {
         $languageArray = $_SESSION['sessionLanguages'];
     }
@@ -917,6 +919,8 @@ function getExampleDirectory($uniqueKey, mysqli $con)
         $originalDirectory = $value;
     }
 
+    $query->close();
+
     //Strip the spaces from the directory
     $originalDirectory = 'images/examples/' . stripSpaces($originalDirectory);
 
@@ -942,6 +946,7 @@ function setCleanupExamples($key, mysqli $con)
         [['examples'], 'languages', 'languageFourFK', $languageFourFK],
         [['examples'], 'languages', 'languageFiveFK', $languageFiveFK]];
 
+    $query->close();
     return $toDelete;
 }
 
@@ -998,6 +1003,9 @@ function cleanUpFK($toClean, $con)
                             //The record should not be deleted
                             $fkContained = true;
                         }
+
+                        //close the query
+                        $query->close();
                     }
                 }
             }
@@ -1268,6 +1276,7 @@ function getPK($query, $con)
     while ($row = $query->fetch()) {
         $key = $primary;
     }
+    $query->close();
     return $key;
 }
 
@@ -1388,15 +1397,6 @@ function findIn2dArray($array, $value)
     return false;
 }
 
-//Updates the specified value in the specified table
-function updateTableValue($table, $column, $value, $conditionalColumn, $key, $con)
-{
-    $query = "UPDATE " . $table . " SET " . $column . " = '" . $value . "' WHERE " . $conditionalColumn . " = " . $key;
-
-    $query = $con->prepare($query);
-    $query->execute();
-}
-
 //Run a specified query
 function runQuery($query, $con)
 {
@@ -1430,7 +1430,9 @@ function numTimesFkUsedEducation($query, $con)
     $query = runAndReturn($query, $con);
     $query->bind_result($uniqueKey, $institutionFK, $subject, $gradeFK, $subjectLevelFK, $yearFk, $subjectCodeFK, $creditsFK, $codeExtensionFK);
     $query->store_result();
-    return $query->num_rows();
+    $recordCount = $query->num_rows();
+    $query->close();
+    return $recordCount;
 }
 
 //Checks if a record exists in a linked table. Returns the number of records
@@ -1443,6 +1445,7 @@ function recordCount($query, $con)
     $query->bind_result($key, $result);
     $query->store_result();
     $recordCount = $query->num_rows();
+    $query->close();
     return $recordCount;
 }
 
@@ -1457,24 +1460,6 @@ function findDuplicate($query, $con)
         $recordCount++;
     }
     return $recordCount;
-}
-
-
-//Function that executes a query and returns the foreign key
-function getFK($table, $value, $con)
-{
-    $primary = null;
-    $val = null;
-    $foreignKeyQuery = "SELECT * FROM " . $table . " WHERE " . $table . "." . $table . " = '" . $value . "'";
-    $foreignKeyQuery = $con->prepare($foreignKeyQuery);
-    $foreignKeyQuery->execute();
-    $foreignKeyQuery->bind_result($primary, $val);
-    $foreignKeyQuery->store_result();
-    $key = "";
-    while ($row = $foreignKeyQuery->fetch()) {
-        $key = $primary;
-    }
-    return $key;
 }
 
 //Takes a value, strips the spaces and returns it
@@ -1526,7 +1511,6 @@ function resize_image($file, $w, $h, $crop = true)
 }
 
 //Manual redirect.
-//todo add an auto redirect if the user enters the url manually
 header("refresh:5;url=index.php");
 ?>
 <p>You entered the url manually. You should be redirected to the home page in 5 seconds. Otherwise you can click the

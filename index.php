@@ -12,7 +12,6 @@
     require("header.php");
 
     ?>
-    <!--Todo. Look at hiding file names in browser address bar. jack said something about giving each file its own folder and then renaming the file to index-->
     <html lang="English">
     <!--Creates the cookie privacy popup-->
     <div id = "popup" class="popup-container" style="display: <?php echo $show;?>">
