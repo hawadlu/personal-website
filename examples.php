@@ -1,9 +1,7 @@
-<html lang="English">
-<!--Pulls in the head and other required pages-->
 <?php
-require("head.php");
 require("connect.php");
 require("functions.php");
+require("head.php");
 
 //Setup the user based records
 //Check to see if the playAroundExamples session exists
@@ -26,7 +24,7 @@ if (isset($_SESSION['playAroundExamples'])) {
         $_SESSION['sessionImages'] = [];
 
         //Get all of the possible images
-        $path = 'Images/userImages';
+        $path = 'images/userImages';
         $files = scandir($path);
         $files = array_diff(scandir($path), array('.', '..'));
 
@@ -42,6 +40,8 @@ if (isset($_SESSION['playAroundExamples'])) {
     $languageArray = $_SESSION['sessionLanguages'];
 }
 ?>
+<html lang="English">
+<!--Pulls in the head and other required pages-->
 <body class=background-img>
 <div class="page-grid-container">
     <!--Display a message to the user-->
