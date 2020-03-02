@@ -70,6 +70,28 @@ function getUniqueValuesForSession($array, $location)
     return $uniqueValues;
 }
 
+/**
+ * @param $count
+ * @param $recordCount
+ * @return array
+ */
+function calculateClassHeader($count, $recordCount)
+{
+    //Calculates if any rounding of the examples div is required
+    if ($count == 0) {
+        $classHeader = "roundTop";
+    } else {
+        $classHeader = "";
+    }
+
+    if ($count == $recordCount - 1) {
+        $classContent = "education-grid-container roundBottom";
+    } else {
+        $classContent = "education-grid-container";
+    }
+    return array($classHeader, $classContent);
+}
+
 ?>
 <html lang="English">
 <body class="background-img">
@@ -100,21 +122,7 @@ function getUniqueValuesForSession($array, $location)
             $subjectLevel = $educationArray[$i][7];
             $credits = $educationArray[$i][6];
             $relevantYear = $educationArray[$i][8];
-
-            //Calculates if any rounding of the examples div is required
-            $classHeader = "";
-            $classContent = "";
-            if ($count == 0) {
-                $classHeader = "roundTop";
-            } else {
-                $classHeader = "";
-            }
-
-            if ($count == $recordCount - 1) {
-                $classContent = "education-grid-container roundBottom";
-            } else {
-                $classContent = "education-grid-container";
-            }
+            list($classHeader, $classContent) = calculateClassHeader($count, $recordCount);
 
             //Calculate the appropriate colour
             if ($count % 2 == 0) {
@@ -320,19 +328,7 @@ function getUniqueValuesForSession($array, $location)
     } else {
         while ($row = $educationQuery->fetch()) {
             //Calculates if any rounding of the examples div is required
-            $classHeader = "";
-            $classContent = "";
-            if ($count == 0) {
-                $classHeader = "roundTop";
-            } else {
-                $classHeader = "";
-            }
-
-            if ($count == $recordCount - 1) {
-                $classContent = "education-grid-container roundBottom";
-            } else {
-                $classContent = "education-grid-container";
-            }
+            list($classHeader, $classContent) = calculateClassHeader($count, $recordCount);
 
             //Calculate the appropriate colour
             if ($count % 2 == 0) {

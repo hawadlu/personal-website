@@ -97,9 +97,9 @@ require("head.php");
     <script>
         //Shows the privacy if necessary
         function showPrivacy() {
-            var urlString = window.location.href;
-            var url = new URL(urlString);
-            var c = url.searchParams.get('privacy');
+            const urlString = window.location.href;
+            const url = new URL(urlString);
+            const c = url.searchParams.get('privacy');
 
             console.log(URL.searchParams);
 
@@ -115,7 +115,7 @@ require("head.php");
             }
             document.getElementById(id).style.display = "block";
 
-            var privacy = document.getElementById('privacy');
+            const privacy = document.getElementById('privacy');
             privacy.scrollIntoView();
         }
 
@@ -132,7 +132,7 @@ require("head.php");
 </body>
 <!--Called last so that it renders at the top-->
 <?php
-require("header.php");;
+require("header.php");
 //Pull information from the footer page
 require("footer.php");
 ?>

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 session_start();
 require("connect.php");
 if (!isset($_SESSION['loggedin'])) {
@@ -54,6 +54,7 @@ function dir_is_empty($dir)
 }
 
 //Finds the unique key of a value in one of the play around arrays. Returns it's location, false if it was not found
+/** @noinspection PhpUnused */
 function findPlayAroundKeyLocation($key, $array)
 {
     for ($i = 0; $i < sizeof($array); $i++) {
@@ -206,7 +207,7 @@ require("head.php");
 <!-- The new project Modal -->
 <body id="body" class="background-img">
 <div id="pageGrid" class="page-grid-container">
-    <div style="background-color: white; opacity: 80%" class="roundAll">
+    <div style="background-color: white; opacity: 80%; padding-bottom: 20px;" class="roundAll">
         <!--The edit tabs-->
         <div class="edit-tabs">
             <div class="Education">
@@ -357,7 +358,7 @@ require("head.php");
                                             <button type="submit" class="deleteButton <?php echo $round; ?>"
                                                     name="deleteEducationRecord"
                                                     style="padding: 0; --bgColour: <?php echo $colour; ?>">
-                                                <img src="images/bin.png" class="binImage <?php echo $round; ?>">
+                                                <img alt = "Delete Icon" src="images/bin.png" class="binImage <?php echo $round; ?>">
                                             </button>
                                         </form>
                                     </div>
@@ -504,9 +505,9 @@ require("head.php");
                                     <!--The year-->
                                     <div class="addYear">
                                         <div class="add-Subject-Year autocomplete">
-                                            <input id="updateEducationYear<?php echo $uniqueKey; ?>" class="textInput"
-                                                   type="number" name="subjectYear" value="<?php echo $relevantYear; ?>"
-                                                   required>
+                                            <label for="updateEducationYear<?php echo $uniqueKey; ?>"></label><input id="updateEducationYear<?php echo $uniqueKey; ?>" class="textInput"
+                                                                                                                     type="number" name="subjectYear" value="<?php echo $relevantYear; ?>"
+                                                                                                                     required>
                                         </div>
                                     </div>
 
@@ -518,9 +519,9 @@ require("head.php");
                                     <!--The subject-->
                                     <div class="addSubject">
                                         <div class="add-Subject autocomplete">
-                                            <input id="updateEducationSubject<?php echo $uniqueKey; ?>"
-                                                   class="textInput"
-                                                   type="text" name="subject" value="<?php echo $subject; ?>" required>
+                                            <label for="updateEducationSubject<?php echo $uniqueKey; ?>"></label><input id="updateEducationSubject<?php echo $uniqueKey; ?>"
+                                                                                                                        class="textInput"
+                                                                                                                        type="text" name="subject" value="<?php echo $subject; ?>" required>
                                         </div>
                                     </div>
 
@@ -532,8 +533,8 @@ require("head.php");
                                     <!--The code-->
                                     <div class="addCode">
                                         <div class="add-Code autocomplete">
-                                            <input id="updateEducationCode<?php echo $uniqueKey; ?>" class="textInput"
-                                                   type="text" name="code" value="<?php echo $code; ?>" required>
+                                            <label for="updateEducationCode<?php echo $uniqueKey; ?>"></label><input id="updateEducationCode<?php echo $uniqueKey; ?>" class="textInput"
+                                                                                                                     type="text" name="code" value="<?php echo $code; ?>" required>
                                         </div>
                                     </div>
 
@@ -545,10 +546,10 @@ require("head.php");
                                     <!--Code extension-->
                                     <div class="addCodeExtension">
                                         <div class="add-Code-Extension autocomplete">
-                                            <input id="updateEducationCodeExtension<?php echo $uniqueKey; ?>"
-                                                   class="textInput"
-                                                   type="text" name="codeExtension"
-                                                   value="<?php echo $codeExtension; ?> " required>
+                                            <label for="updateEducationCodeExtension<?php echo $uniqueKey; ?>"></label><input id="updateEducationCodeExtension<?php echo $uniqueKey; ?>"
+                                                                                                                              class="textInput"
+                                                                                                                              type="text" name="codeExtension"
+                                                                                                                              value="<?php echo $codeExtension; ?> " required>
                                         </div>
                                     </div>
 
@@ -561,37 +562,39 @@ require("head.php");
                                     <div class="addGradeType">
                                         <div class="add-Grade">
                                             <!--Allow the user to select the type of grade. Set to the current grade type by default-->
-                                            <select onchange="showCreditsGpa(this.value)" class="textInput">
-                                                <?php
-                                                //Set the default order
-                                                if ($credits != 0) {
-                                                    $optionOne = "showUpdateEducationCreditsDiv" . $uniqueKey;
-                                                    $optionTwo = "showUpdateEducationGpaDiv" . $uniqueKey;
-                                                    $displayValOne = "Credits";
-                                                    $displayValTwo = "Gpa";
-                                                    $displayDivCredits = "block";
-                                                    $displayDivGpa = "none";
-                                                } else {
-                                                    $optionOne = "showUpdateEducationGpaDiv" . $uniqueKey;
-                                                    $optionTwo = "showUpdateEducationCreditsDiv" . $uniqueKey;
-                                                    $displayValOne = "Gpa";
-                                                    $displayValTwo = "Credits";
-                                                    $displayDivCredits = "none";
-                                                    $displayDivGpa = "block";
-                                                }
-                                                ?>
-                                                <option value="<?php echo $optionOne; ?>">
-                                                    <?php echo $displayValOne;
-                                                    //Update the type of grade being submitted
-                                                    ?>
-                                                </option>
-                                                <option value="<?php echo $optionTwo; ?>">
+                                            <label style="width: 90%;">
+                                                <select onchange="showCreditsGpa(this.value)" class="textInput">
                                                     <?php
-                                                    //Update the type of grade being submitted
-                                                    echo $displayValTwo;
+                                                    //Set the default order
+                                                    if ($credits != 0) {
+                                                        $optionOne = "showUpdateEducationCreditsDiv" . $uniqueKey;
+                                                        $optionTwo = "showUpdateEducationGpaDiv" . $uniqueKey;
+                                                        $displayValOne = "Credits";
+                                                        $displayValTwo = "Gpa";
+                                                        $displayDivCredits = "block";
+                                                        $displayDivGpa = "none";
+                                                    } else {
+                                                        $optionOne = "showUpdateEducationGpaDiv" . $uniqueKey;
+                                                        $optionTwo = "showUpdateEducationCreditsDiv" . $uniqueKey;
+                                                        $displayValOne = "Gpa";
+                                                        $displayValTwo = "Credits";
+                                                        $displayDivCredits = "none";
+                                                        $displayDivGpa = "block";
+                                                    }
                                                     ?>
-                                                </option>
-                                            </select>
+                                                    <option value="<?php echo $optionOne; ?>">
+                                                        <?php echo $displayValOne;
+                                                        //Update the type of grade being submitted
+                                                        ?>
+                                                    </option>
+                                                    <option value="<?php echo $optionTwo; ?>">
+                                                        <?php
+                                                        //Update the type of grade being submitted
+                                                        echo $displayValTwo;
+                                                        ?>
+                                                    </option>
+                                                </select>
+                                            </label>
 
                                         </div>
                                     </div>
@@ -605,16 +608,16 @@ require("head.php");
                                     <div class="addGrade">
                                         <div id="showUpdateEducationCreditsDiv<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayDivCredits; ?>">
-                                            <input id="updateEducationCredits<?php echo $uniqueKey; ?>" class=textInput"
-                                                   type="number" name="credits" placeholder="<?php echo $credits; ?>">
+                                            <label for="updateEducationCredits<?php echo $uniqueKey; ?>"></label><input id="updateEducationCredits<?php echo $uniqueKey; ?>" class=textInput"
+                                                                                                                        type="number" name="credits" placeholder="<?php echo $credits; ?>">
                                             <?php $isNumeric = false; ?>
                                         </div>
                                         <div id="showUpdateEducationGpaDiv<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayDivGpa; ?>">
                                             <div class="autocomplete">
-                                                <input id="updateEducationGrade<?php echo $uniqueKey; ?>"
-                                                       class=textInput"
-                                                       type="text" name="gpa" placeholder="<?php echo $grade; ?>">
+                                                <label for="updateEducationGrade<?php echo $uniqueKey; ?>"></label><input id="updateEducationGrade<?php echo $uniqueKey; ?>"
+                                                                                                                          class=textInput"
+                                                                                                                          type="text" name="gpa" placeholder="<?php echo $grade; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -902,7 +905,7 @@ require("head.php");
                                         <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey; ?>">
                                         <button type="submit" class="deleteButton" name="deleteExample"
                                                 style="padding: 0;">
-                                            <img src="images/bin.png" class="binImage">
+                                            <img alt = "Delete Icon" src="images/bin.png" class="binImage">
                                         </button>
                                     </form>
                                 </div>
@@ -929,8 +932,8 @@ require("head.php");
                                     <!--The project title-->
                                     <div class="addName">
                                         <div class="autocomplete">
-                                            <input id="updateExampleName<?php echo $uniqueKey; ?>" type="text"
-                                                   name="exampleName" value="<?php echo $name; ?>" required>
+                                            <label for="updateExampleName<?php echo $uniqueKey; ?>"></label><input id="updateExampleName<?php echo $uniqueKey; ?>" type="text"
+                                                                                                                   name="exampleName" value="<?php echo $name; ?>" required>
                                         </div>
                                     </div>
 
@@ -942,9 +945,9 @@ require("head.php");
                                     <!--The year-->
                                     <div class="addYear">
                                         <div class="autocomplete">
-                                            <input id="updateExampleYear<?php echo $uniqueKey; ?>" class="textInput"
-                                                   type="number"
-                                                   name="exampleYear" value="<?php echo $relevantYear; ?>" required>
+                                            <label for="updateExampleYear<?php echo $uniqueKey; ?>"></label><input id="updateExampleYear<?php echo $uniqueKey; ?>" class="textInput"
+                                                                                                                   type="number"
+                                                                                                                   name="exampleYear" value="<?php echo $relevantYear; ?>" required>
                                         </div>
                                     </div>
 
@@ -978,9 +981,11 @@ require("head.php");
                                         <!--Div that shows the link-->
                                         <div id="updateExamplesLink<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayLinkDiv; ?>">
-                                            <input type="text" name="updateLinkEntry"
-                                                   value="<?php echo $linkToDisplay; ?>"
-                                                   placeholder="<?php echo $placeholder; ?>">
+                                            <label>
+                                                <input type="text" name="updateLinkEntry"
+                                                       value="<?php echo $linkToDisplay; ?>"
+                                                       placeholder="<?php echo $placeholder; ?>">
+                                            </label>
                                         </div>
                                     </div>
 
@@ -1009,9 +1014,11 @@ require("head.php");
                                         <!--The div that shows the github link-->
                                         <div id="updateGithubLink<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayLinkDiv; ?>">
-                                            <input name="updateGithubEntry" type="text"
-                                                   value="<?php echo $linkToDisplay; ?>"
-                                                   placeholder="<?php echo $placeholder; ?>">
+                                            <label>
+                                                <input name="updateGithubEntry" type="text"
+                                                       value="<?php echo $linkToDisplay; ?>"
+                                                       placeholder="<?php echo $placeholder; ?>">
+                                            </label>
                                         </div>
                                     </div>
 
@@ -1024,20 +1031,20 @@ require("head.php");
                                     <div class="addLanguages">
                                         <?php
                                         //Create a checkbox for each language
-                                        for ($i = 0; $i < sizeof($languageArray); $i++) {
+                                        for ($i = 0; $i < sizeof($languageArrayDB); $i++) {
                                             //Checking if the language matches one of the languages used in the example
                                             $checked = "";
-                                            if ($languageArray[$i] == $langOne || $languageArray[$i] == $langTwo || $languageArray[$i] == $langThree ||
-                                                $languageArray[$i] == $langFour || $languageArray[$i] == $langFive) {
+                                            if ($languageArrayDB[$i] == $langOne || $languageArrayDB[$i] == $langTwo || $languageArrayDB[$i] == $langThree ||
+                                                $languageArrayDB[$i] == $langFour || $languageArrayDB[$i] == $langFive) {
                                                 $checked = "checked";
                                             }
 
                                             ?>
                                             <div>
-                                                <input type="checkbox" id="<?php echo $languageArray[$i]; ?>"
-                                                       name="<?php echo $languageArray[$i]; ?>" class="checkbox"
-                                                       value="<?php echo $languageArray[$i]; ?>" <?php echo $checked; ?>>
-                                                <label for="<?php echo $languageArray[$i]; ?>"><?php echo $languageArray[$i] ?></label>
+                                                <input type="checkbox" id="<?php echo $languageArrayDB[$i]; ?>"
+                                                       name="<?php echo $languageArrayDB[$i]; ?>" class="checkbox"
+                                                       value="<?php echo $languageArrayDB[$i]; ?>" <?php echo $checked; ?>>
+                                                <label for="<?php echo $languageArrayDB[$i]; ?>"><?php echo $languageArrayDB[$i] ?></label>
                                             </div>
                                             <?php
                                         }
@@ -1053,7 +1060,9 @@ require("head.php");
 
                                         <!--Input box for the new language-->
                                         <div id="newLanguageDiv<?php echo $uniqueKey; ?>" style="display:none;">
-                                            <input type="text" name="updateLanguageEntry" placeholder="New Language">
+                                            <label>
+                                                <input type="text" name="updateLanguageEntry" placeholder="New Language">
+                                            </label>
                                         </div>
                                     </div>
 
@@ -1064,8 +1073,10 @@ require("head.php");
 
                                     <!--The description-->
                                     <div class="addDescription">
-                                        <textarea name="exampleDescription" style="width: 100%; height: auto"
-                                                  required> <?php echo $examplesDescription; ?> </textarea>
+                                        <label>
+<textarea name="exampleDescription" style="width: 100%; height: auto"
+          required> <?php echo $examplesDescription; ?> </textarea>
+                                        </label>
                                     </div>
 
                                     <!--Images header-->
@@ -1162,7 +1173,7 @@ require("head.php");
                                         ?>
                                         <div class="deleteImageContainer">
                                             <div class="displayImage">
-                                                <img src="<?php echo $file; ?>" style="width: 250px">
+                                                <img alt = "The image to delete" src="<?php echo $file; ?>" style="width: 250px">
                                             </div>
 
                                             <div class="displayDelete">
@@ -1319,7 +1330,7 @@ require("head.php");
                                             <button type="submit" class="deleteButton <?php echo $round; ?>"
                                                     name="deleteEducationRecord"
                                                     style="padding: 0; --bgColour: <?php echo $colour; ?>">
-                                                <img src="images/bin.png" class="binImage <?php echo $round; ?>">
+                                                <img alt="Delete icon" src="images/bin.png" class="binImage <?php echo $round; ?>">
                                             </button>
                                         </form>
                                     </div>
@@ -1436,10 +1447,10 @@ require("head.php");
                                     <!--Institution-->
                                     <div class="addInstitution">
                                         <div class="add-Institution autocomplete">
-                                            <input id="updateEducationInstitution<?php echo $uniqueKey; ?>"
-                                                   class="textInput"
-                                                   type="text" name="institution" value="<?php echo $institution; ?>"
-                                                   required>
+                                            <label for="updateEducationInstitution<?php echo $uniqueKey; ?>"></label><input id="updateEducationInstitution<?php echo $uniqueKey; ?>"
+                                                                                                                            class="textInput"
+                                                                                                                            type="text" name="institution" value="<?php echo $institution; ?>"
+                                                                                                                            required>
                                         </div>
                                     </div>
 
@@ -1451,10 +1462,10 @@ require("head.php");
                                     <!--Subject Level-->
                                     <div class="addLevel">
                                         <div class="add-Subject-Level autocomplete">
-                                            <input id="updateEducationSubjectLevel<?php echo $uniqueKey; ?>"
-                                                   class="textInput"
-                                                   type="text" name="subjectLevel" value="<?php echo $subjectLevel; ?>"
-                                                   required>
+                                            <label for="updateEducationSubjectLevel<?php echo $uniqueKey; ?>"></label><input id="updateEducationSubjectLevel<?php echo $uniqueKey; ?>"
+                                                                                                                             class="textInput"
+                                                                                                                             type="text" name="subjectLevel" value="<?php echo $subjectLevel; ?>"
+                                                                                                                             required>
                                         </div>
                                     </div>
 
@@ -1466,9 +1477,9 @@ require("head.php");
                                     <!--The year-->
                                     <div class="addYear">
                                         <div class="add-Subject-Year autocomplete">
-                                            <input id="updateEducationYear<?php echo $uniqueKey; ?>" class="textInput"
-                                                   type="number" name="subjectYear" value="<?php echo $relevantYear; ?>"
-                                                   required>
+                                            <label for="updateEducationYear<?php echo $uniqueKey; ?>"></label><input id="updateEducationYear<?php echo $uniqueKey; ?>" class="textInput"
+                                                                                                                     type="number" name="subjectYear" value="<?php echo $relevantYear; ?>"
+                                                                                                                     required>
                                         </div>
                                     </div>
 
@@ -1480,9 +1491,9 @@ require("head.php");
                                     <!--The subject-->
                                     <div class="addSubject">
                                         <div class="add-Subject autocomplete">
-                                            <input id="updateEducationSubject<?php echo $uniqueKey; ?>"
-                                                   class="textInput"
-                                                   type="text" name="subject" value="<?php echo $subject; ?>" required>
+                                            <label for="updateEducationSubject<?php echo $uniqueKey; ?>"></label><input id="updateEducationSubject<?php echo $uniqueKey; ?>"
+                                                                                                                        class="textInput"
+                                                                                                                        type="text" name="subject" value="<?php echo $subject; ?>" required>
                                         </div>
                                     </div>
 
@@ -1494,8 +1505,8 @@ require("head.php");
                                     <!--The code-->
                                     <div class="addCode">
                                         <div class="add-Code autocomplete">
-                                            <input id="updateEducationCode<?php echo $uniqueKey; ?>" class="textInput"
-                                                   type="text" name="code" value="<?php echo $code; ?>" required>
+                                            <label for="updateEducationCode<?php echo $uniqueKey; ?>"></label><input id="updateEducationCode<?php echo $uniqueKey; ?>" class="textInput"
+                                                                                                                     type="text" name="code" value="<?php echo $code; ?>" required>
                                         </div>
                                     </div>
 
@@ -1507,10 +1518,10 @@ require("head.php");
                                     <!--Code extension-->
                                     <div class="addCodeExtension">
                                         <div class="add-Code-Extension autocomplete">
-                                            <input id="updateEducationCodeExtension<?php echo $uniqueKey; ?>"
-                                                   class="textInput"
-                                                   type="text" name="codeExtension"
-                                                   value="<?php echo $codeExtension; ?> " required>
+                                            <label for="updateEducationCodeExtension<?php echo $uniqueKey; ?>"></label><input id="updateEducationCodeExtension<?php echo $uniqueKey; ?>"
+                                                                                                                              class="textInput"
+                                                                                                                              type="text" name="codeExtension"
+                                                                                                                              value="<?php echo $codeExtension; ?> " required>
                                         </div>
                                     </div>
 
@@ -1523,37 +1534,39 @@ require("head.php");
                                     <div class="addGradeType">
                                         <div class="add-Grade">
                                             <!--Allow the user to select the type of grade. Set to the current grade type by default-->
-                                            <select onchange="showCreditsGpa(this.value)" class="textInput">
-                                                <?php
-                                                //Set the default order
-                                                if ($credits != 0) {
-                                                    $optionOne = "showUpdateEducationCreditsDiv" . $uniqueKey;
-                                                    $optionTwo = "showUpdateEducationGpaDiv" . $uniqueKey;
-                                                    $displayValOne = "Credits";
-                                                    $displayValTwo = "Gpa";
-                                                    $displayDivCredits = "block";
-                                                    $displayDivGpa = "none";
-                                                } else {
-                                                    $optionOne = "showUpdateEducationGpaDiv" . $uniqueKey;
-                                                    $optionTwo = "showUpdateEducationCreditsDiv" . $uniqueKey;
-                                                    $displayValOne = "Gpa";
-                                                    $displayValTwo = "Credits";
-                                                    $displayDivCredits = "none";
-                                                    $displayDivGpa = "block";
-                                                }
-                                                ?>
-                                                <option value="<?php echo $optionOne; ?>">
-                                                    <?php echo $displayValOne;
-                                                    //Update the type of grade being submitted
-                                                    ?>
-                                                </option>
-                                                <option value="<?php echo $optionTwo; ?>">
+                                            <label style="width: 90%;">
+                                                <select onchange="showCreditsGpa(this.value)" class="textInput">
                                                     <?php
-                                                    //Update the type of grade being submitted
-                                                    echo $displayValTwo;
+                                                    //Set the default order
+                                                    if ($credits != 0) {
+                                                        $optionOne = "showUpdateEducationCreditsDiv" . $uniqueKey;
+                                                        $optionTwo = "showUpdateEducationGpaDiv" . $uniqueKey;
+                                                        $displayValOne = "Credits";
+                                                        $displayValTwo = "Gpa";
+                                                        $displayDivCredits = "block";
+                                                        $displayDivGpa = "none";
+                                                    } else {
+                                                        $optionOne = "showUpdateEducationGpaDiv" . $uniqueKey;
+                                                        $optionTwo = "showUpdateEducationCreditsDiv" . $uniqueKey;
+                                                        $displayValOne = "Gpa";
+                                                        $displayValTwo = "Credits";
+                                                        $displayDivCredits = "none";
+                                                        $displayDivGpa = "block";
+                                                    }
                                                     ?>
-                                                </option>
-                                            </select>
+                                                    <option value="<?php echo $optionOne; ?>">
+                                                        <?php echo $displayValOne;
+                                                        //Update the type of grade being submitted
+                                                        ?>
+                                                    </option>
+                                                    <option value="<?php echo $optionTwo; ?>">
+                                                        <?php
+                                                        //Update the type of grade being submitted
+                                                        echo $displayValTwo;
+                                                        ?>
+                                                    </option>
+                                                </select>
+                                            </label>
 
                                         </div>
                                     </div>
@@ -1567,16 +1580,16 @@ require("head.php");
                                     <div class="addGrade">
                                         <div id="showUpdateEducationCreditsDiv<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayDivCredits; ?>">
-                                            <input id="updateEducationCredits<?php echo $uniqueKey; ?>" class=textInput"
-                                                   type="number" name="credits" placeholder="<?php echo $credits; ?>">
+                                            <label for="updateEducationCredits<?php echo $uniqueKey; ?>"></label><input id="updateEducationCredits<?php echo $uniqueKey; ?>" class=textInput"
+                                                                                                                        type="number" name="credits" placeholder="<?php echo $credits; ?>">
                                             <?php $isNumeric = false; ?>
                                         </div>
                                         <div id="showUpdateEducationGpaDiv<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayDivGpa; ?>">
                                             <div class="autocomplete">
-                                                <input id="updateEducationGrade<?php echo $uniqueKey; ?>"
-                                                       class=textInput"
-                                                       type="text" name="gpa" placeholder="<?php echo $grade; ?>">
+                                                <label for="updateEducationGrade<?php echo $uniqueKey; ?>"></label><input id="updateEducationGrade<?php echo $uniqueKey; ?>"
+                                                                                                                          class=textInput"
+                                                                                                                          type="text" name="gpa" placeholder="<?php echo $grade; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -1772,7 +1785,7 @@ require("head.php");
                                         <input type="hidden" name="uniqueKey" value="<?php echo $uniqueKey; ?>">
                                         <button type="submit" class="deleteButton" name="deleteExample"
                                                 style="padding: 0;">
-                                            <img src="images/bin.png" class="binImage">
+                                            <img alt = "Delete icon" src="images/bin.png" class="binImage">
                                         </button>
                                     </form>
                                 </div>
@@ -1798,8 +1811,8 @@ require("head.php");
                                     <!--The project title-->
                                     <div class="addName">
                                         <div class="autocomplete">
-                                            <input id="updateExampleName<?php echo $uniqueKey; ?>" type="text"
-                                                   name="exampleName" value="<?php echo $name; ?>" required>
+                                            <label for="updateExampleName<?php echo $uniqueKey; ?>"></label><input id="updateExampleName<?php echo $uniqueKey; ?>" type="text"
+                                                                                                                   name="exampleName" value="<?php echo $name; ?>" required>
                                         </div>
                                     </div>
 
@@ -1811,9 +1824,9 @@ require("head.php");
                                     <!--The year-->
                                     <div class="addYear">
                                         <div class="autocomplete">
-                                            <input id="updateExampleYear<?php echo $uniqueKey; ?>" class="textInput"
-                                                   type="number"
-                                                   name="exampleYear" value="<?php echo $relevantYear; ?>" required>
+                                            <label for="updateExampleYear<?php echo $uniqueKey; ?>"></label><input id="updateExampleYear<?php echo $uniqueKey; ?>" class="textInput"
+                                                                                                                   type="number"
+                                                                                                                   name="exampleYear" value="<?php echo $relevantYear; ?>" required>
                                         </div>
                                     </div>
 
@@ -1847,9 +1860,11 @@ require("head.php");
                                         <!--Div that shows the link-->
                                         <div id="updateExamplesLink<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayLinkDiv; ?>">
-                                            <input type="text" name="updateLinkEntry"
-                                                   value="<?php echo $linkToDisplay; ?>"
-                                                   placeholder="<?php echo $placeholder; ?>">
+                                            <label>
+                                                <input type="text" name="updateLinkEntry"
+                                                       value="<?php echo $linkToDisplay; ?>"
+                                                       placeholder="<?php echo $placeholder; ?>">
+                                            </label>
                                         </div>
                                     </div>
 
@@ -1878,9 +1893,11 @@ require("head.php");
                                         <!--The div that shows the github link-->
                                         <div id="updateGithubLink<?php echo $uniqueKey; ?>"
                                              style="display: <?php echo $displayLinkDiv; ?>">
-                                            <input name="updateGithubEntry" type="text"
-                                                   value="<?php echo $linkToDisplay; ?>"
-                                                   placeholder="<?php echo $placeholder; ?>">
+                                            <label>
+                                                <input name="updateGithubEntry" type="text"
+                                                       value="<?php echo $linkToDisplay; ?>"
+                                                       placeholder="<?php echo $placeholder; ?>">
+                                            </label>
                                         </div>
                                     </div>
 
@@ -1920,7 +1937,9 @@ require("head.php");
 
                                         <!--Input box for the new language-->
                                         <div id="newLanguageDiv<?php echo $uniqueKey; ?>" style="display:none;">
-                                            <input type="text" name="updateLanguageEntry" placeholder="New Language">
+                                            <label>
+                                                <input type="text" name="updateLanguageEntry" placeholder="New Language">
+                                            </label>
                                         </div>
                                     </div>
 
@@ -1931,8 +1950,10 @@ require("head.php");
 
                                     <!--The description-->
                                     <div class="addDescription">
-                                        <textarea name="exampleDescription" style="width: 100%; height: auto"
-                                                  required> <?php echo $examplesDescription; ?> </textarea>
+                                        <label>
+<textarea name="exampleDescription" style="width: 100%; height: auto"
+          required> <?php echo $examplesDescription; ?> </textarea>
+                                        </label>
                                     </div>
 
                                     <!--Images header-->
@@ -2006,10 +2027,10 @@ require("head.php");
                                                     ?>
                                                     <div class="deleteImageContainer">
                                                         <div class="displayImage">
-                                                            <img src="<?php echo $image;?>">
+                                                            <img alt = "The image to be deleted" src="<?php echo $image;?>">
                                                         </div>
                                                         <div class="displayDelete" style="height: 30px; margin-bottom: 20px;">
-                                                            <input type="checkbox" value="<?php echo $image;?>" name = "<?php echo $image;?>" id = "<?php echo $uniqueKey . $image;?>">
+                                                            <label for="<?php echo $uniqueKey . $image;?>"></label><input type="checkbox" value="<?php echo $image;?>" name = "<?php echo $image;?>" id = "<?php echo $uniqueKey . $image;?>">
                                                         </div>
                                                     </div>
                                                     <?php
@@ -2040,7 +2061,7 @@ require("head.php");
                                         ?>
                                         <div class="deleteImageContainer">
                                             <div class="displayImage">
-                                                <img src="<?php echo $file; ?>" style="width: 250px">
+                                                <img alt = "The image to be deleted" src="<?php echo $file; ?>" style="width: 250px">
                                             </div>
 
                                             <div class="displayDelete">
@@ -2106,8 +2127,8 @@ require("head.php");
                     <!--Institution-->
                     <div class="addInstitution">
                         <div class="autocomplete">
-                            <input id="newEducationRecordInstitution" class="textInput" type="text"
-                                   name="newInstitution" placeholder="Institution: e.g. Tawa College" required>
+                            <label for="newEducationRecordInstitution"></label><input id="newEducationRecordInstitution" class="textInput" type="text"
+                                                                                      name="newInstitution" placeholder="Institution: e.g. Tawa College" required>
                         </div>
                     </div>
 
@@ -2119,8 +2140,8 @@ require("head.php");
                     <!--Level-->
                     <div class="addLevel">
                         <div class="autocomplete">
-                            <input id="newEducationRecordSubjectLevel" class="textInput" type="text"
-                                   name="newSubjectLevel" placeholder="Level: e.g. NCEA Level One" required>
+                            <label for="newEducationRecordSubjectLevel"></label><input id="newEducationRecordSubjectLevel" class="textInput" type="text"
+                                                                                       name="newSubjectLevel" placeholder="Level: e.g. NCEA Level One" required>
                         </div>
                     </div>
 
@@ -2132,8 +2153,8 @@ require("head.php");
                     <!--Year-->
                     <div class="addYear">
                         <div class="autocomplete">
-                            <input id="newEducationRecordYear" class="textInput" type="number" name="newSubjectYear"
-                                   placeholder="Year: e.g. <?php echo date('Y'); ?>" required>
+                            <label for="newEducationRecordYear"></label><input id="newEducationRecordYear" class="textInput" type="number" name="newSubjectYear"
+                                                                               placeholder="Year: e.g. <?php echo date('Y'); ?>" required>
                         </div>
                     </div>
 
@@ -2145,8 +2166,8 @@ require("head.php");
                     <!--Subject-->
                     <div class="addSubject">
                         <div class="autocomplete">
-                            <input id="newEducationRecordSubject" class="textInput" type="text" name="newSubject"
-                                   placeholder="Subject: e.g. Science" " required>
+                            <label for="newEducationRecordSubject"></label><input id="newEducationRecordSubject" class="textInput" type="text" name="newSubject"
+                                                                                  placeholder="Subject: e.g. Science" " required>
                         </div>
                     </div>
 
@@ -2158,8 +2179,8 @@ require("head.php");
                     <!--Code-->
                     <div class="addCode">
                         <div class="autocomplete">
-                            <input id="newEducationRecordCode" class="textInput" type="text" name="newCode"
-                                   placeholder="Code: e.g. COMP" required>
+                            <label for="newEducationRecordCode"></label><input id="newEducationRecordCode" class="textInput" type="text" name="newCode"
+                                                                               placeholder="Code: e.g. COMP" required>
                         </div>
                     </div>
 
@@ -2171,8 +2192,8 @@ require("head.php");
                     <!--Code extension-->
                     <div class="addCodeExtension">
                         <div class="autocomplete">
-                            <input id="newEducationRecordCodeExtension" class="textInput" type="text"
-                                   name="newCodeExtension" placeholder="Code Extension: e.g. 101" required>
+                            <label for="newEducationRecordCodeExtension"></label><input id="newEducationRecordCodeExtension" class="textInput" type="text"
+                                                                                        name="newCodeExtension" placeholder="Code Extension: e.g. 101" required>
                         </div>
                     </div>
 
@@ -2184,29 +2205,31 @@ require("head.php");
                     <!--Grade Type-->
                     <div class="addGradeType">
                         <!--Change the input type based on the type of grade the user wishes to enter-->
-                        <select onchange="showCreditsGpa(this.value)" class="textInput">
-                            <?php
-                            //Set the default order
-                            $optionOne = "showNewCreditsDiv";
-                            $optionTwo = "showNewGpaDiv";
-                            $displayValOne = "Credits";
-                            $displayValTwo = "Gpa";
-                            $displayDivCredits = "block";
-                            $displayDivGpa = "none";
-                            ?>
-                            <option value="<?php echo $optionOne; ?>">
+                        <label style="width: 90%;">
+                            <select onchange="showCreditsGpa(this.value)" class="textInput">
                                 <?php
-                                echo $displayValOne;
-                                //Update the type of grade being submitted
+                                //Set the default order
+                                $optionOne = "showNewCreditsDiv";
+                                $optionTwo = "showNewGpaDiv";
+                                $displayValOne = "Credits";
+                                $displayValTwo = "Gpa";
+                                $displayDivCredits = "block";
+                                $displayDivGpa = "none";
                                 ?>
-                            </option>
-                            <option value="<?php echo $optionTwo; ?>">
-                                <?php
-                                //Update the type of grade being submitted
-                                echo $displayValTwo;
-                                ?>
-                            </option>
-                        </select>
+                                <option value="<?php echo $optionOne; ?>">
+                                    <?php
+                                    echo $displayValOne;
+                                    //Update the type of grade being submitted
+                                    ?>
+                                </option>
+                                <option value="<?php echo $optionTwo; ?>">
+                                    <?php
+                                    //Update the type of grade being submitted
+                                    echo $displayValTwo;
+                                    ?>
+                                </option>
+                            </select>
+                        </label>
                     </div>
 
                     <!--Grade header-->
@@ -2217,16 +2240,16 @@ require("head.php");
                     <!--Grade-->
                     <div class="addGrade">
                         <div id="showNewCreditsDiv" style="display: <?php echo $displayDivCredits; ?>">
-                            <input id="newEducationRecordCredits" class=textInput" type="number" name="newCredits"
-                                   placeholder="Credits: e.g. 22">
+                            <label for="newEducationRecordCredits"></label><input id="newEducationRecordCredits" class=textInput" type="number" name="newCredits"
+                                                                                  placeholder="Credits: e.g. 22">
                             <?php
                             $isNumeric = false;
                             ?>
                         </div>
                         <div id="showNewGpaDiv" style="display: <?php echo $displayDivGpa; ?>">
                             <div class="autocomplete">
-                                <input id="newEducationRecordGpa" class=textInput" type="text" name="newGpa"
-                                       placeholder="Gpa: e.g. A-">
+                                <label for="newEducationRecordGpa"></label><input id="newEducationRecordGpa" class=textInput" type="text" name="newGpa"
+                                                                                  placeholder="Gpa: e.g. A-">
                             </div>
                         </div>
                     </div>
@@ -2261,16 +2284,16 @@ require("head.php");
                     <!--The project title-->
                     <div class="addName">
                         <div class="autocomplete">
-                            <input id="newExampleName" type="text" name="newExampleName"
-                                   placeholder="Project Name: E.g. Tarzan" required>
+                            <label for="newExampleName"></label><input id="newExampleName" type="text" name="newExampleName"
+                                                                       placeholder="Project Name: E.g. Tarzan" required>
                         </div>
                     </div>
 
                     <!--The year-->
                     <div class="addYear">
                         <div class="autocomplete">
-                            <input id="newExampleYear" type="number"
-                                   name="newExampleYear" placeholder="Year: E.g. <?php echo date('Y'); ?>" required>
+                            <label for="newExampleYear"></label><input id="newExampleYear" type="number"
+                                                                       name="newExampleYear" placeholder="Year: E.g. <?php echo date('Y'); ?>" required>
                         </div>
                     </div>
 
@@ -2291,7 +2314,9 @@ require("head.php");
 
                         <!--Div that shows the link-->
                         <div id="newExamplesLink" style="display: none">
-                            <input type="text" name="newLinkEntry" placeholder="E.g. google.com">
+                            <label>
+                                <input type="text" name="newLinkEntry" placeholder="E.g. google.com">
+                            </label>
                         </div>
                     </div>
 
@@ -2305,7 +2330,9 @@ require("head.php");
 
                         <!--The div that shows the github link-->
                         <div id="newGithubLink" style="display: none">
-                            <input name="newGithubEntry" type="text" placeholder="E.g. github.com">
+                            <label>
+                                <input name="newGithubEntry" type="text" placeholder="E.g. github.com">
+                            </label>
                         </div>
                     </div>
 
@@ -2353,7 +2380,9 @@ require("head.php");
 
                         <!--Input box for the new language-->
                         <div id="newLanguageInputDiv" style="display:none;">
-                            <input type="text" name="newLanguageEntry" placeholder="New Language">
+                            <label>
+                                <input type="text" name="newLanguageEntry" placeholder="New Language">
+                            </label>
                         </div>
                     </div>
 
@@ -2364,8 +2393,10 @@ require("head.php");
 
                     <!--Description-->
                     <div class="addDescription">
-                            <textarea name="newExampleDescription" style="width: 100%" placeholder="Enter a description"
-                                      required></textarea>
+                        <label>
+<textarea name="newExampleDescription" style="width: 100%" placeholder="Enter a description"
+          required></textarea>
+                        </label>
                     </div>
 
                     <!--Images header-->
@@ -2398,10 +2429,12 @@ require("head.php");
                                         ?>
                                         <div class="deleteImageContainer">
                                         <div class="displayImage">
-                                            <img src="<?php echo $image;?>">
+                                            <img alt = "The image to be deleted" src="<?php echo $image;?>">
                                         </div>
                                         <div class="displayDelete">
-                                            <input style="height: 40px;" type="checkbox" name="<?php echo $image;?>" value = "<?php echo $image;?>">
+                                            <label>
+                                                <input style="height: 40px;" type="checkbox" name="<?php echo $image;?>" value = "<?php echo $image;?>">
+                                            </label>
                                         </div>
                                     </div>
                                 <?php
@@ -2463,58 +2496,10 @@ require("head.php");
         }
     }
 
-    //Shows and hides the relevant add image modal
-    function showAddImageModal(key) {
-        // Get the modal
-        var modal = document.getElementById("addImageModal" + key);
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("closeAddImageModal" + key)[0];
-
-        modal.style.display = "grid";
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-    }
-
-    //Shows and hides the relevant edit image modal
-    function showEditImageModal(key) {
-        // Get the modal
-        var modal = document.getElementById("editImageModal" + key);
-
-        // Get the <span> element that closes the modal
-        // var span = document.getElementsByClassName("closeEditImageModal" + key)[0];
-
-        modal.style.display = "block";
-
-        // When the user clicks on <span> (x), close the modal
-        // span.onclick = function() {
-        //     modal.style.display = "none";
-        // }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-    }
-
     //Shows and hides the link input in the examples update
     function showUpdateLinkInput(id) {
         //Check if the element is already displayed
-        if (document.getElementById(id).style.display == "block") {
+        if (document.getElementById(id).style.display === "block") {
             hideElement(id);
         } else {
             document.getElementById(id).style.display = "block";
@@ -2559,7 +2544,7 @@ require("head.php");
     //Hides the appropriate submit button and title
     function hideSubmit(submitId, titleId) {
         //If the button is already hidden call a function to show it
-        if (document.getElementById(submitId).style.display != "none") {
+        if (document.getElementById(submitId).style.display !== "none") {
             document.getElementById(submitId).style.display = "none";
             document.getElementById(titleId).style.display = "none";
         } else {
@@ -2576,7 +2561,7 @@ require("head.php");
     //Shows a single occurrence of an element that may occur several times on the page
     function showUniqueElement(element, button, showMsg, hideMsg) {
         //If the element is not visible
-        if (document.getElementById(element).style.display == "none") {
+        if (document.getElementById(element).style.display === "none") {
             document.getElementById(element).style.display = "block";
             updateButton(button, hideMsg);
         } else {
@@ -2606,10 +2591,10 @@ require("head.php");
             document.getElementById("educationTab").style.backgroundColor = null;
             document.getElementById("projectTab").style.backgroundColor = "#D3D3D3";
             hideElement('editEducation');
-        } else if (show == "showNceaInput") {
+        } else if (show === "showNceaInput") {
             document.getElementById("newNceaInput").style.display = "block";
             hideElement("newGpaInput");
-        } else if (show == "showGpaInput") {
+        } else if (show === "showGpaInput") {
             document.getElementById("newGpaInput").style.display = "block";
             hideElement("newNceaInput");
         }
@@ -2639,20 +2624,20 @@ require("head.php");
     }
 
     //Takes a parent div and array of child inputs
-    function showCreditsGpa(show, childInputs) {
+    function showCreditsGpa(show) {
         var id = 0;
         //Change div for updating
         if (show.includes("Update")) {
             if (show.includes("Credits")) {
                 //isolate the id
-                id = show.substring("showUpdateEducationCreditsDiv".length)
+                id = show.substring("showUpdateEducationCreditsDiv".length);
 
                 //Show and hide the relevant divs
                 document.getElementById("showUpdateEducationCreditsDiv" + id).style.display = 'block';
                 hideElement("showUpdateEducationGpaDiv" + id);
 
             } else if (show.includes("Gpa")) {
-                id = show.substring("showUpdateEducationGpaDiv".length)
+                id = show.substring("showUpdateEducationGpaDiv".length);
 
                 //Show and hide the relevant divs
                 document.getElementById("showUpdateEducationGpaDiv" + id).style.display = 'block';
@@ -2699,7 +2684,7 @@ require("head.php");
             /*for each item in the array...*/
             for (i = 0; i < arr.length; i++) {
                 /*check if the item starts with the same letters as the text field value:*/
-                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                if (arr[i].substr(0, val.length).toUpperCase() === val.toUpperCase()) {
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
                     /*make the matching letters bold:*/
@@ -2711,8 +2696,8 @@ require("head.php");
                     b.addEventListener("click", function (e) {
                         /*insert the value for the autocomplete text field:*/
                         inp.value = this.getElementsByTagName("input")[0].value;
-                        /*close the list of autocompleted values,
-                        (or any other open lists of autocompleted values:*/
+                        /*close the list of autocomplete values,
+                        (or any other open lists of autocomplete values:*/
                         closeAllLists();
                     });
                     a.appendChild(b);
@@ -2723,19 +2708,19 @@ require("head.php");
         inp.addEventListener("keydown", function (e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) {
+            if (e.keyCode === 40) {
                 /*If the arrow DOWN key is pressed,
                 increase the currentFocus variable:*/
                 currentFocus++;
                 /*and and make the current item more visible:*/
                 addActive(x);
-            } else if (e.keyCode == 38) { //up
+            } else if (e.keyCode === 38) { //up
                 /*If the arrow UP key is pressed,
                 decrease the currentFocus variable:*/
                 currentFocus--;
                 /*and and make the current item more visible:*/
                 addActive(x);
-            } else if (e.keyCode == 13) {
+            } else if (e.keyCode === 13) {
                 /*If the ENTER key is pressed, prevent the form from being submitted,*/
                 e.preventDefault();
                 if (currentFocus > -1) {
@@ -2763,12 +2748,12 @@ require("head.php");
             }
         }
 
-        function closeAllLists(elmnt) {
+        function closeAllLists(element) {
             /*close all autocomplete lists in the document,
             except the one passed as an argument:*/
             var x = document.getElementsByClassName("autocomplete-items");
             for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
+                if (element !== x[i] && element !== inp) {
                     x[i].parentNode.removeChild(x[i]);
                 }
             }
@@ -2834,14 +2819,16 @@ require("head.php");
         return array;
     }
 
-    //Set the error/success message timeout
-    $(document).ready(function () {
-        $('.alert').delay(10000).fadeOut(300);
-    });
+
+        $(document).ready(function () {
+            $('.alert').delay(10000).fadeOut(300);
+        });
+
+
 </script>
 <!--Called last so that it renders at the top-->
 <?php
-require("header.php");;
+require("header.php");
 //Pull information from the footer page
 require("footer.php");
 

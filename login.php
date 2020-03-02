@@ -34,10 +34,10 @@
                         </h2>
                     </div>
                     <div>
-                        <input class="loginBox" type="text" name="username" placeholder="Username" id="username" required>
+                        <label for="username"></label><input class="loginBox" type="text" name="username" placeholder="Username" id="username" required>
                     </div>
                     <div>
-                        <input class="loginBox" type="password" name="password" placeholder="Password" id="password" required>
+                        <label for="password"></label><input class="loginBox" type="password" name="password" placeholder="Password" id="password" required>
                     </div>
                     <div>
                         <input class="indexButton loginBox" type="submit" value="Login">

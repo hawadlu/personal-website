@@ -43,11 +43,10 @@ a:hover {
 
 /*STYLE THE FORMS*/
 form{
-  margin:0px; padding:0px; display:inline;
+  margin:0; padding:0; display:inline;
 }
 
 input{
-  padding: 0;
   height: 100%;
   width: 100%;
   border: 1px solid transparent;
@@ -79,10 +78,6 @@ input[type=checkbox] {
 }
 
 /*Used to round the corners of some images*/
-.rounded{
-  border-radius: 10px;
-  margin: 0;
-}
 
 /*Style the checkboxes*/
 .checkbox {
@@ -236,68 +231,12 @@ button {
 
 /*THE NAV*/
 /* Grid styling nav*/
-.nav-grid-container {
-  background-color: #9A9591;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: ". . .";
-  opacity: 100%;
-}
 
 /*The nav hover effect*/
-.hover-effect:hover {
-  background-color:rgba(255, 255, 255, 0.5);
-}
-
-.hamburger {
-  display: none;
-}
 
 /*For mobile devices*/
 @media (max-width:650px){
-  .hamburger {
-    display: block;
-    background-color: #9A9591;
-  }
 
-  .hamburger:hover .nav-grid-container {
-    background-color: #9A9591;
-    display: block;
-  }
-
-  .hamburgerImg {
-    max-height: 50px;
-    max-width: 50px;
-  }
-
-  .nav-grid-container {
-    background-color: #9A9591;
-    width: 100%;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-areas: " . " " . " ".";
-    opacity: 100%;
-  }
-
-  .dropdown {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    z-index: -1;
-  }
-
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    width: 100%;
-    opacity: 100%;
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
 }
 
 
@@ -400,7 +339,7 @@ button {
   top: 0;
   left: 0;
   height: auto;
-  box-shadow: 0px 0px 10px 0px;
+  box-shadow: 0 0 10px 0;
 }
 
 /*BUTTONS ON THE INDEX PAGE*/
@@ -484,13 +423,6 @@ button {
 }
 
 /*used to position the logout button in the upper right corner of the page*/
-.topCorner{
-  position:absolute;
-  top:0;
-  right:0;
-}
-
-
 
 
 /*THE EDUCATION GRID*/
@@ -551,7 +483,7 @@ button {
 
 /*THE EDUCATION GRID STYLED TO ALLOW EDITING */
 .education-grid-container-edit {
-  padding: 5px 0px;
+  padding: 5px 0;
   display: grid;
   grid-template-columns: 20% 10% 30% 7.5% 22.5% 10%;
   grid-template-rows: auto auto;
@@ -582,6 +514,8 @@ button {
 .education-Year-Edit { grid-area: Year; }
 .education-subjectLevel { grid-area: subjectLevel; }
 .codeTitle-Edit {display: none;}
+
+/*noinspection CssUnusedSymbol*/
 .subjectTitle-Edit {display: none;}
 .yearTitle-Edit {display: none;}
 .creditsTitle-Edit {display: none;}
@@ -857,9 +791,6 @@ button {
 }
 
 /*Rounds only the top corners. called for the first instance of the experience and education div*/
-.roundTop {
-  border-radius: 20px 20px 0 0;
-}
 
 /*Rounds only the bottom corners. called for the first instance of the experience div*/
 .roundBottom {
@@ -974,9 +905,6 @@ button {
 }
 
 /* Hide the images by default */
-.imageHolder {
-  display: none;
-}
 
 /* Next & previous buttons */
 .prev,
@@ -994,13 +922,6 @@ button {
 }
 
 /* Round specific parts of the buttons*/
-.roundBottomLeft {
-  border-radius: 0 0 0 10px;
-}
-
-.roundBottomRight {
-  border-radius: 0 0 10px 0;
-}
 
 /* Position the "next button" to the right */
 .next {
@@ -1026,48 +947,14 @@ button {
 }
 
 /* THE COOKIE POPUP */
-#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  filter:alpha(opacity=70);
-  -moz-opacity:0.7;
-  -khtml-opacity: 0.7;
-  opacity: 0.7;
-  z-index: 100;
-  display: none;
-}
 .cnt223 a{
   text-decoration: none;
 }
 /*The popup width*/
-.popup{
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
-  display: none;
-  position: fixed;
-  z-index: 101;
-  background-color: #ffffff;
-}
 
 .cnt223 p a{
   color: #d90029;
   font-weight: bold;
-}
-.cnt223 .x{
-  float: right;
-  height: 35px;
-  left: 22px;
-  position: relative;
-  top: -25px;
-  width: 34px;
-}
-.cnt223 .x:hover{
-  cursor: pointer;
 }
 
 /*LOGIN*/
@@ -1098,42 +985,10 @@ button {
 
 /*THE MODAL USED TO CREATE NEW ITEMS*/
 /* The Modal (background) */
-.newItemModal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-}
 
 /* Modal Content/Box */
-.newItemModalContent {
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-.newItemModalInnerDiv {
-  background-color: #d3d3d3;
-}
 
 /* The Close Button */
-.closeNewItemModal {
-  color: #e97e51;
-  /*float: right;*/
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.closeNewItemModal:hover,
-.closeNewItemModal:focus {
-  color: #d90029;
-  text-decoration: none;
-  cursor: pointer;
-}
 
 /*BUTTON USED WHEN CALLING FUNCTION TO SHOW/EDIT IMAGES*/
 .imageButton {
@@ -1183,33 +1038,9 @@ button {
 }
 
 /* The Close Button */
-.close {
-  color: #aa5521;
-  float: left;
-  font-size: 60px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #d90029;
-  text-decoration: none;
-  cursor: pointer;
-}
 
 /*EDIT IMAGES MODAL*/
 /* The Modal (background) */
-.editAddImageModal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: auto; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-}
 
 /* The Close Button */
 .closeEditAddModal {
@@ -1217,10 +1048,6 @@ button {
   float: left;
   font-size: 28px;
   font-weight: bold;
-}
-
-.editAddImageModalContent {
-  padding-top: 30px;
 }
 
 .closeEditAddModal:hover,
@@ -1231,11 +1058,6 @@ button {
 }
 
 /*Styling specific to the add images modal*/
-.addImagesModal {
-  width: 50%;
-  margin-left: 25%;
-  margin-right: 25%;
-}
 
 
 /*AUTOCOMPLETE FUNCTIONALITY*/

@@ -24,7 +24,7 @@
             // Note: remember to use password_hash in your registration file to store the hashed passwords.
 
             if (hash('sha256', $_POST['password']) == $password) {
-                // Verification success! User has loggedin!
+                // Verification success! User has logged in!
                 // Create sessions so we know the user is logged in, they basically act like cookies but remember the data on the server.
                 session_regenerate_id();
                 $_SESSION['loggedin'] = TRUE;
@@ -76,5 +76,5 @@ function redirectWithSuccess($cookieValue, $redirectTo)
     exit();
 }
 
-?>
+
 

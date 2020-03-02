@@ -20,18 +20,17 @@
         </div>
         <div class="popup-content roundAll">
             <!--The text and other information displayed in the cookie popup-->
-            <h1 style="color: black;">
-                <div style="text-align: center; padding-top: 10px">
+            <div style="text-align: center; padding-top: 10px">
+                <h1 style="color: black;">
                     Important Notice
-                </div>
-            </h1>
+                </h1>
+            </div>
             <p style="padding: 10px;">
                 Our website collects data and uses cookies. Click <a class="onHover" href="about.php?privacy=true">here</a>
                 to view our privacy and cookie policies. By continuing to use this website you consent to the
                 use of cookies and data.
-                <br/>
-                <br/>
-
+                <br>
+                <br>
             </p>
         </div>
     </div>

@@ -172,7 +172,6 @@ function getUniqueValuesForSession($array, $location)
                         }
                         ?>
                     <p class="alignTextLeft">Languages: <?php echo $languages; ?></p>
-                    </p>
                 </div>
                 <div class="examples-link">
                     <p class="alignTextLeft">

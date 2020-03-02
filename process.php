@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 //Check if the user is logged in
 session_start();
@@ -163,12 +163,17 @@ if (isset($_POST["newEducationRecord"])) {
 
 
     if ($loggedIn == true) {
-        //Run function to insert the record into the databse
+        //Run function to insert the record into the database
         insertValues($toInsert, $con, 'education');
 
     } else {
         //Generate a new unique key
         $uniqueKey = generatePlayAroundUniqueKey($_SESSION['playAroundEducation']);
+
+        //Return error if null
+        if (is_null($uniqueKey)) {
+            redirectWithError('Failed to create record.', 'edit.php');
+        }
 
         //Add the record to the session array
         $newArray = [$uniqueKey, $postedNewInstitution, $postedNewSubject, $postedNewSubjectCode, $postedNewCodeExtension, $postedNewGrade, $postedNewCredits, $postedNewSubjectLevel, $postedNewSubjectYear];
@@ -430,7 +435,7 @@ if (isset($_POST['submitExampleUpdate'])) {
     } else {
         $location = findPlayAroundKeyLocation($uniqueKey, $_SESSION['playAroundExamples']);
 
-        //Update the value in the session array (refence the previous version of this record because the images do not change here)
+        //Update the value in the session array (reference the previous version of this record because the images do not change here)
         $_SESSION['playAroundExamples'][$location] = [$uniqueKey, $_SESSION['playAroundExamples'][$location][1], $postedExampleName, $languagesUsed, $postedExampleLink,
             $postedExampleGithub, $postedExampleDescription, $postedExampleYear];
     }
@@ -744,6 +749,12 @@ if (isset($_POST['newExampleRecord'])) {
 
         //Set the new value
         $key = generatePlayAroundUniqueKey($_SESSION['playAroundExamples']);
+
+        //Return error if null
+        if (is_null($uniqueKey)) {
+            redirectWithError('Failed to create record', 'edit.php');
+        }
+
         $newArray = [$key, $imageArray, $postedNewExampleName, $languagesUsed, $postedNewExampleLink, $postedNewExampleGithub, $postedNewExampleDescription, $postedNewExampleYear];
         array_push($_SESSION['playAroundExamples'], $newArray);
     }
@@ -766,11 +777,11 @@ function generatePlayAroundUniqueKey($array)
     while (true) {
         if (!in_array($key, $keysInUse)) {
             return $key;
-            exit();
         } else {
             $key++;
         }
     }
+    return null;
 }
 
 //Finds the unique key of a value in one of the play around arrays. Returns it's location, false if it was not found
@@ -963,15 +974,13 @@ function setCleanupEducation($key, mysqli $con)
     $query->close();
 
     //The tables that use this FK, the table that stores the FK, the column where the FK can be found, the value
-    $toDelete = [[['education'], 'institution', 'institutionFK', $institutionFK],
+    return [[['education'], 'institution', 'institutionFK', $institutionFK],
         [['education'], 'grade', 'gradeFK', $gradeFK],
         [['education'], 'subjectLevel', 'subjectLevelFK', $subjectLevelFK],
         [['education', 'examples'], 'year', 'yearFK', $yearFK],
         [['education'], 'subjectCode', 'subjectCodeFK', $subjectCodeFK],
         [['education'], 'credits', 'creditsFK', $creditsFK],
         [['education'], 'codeExtension', 'codeExtensionFK', $codeExtensionFK]];
-
-    return $toDelete;
 }
 
 //Takes a 2d array of foreign keys and cleans any that are no longer needed
@@ -1322,9 +1331,9 @@ function checkLength($value, $maxLen)
 }
 
 //shortens a value to 40 chars including (...). Returns the result.
-function trimString($value)
+function trimString($value, $max)
 {
-    return substr($value, 0, 37) . "...";
+    return substr($value, 0, $max - 3) . "...";
 }
 
 //Checks to see if a value is a member of the supplied values. returns true if it is.
@@ -1480,15 +1489,15 @@ function resize_image($file, $w, $h, $crop = true)
         } else {
             $height = ceil($height - ($height * abs($r - $w / $h)));
         }
-        $newwidth = $w;
-        $newheight = $h;
+        $newWidth = $w;
+        $newHeight = $h;
     } else {
         if ($w / $h > $r) {
-            $newwidth = $h * $r;
-            $newheight = $h;
+            $newWidth = $h * $r;
+            $newHeight = $h;
         } else {
-            $newheight = $w / $r;
-            $newwidth = $w;
+            $newHeight = $w / $r;
+            $newWidth = $w;
         }
     }
 
@@ -1504,8 +1513,8 @@ function resize_image($file, $w, $h, $crop = true)
         $src = imagecreatefromjpeg($file);
     }
 
-    $dst = imagecreatetruecolor($newwidth, $newheight);
-    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+    $dst = imagecreatetruecolor($newWidth, $newHeight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
     return $dst;
 }
