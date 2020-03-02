@@ -2,8 +2,6 @@
 <!--Pulls in the head and other required pages-->
 <?php
 require("head.php");
-
-//todo add section where people can find my contact informa i.e. email addresss.
 ?>
 <body onload="showPrivacy()" class="background-img">
 <div class="page-grid-container">
@@ -15,7 +13,7 @@ require("head.php");
             </h1>
         </div>
         <p style="padding: 10px">
-            <img class="aboutMeImg" src="images/profile pic.png" alt="Me">
+            <img class="aboutMeImg" src="images/Profile Pic.png" alt="Me">
 
             I have chosen to go down the software development route because I feel that the teamwork environment that
             the industry provides is a natural fit for my personality. I enjoy working as part of a team (especially
@@ -36,6 +34,10 @@ require("head.php");
             company.
 
         </p>
+        <div style="text-align: center">
+            <h3>Get in touch</h3>
+            <p>Email: <a href="mailto:hawadlu@outlook.com">hawadlu@outlook.com</a></p>
+        </div>
         <button id="show" style="display: block;" class="hidePrivacy roundBottom" onclick="showElement('privacy')">Show my
             cookie and privacy policy
         </button>
@@ -95,9 +97,9 @@ require("head.php");
     <script>
         //Shows the privacy if necessary
         function showPrivacy() {
-            var urlString = window.location.href;
-            var url = new URL(urlString);
-            var c = url.searchParams.get('privacy');
+            const urlString = window.location.href;
+            const url = new URL(urlString);
+            const c = url.searchParams.get('privacy');
 
             console.log(URL.searchParams);
 
@@ -113,7 +115,7 @@ require("head.php");
             }
             document.getElementById(id).style.display = "block";
 
-            var privacy = document.getElementById('privacy');
+            const privacy = document.getElementById('privacy');
             privacy.scrollIntoView();
         }
 
@@ -130,7 +132,7 @@ require("head.php");
 </body>
 <!--Called last so that it renders at the top-->
 <?php
-require("header.php");;
+require("header.php");
 //Pull information from the footer page
 require("footer.php");
 ?>

@@ -13,21 +13,22 @@
         //Check if logged in. Place a logout button if required
         if (isset($_SESSION['loggedin'])) {
             ?>
-            <a href="logout.php" class="topCorner" style="color: #d90029">Logout</a>
+            <a href="logout.php" style="color: #d90029">Logout</a>
             <?php
         }
         ?>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <img src="images/hamburger%20icon.png">
+        <a href="javascript:void(0);" class="icon" onclick="loadHamburger()">
+            <img alt = "Hamburger icon" src="images/Hamburger Icon.png">
         </a>
     </div>
 
     <script>
-        function myFunction() {
-            var x = document.getElementById("myTopnav");
+        function loadHamburger() {
+            const x = document.getElementById("myTopnav");
             if (x.className === "topnav") {
                 x.className += " responsive";
             } else {
+                x.className = "topnav";
                 x.className = "topnav";
             }
         }

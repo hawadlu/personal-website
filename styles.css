@@ -43,11 +43,10 @@ a:hover {
 
 /*STYLE THE FORMS*/
 form{
-  margin:0px; padding:0px; display:inline;
+  margin:0; padding:0; display:inline;
 }
 
 input{
-  padding: 0;
   height: 100%;
   width: 100%;
   border: 1px solid transparent;
@@ -79,10 +78,6 @@ input[type=checkbox] {
 }
 
 /*Used to round the corners of some images*/
-.rounded{
-  border-radius: 10px;
-  margin: 0;
-}
 
 /*Style the checkboxes*/
 .checkbox {
@@ -99,6 +94,26 @@ input[type=checkbox] {
   padding-bottom: 2%;
 }
 
+/*Styling for the message that informs the user what they can and can't edit*/
+.editMessage {
+  background-color: white;
+  opacity: 80%;
+  height: auto;
+  text-align: center;
+  line-height: normal;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+@media (max-width: 750px) {
+  .editMessage {
+    height: auto;
+    line-height: normal;
+    padding: 10px;
+  }
+}
+
 /* VARIOUS BG IMAGE SIZES*/
 /*Too small for any image*/
 @media (max-width: 320px) {
@@ -109,10 +124,10 @@ input[type=checkbox] {
 
 /*Devices with a resolution between W320-W412 and H556-H732*/
 @media (min-width: 320px) and (max-width: 412px) {
-    .background-img {
-      background: #ffffff url("images/bg Images/w320-412 h556-732.jpeg") fixed;
-      height: 100%;
-    }
+  .background-img {
+    background: #ffffff url("images/bg Images/w320-412 h556-732.jpeg") fixed;
+    height: 100%;
+  }
 }
 
 /*Devices with a resolution between W412-W600 and H732-H960*/
@@ -216,68 +231,12 @@ button {
 
 /*THE NAV*/
 /* Grid styling nav*/
-.nav-grid-container {
-  background-color: #9A9591;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: ". . .";
-  opacity: 100%;
-}
 
 /*The nav hover effect*/
-.hover-effect:hover {
-  background-color:rgba(255, 255, 255, 0.5);
-}
-
-.hamburger {
-  display: none;
-}
 
 /*For mobile devices*/
 @media (max-width:650px){
-  .hamburger {
-    display: block;
-    background-color: #9A9591;
-  }
 
-  .hamburger:hover .nav-grid-container {
-    background-color: #9A9591;
-    display: block;
-  }
-
-  .hamburgerImg {
-    max-height: 50px;
-    max-width: 50px;
-  }
-
-  .nav-grid-container {
-    background-color: #9A9591;
-    width: 100%;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-areas: " . " " . " ".";
-    opacity: 100%;
-  }
-
-  .dropdown {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    z-index: -1;
-  }
-
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    width: 100%;
-    opacity: 100%;
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
 }
 
 
@@ -380,7 +339,7 @@ button {
   top: 0;
   left: 0;
   height: auto;
-  box-shadow: 0px 0px 10px 0px;
+  box-shadow: 0 0 10px 0;
 }
 
 /*BUTTONS ON THE INDEX PAGE*/
@@ -464,13 +423,6 @@ button {
 }
 
 /*used to position the logout button in the upper right corner of the page*/
-.topCorner{
-  position:absolute;
-  top:0;
-  right:0;
-}
-
-
 
 
 /*THE EDUCATION GRID*/
@@ -479,7 +431,7 @@ button {
   grid-template-columns: 15% 45% 7.5% 22.5% 10%;
   grid-template-rows: auto;
   grid-template-areas:
-  "Code Subject Credits subjectLevel Year";
+          "Code Subject Credits subjectLevel Year";
 }
 
 .education-Titles-Large {
@@ -515,11 +467,11 @@ button {
     grid-template-columns: 75px auto;
     grid-template-rows: auto auto auto auto auto;
     grid-template-areas:
-    "codeTitle Code"
-    "subjectTitle Subject"
-    "yearTitle Year"
-    "creditsTitle Credits"
-    "subjectLevelTitle subjectLevel";
+            "codeTitle Code"
+            "subjectTitle Subject"
+            "yearTitle Year"
+            "creditsTitle Credits"
+            "subjectLevelTitle subjectLevel";
   }
 
   .codeTitle {grid-area: codeTitle; display: block}
@@ -531,6 +483,7 @@ button {
 
 /*THE EDUCATION GRID STYLED TO ALLOW EDITING */
 .education-grid-container-edit {
+  padding: 5px 0;
   display: grid;
   grid-template-columns: 20% 10% 30% 7.5% 22.5% 10%;
   grid-template-rows: auto auto;
@@ -561,6 +514,8 @@ button {
 .education-Year-Edit { grid-area: Year; }
 .education-subjectLevel { grid-area: subjectLevel; }
 .codeTitle-Edit {display: none;}
+
+/*noinspection CssUnusedSymbol*/
 .subjectTitle-Edit {display: none;}
 .yearTitle-Edit {display: none;}
 .creditsTitle-Edit {display: none;}
@@ -591,11 +546,12 @@ button {
 
 /*GRID THAT CONTAINS THE UPDATE AND EDIT BUTTONS*/
 .updateDelete-container {
-  height: 100%;
+  height: 30px;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-areas: "delete update";
-  padding-top: 20px;
+  grid-template-areas:
+          "delete update";
+  /* padding-top: 20px; */
 }
 
 .delete { grid-area: delete;
@@ -645,12 +601,12 @@ button {
   grid-template-columns: 33.3% 33.3% 33.3%;
   grid-template-rows: auto;
   grid-template-areas:
-  "institutionTitle levelTitle yearTitleNewEducation"
-  "addInstitution addLevel addYear"
-  "subjectTitleNew codeTitleNew codeExtensionTitle"
-  "addSubject addCode addCodeExtension"
-  "gradeTypeTitle gradeTitleNew submitTitleNew"
-  "addGradeType addGrade submit";
+          "institutionTitle levelTitle yearTitleNewEducation"
+          "addInstitution addLevel addYear"
+          "subjectTitleNew codeTitleNew codeExtensionTitle"
+          "addSubject addCode addCodeExtension"
+          "gradeTypeTitle gradeTitleNew submitTitleNew"
+          "addGradeType addGrade submit";
 }
 
 /*Styling for tablets*/
@@ -688,24 +644,24 @@ button {
     grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas:
-    "institutionTitle"
-    "addInstitution"
-    "levelTitle"
-    "addLevel"
-    "yearTitleNewEducation"
-    "addYear"
-    "subjectTitleNew"
-    "addSubject"
-    "codeTitleNew"
-    "addCode"
-    "codeExtensionTitle"
-    "addCodeExtension"
-    "gradeTypeTitle"
-    "addGradeType"
-    "gradeTitleNew"
-    "addGrade"
-    "submitTitleNew"
-    "submit"
+            "institutionTitle"
+            "addInstitution"
+            "levelTitle"
+            "addLevel"
+            "yearTitleNewEducation"
+            "addYear"
+            "subjectTitleNew"
+            "addSubject"
+            "codeTitleNew"
+            "addCode"
+            "codeExtensionTitle"
+            "addCodeExtension"
+            "gradeTypeTitle"
+            "addGradeType"
+            "gradeTitleNew"
+            "addGrade"
+            "submitTitleNew"
+            "submit"
   }
 }
 
@@ -727,7 +683,7 @@ button {
 .addGradeType { grid-area: addGradeType; }
 .addGrade { grid-area: addGrade; }
 .submit { grid-area: submit;
-padding-bottom: 20px;}
+  padding-bottom: 20px;}
 
 /*GRID CONTAINING ALL THE FIELDS FOR ADDING A NEW EXAMPLE RECORD*/
 .addExampleContainer {
@@ -760,22 +716,22 @@ padding-bottom: 20px;}
     grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas:
-    "nameTitle"
-    "addName"
-    "yearTitleNewExample"
-    "addYear"
-    "linksTitle"
-    "addLink"
-    "addGithub"
-    "languagesTitle"
-    "addLanguages"
-    "addNewLanguage"
-    "descriptionTitle"
-    "addDescription"
-    "imagesTitle"
-    "addImages"
-    "submitTitle"
-    "submit";
+            "nameTitle"
+            "addName"
+            "yearTitleNewExample"
+            "addYear"
+            "linksTitle"
+            "addLink"
+            "addGithub"
+            "languagesTitle"
+            "addLanguages"
+            "addNewLanguage"
+            "descriptionTitle"
+            "addDescription"
+            "imagesTitle"
+            "addImages"
+            "submitTitle"
+            "submit";
   }
 }
 
@@ -801,7 +757,7 @@ padding-bottom: 20px;}
 .addImages { grid-area: addImages; }
 .submitTitle { grid-area: submitTitle; }
 .submit { grid-area: submit;
-padding-bottom: 20px;}
+  padding-bottom: 20px;}
 
 /*Styling for mobile*/
 @media (max-width: 1000px) {
@@ -835,9 +791,6 @@ padding-bottom: 20px;}
 }
 
 /*Rounds only the top corners. called for the first instance of the experience and education div*/
-.roundTop {
-  border-radius: 20px 20px 0 0;
-}
 
 /*Rounds only the bottom corners. called for the first instance of the experience div*/
 .roundBottom {
@@ -847,7 +800,7 @@ padding-bottom: 20px;}
 /*THE EXPERIENCE GRID*/
 .examples-grid-container {
   display: grid;
-    padding: 5%;
+  padding: 5%;
   grid-template-columns: 1fr;
   grid-template-rows: auto;
   grid-template-areas: "name"
@@ -952,9 +905,6 @@ padding-bottom: 20px;}
 }
 
 /* Hide the images by default */
-.imageHolder {
-  display: none;
-}
 
 /* Next & previous buttons */
 .prev,
@@ -972,13 +922,6 @@ padding-bottom: 20px;}
 }
 
 /* Round specific parts of the buttons*/
-.roundBottomLeft {
-  border-radius: 0 0 0 10px;
-}
-
-.roundBottomRight {
-  border-radius: 0 0 10px 0;
-}
 
 /* Position the "next button" to the right */
 .next {
@@ -1004,48 +947,14 @@ padding-bottom: 20px;}
 }
 
 /* THE COOKIE POPUP */
-#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  filter:alpha(opacity=70);
-  -moz-opacity:0.7;
-  -khtml-opacity: 0.7;
-  opacity: 0.7;
-  z-index: 100;
-  display: none;
-}
 .cnt223 a{
   text-decoration: none;
 }
 /*The popup width*/
-.popup{
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
-  display: none;
-  position: fixed;
-  z-index: 101;
-  background-color: #ffffff;
-}
 
 .cnt223 p a{
   color: #d90029;
   font-weight: bold;
-}
-.cnt223 .x{
-  float: right;
-  height: 35px;
-  left: 22px;
-  position: relative;
-  top: -25px;
-  width: 34px;
-}
-.cnt223 .x:hover{
-  cursor: pointer;
 }
 
 /*LOGIN*/
@@ -1076,42 +985,10 @@ padding-bottom: 20px;}
 
 /*THE MODAL USED TO CREATE NEW ITEMS*/
 /* The Modal (background) */
-.newItemModal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-}
 
 /* Modal Content/Box */
-.newItemModalContent {
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-.newItemModalInnerDiv {
-  background-color: #d3d3d3;
-}
 
 /* The Close Button */
-.closeNewItemModal {
-  color: #e97e51;
-  /*float: right;*/
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.closeNewItemModal:hover,
-.closeNewItemModal:focus {
-  color: #d90029;
-  text-decoration: none;
-  cursor: pointer;
-}
 
 /*BUTTON USED WHEN CALLING FUNCTION TO SHOW/EDIT IMAGES*/
 .imageButton {
@@ -1131,7 +1008,7 @@ padding-bottom: 20px;}
   overflow: scroll;
   margin-top: 100px;
   max-height: 65%;
-/* bottom: 0; */
+  /* bottom: 0; */
   top: 0;
   position: fixed;
   margin-left: 5%;
@@ -1146,41 +1023,24 @@ padding-bottom: 20px;}
 }
 
 .popup-close { grid-area: close;
-float: left;
-width: 100%}
+  float: left;
+  width: 100%}
 
 .popup-content { grid-area: content;
-background-color: white;
-width: 100%;}
+  background-color: white;
+  width: 100%;}
+
+/*Add some padding for larger screens*/
+@media (min-width: 1000px) {
+  .popup-content {
+    padding-bottom: 50px;
+  }
+}
 
 /* The Close Button */
-.close {
-  color: #aa5521;
-  float: left;
-  font-size: 60px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #d90029;
-  text-decoration: none;
-  cursor: pointer;
-}
 
 /*EDIT IMAGES MODAL*/
 /* The Modal (background) */
-.editAddImageModal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: auto; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-}
 
 /* The Close Button */
 .closeEditAddModal {
@@ -1188,10 +1048,6 @@ width: 100%;}
   float: left;
   font-size: 28px;
   font-weight: bold;
-}
-
-.editAddImageModalContent {
-  padding-top: 30px;
 }
 
 .closeEditAddModal:hover,
@@ -1202,11 +1058,6 @@ width: 100%;}
 }
 
 /*Styling specific to the add images modal*/
-.addImagesModal {
-  width: 50%;
-  margin-left: 25%;
-  margin-right: 25%;
-}
 
 
 /*AUTOCOMPLETE FUNCTIONALITY*/

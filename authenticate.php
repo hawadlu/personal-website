@@ -19,11 +19,12 @@
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($id, $password);
             $stmt->fetch();
+            $stmt->close();
             // Account exists, now we verify the password.
             // Note: remember to use password_hash in your registration file to store the hashed passwords.
 
             if (hash('sha256', $_POST['password']) == $password) {
-                // Verification success! User has loggedin!
+                // Verification success! User has logged in!
                 // Create sessions so we know the user is logged in, they basically act like cookies but remember the data on the server.
                 session_regenerate_id();
                 $_SESSION['loggedin'] = TRUE;
@@ -31,15 +32,49 @@
                 $_SESSION['id'] = $id;
 
                 //Redirect to the edit page
-                header("location: edit.php");
+                redirectWithSuccess('Logged in.', 'login.php');
+
             } else {
+                redirectWithError('Incorrect username or password', 'login.php');
                 echo 'Incorrect password!';
             }
         } else {
-            echo 'Incorrect username!';
+            redirectWithError('Incorrect username or password', 'login.php');
         }
 
         $stmt->close();
     }
-?>
+
+//Redirects the user to the specified page with an error cookie set.
+function redirectWithError($cookieValue, $redirectTo)
+{
+    //Add a flag to the front of the cookie describing what it is
+    $cookieValue = "ERROR: " . $cookieValue;
+
+    //Set the cookie
+    setcookie('errorMsg', $cookieValue);
+
+    //Redirect
+    header("location: " . $redirectTo);
+
+    //Stop all execution
+    exit();
+}
+
+function redirectWithSuccess($cookieValue, $redirectTo)
+{
+    //Add a flag to the front of the cookie describing what it is
+    $cookieValue = "Success: " . $cookieValue;
+
+    //Set the cookie
+    setcookie('successMsg', $cookieValue);
+
+    //Redirect
+    header("location: " . $redirectTo);
+
+    //Stop all execution
+    exit();
+}
+
+
 
