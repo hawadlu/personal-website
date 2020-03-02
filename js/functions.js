@@ -41,12 +41,12 @@ function showElement(id) {
             document.getElementById("addProjectTab").style.backgroundColor = '#eee';
             hideElement('addEducation');
         } else if (id === "editEducation") {
-            document.getElementById("projectTab").style.backgroundColor = '#d3d3d3';
-            document.getElementById("educationTab").style.backgroundColor = "white";
+            document.getElementById("projectTab").style.backgroundColor = 'white';
+            document.getElementById("educationTab").style.backgroundColor = "#d3d3d3";
             hideElement('editProjects');
         } else if (id === 'editProjects') {
-            document.getElementById("educationTab").style.backgroundColor = '#d3d3d3';
-            document.getElementById("projectTab").style.backgroundColor = "white";
+            document.getElementById("educationTab").style.backgroundColor = 'white';
+            document.getElementById("projectTab").style.backgroundColor = "#d3d3d3";
             hideElement('editEducation');
         } else if (id === "showNceaInput") {
             document.getElementById("newNceaInput").style.display = "block";

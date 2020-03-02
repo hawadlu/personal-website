@@ -1,6 +1,7 @@
 <?php
     session_start();
     require("connect.php");
+    require("functions.php");
 
     //Now we check if the data from the login form was submitted, isset() will check if the data exists.
     if ( !isset($_POST['username'], $_POST['password']) ) {
@@ -44,37 +45,6 @@
 
         $stmt->close();
     }
-
-//Redirects the user to the specified page with an error cookie set.
-function redirectWithError($cookieValue, $redirectTo)
-{
-    //Add a flag to the front of the cookie describing what it is
-    $cookieValue = "ERROR: " . $cookieValue;
-
-    //Set the cookie
-    setcookie('errorMsg', $cookieValue);
-
-    //Redirect
-    header("location: " . $redirectTo);
-
-    //Stop all execution
-    exit();
-}
-
-function redirectWithSuccess($cookieValue, $redirectTo)
-{
-    //Add a flag to the front of the cookie describing what it is
-    $cookieValue = "Success: " . $cookieValue;
-
-    //Set the cookie
-    setcookie('successMsg', $cookieValue);
-
-    //Redirect
-    header("location: " . $redirectTo);
-
-    //Stop all execution
-    exit();
-}
 
 
 

@@ -1,16 +1,12 @@
 <?php
-session_start();
 require("head.php");
 require("connect.php");
+require("functions.php");
 
 //Check to see if the playAroundEducation session exists and the user is not logged in
 if (!isset($_SESSION['playAroundEducation'])) {
     //Create some default records
-    $defaultRec1 = [0, "Tawa College", "Computer Science", "COMP", 301, null, 22, "NCEA Level Three", 2018];
-    $defaultRec2 = [1, "Tawa College", "Data Science", "DATS", 312, null, 18, "NCEA Level Two", 2017];
-    $defaultRec3 = [2, "A Test School", "Computer Graphics", "CGRA", 151, "A", null, "Year One University", 2019];
-    //Create the session
-    $_SESSION['playAroundEducation'] = [$defaultRec1, $defaultRec3, $defaultRec2];
+    setupEducationSession();
 }
 if (isset($_SESSION['playAroundEducation'])) {
     //Setup the autocomplete education arrays for the session variables
@@ -58,17 +54,6 @@ if (isset($_SESSION['playAroundEducation'])) {
         }
     }
 }
-function getUniqueValuesForSession($array, $location)
-{
-    $uniqueValues = [];
-    for ($i = 0; $i < sizeof($array); $i++) {
-        //Check if the item at the specified location already exists in the uniqueValues array
-        if (!in_array($array[$i][$location], $uniqueValues)) {
-            array_push($uniqueValues, $array[$i][$location]);
-        }
-    }
-    return $uniqueValues;
-}
 
 /**
  * @param $count
@@ -101,10 +86,10 @@ function calculateClassHeader($count, $recordCount)
     <div class="roundAll editMessage">
         <p>These are your records. You can edit them by clicking on the play around tab!</p>
         <button id="showUserEducation" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userEducation', 'showUserEducation', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
-            Show me what I can mess with.
+            Show me what I can play with.
         </button>
     </div>
-    <div id="userEducation" style="display: none">
+    <div id="userEducation" style="display: none; margin-bottom: 20px;">
         <!--Show the records that the user can edit-->
         <?php
         //Setting a variable so that the institution is only printed once
@@ -140,8 +125,8 @@ function calculateClassHeader($count, $recordCount)
                 //Reset the institution
                 $currentInstitution = $institution;
                 ?>
-                <div style="background-color: #D3D3D3; text-align: center" class="<?php echo $classHeader; ?>">
-                    <h1>
+                <div style="background-color: #D3D3D3; text-align: center; padding-top: 10px;" class="<?php echo $classHeader; ?>">
+                    <h1 style="padding-bottom: 10px;">
                         <?php
                         echo $institution;
                         ?>
@@ -346,8 +331,8 @@ function calculateClassHeader($count, $recordCount)
                 //Reset the institution
                 $currentInstitution = $institution;
                 ?>
-                <div style="background-color: #D3D3D3; text-align: center" class="<?php echo $classHeader; ?>">
-                    <h1>
+                <div style="background-color: #D3D3D3; text-align: center; padding-top: 10px;" class="<?php echo $classHeader; ?>">
+                    <h1 style="padding-bottom: 10px;">
                         <?php
                         echo $institution;
                         ?>
