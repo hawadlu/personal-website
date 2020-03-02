@@ -102,7 +102,7 @@ input[type=checkbox] {
   text-align: center;
   line-height: normal;
   margin-bottom: 20px;
-  margin-top: 20px;
+  /*margin-top: 20px;*/
   padding: 10px;
 }
 
@@ -315,7 +315,7 @@ button {
   right: 0;
   bottom: 0;
   left: 0;
-
+  padding: 10px 0 0 0;
 }
 
 /*STYLING FOR THE MAIN PAGE ELEMENTS*/
@@ -373,6 +373,7 @@ button {
 /*Styling for the new item button*/
 .newItemButton {
   width: 50%;
+  height: 40px;
   border: none;
   font-size: 15px;
   color: #cea702;
@@ -432,6 +433,7 @@ button {
   grid-template-rows: auto;
   grid-template-areas:
           "Code Subject Credits subjectLevel Year";
+  padding: 10px 0 0 0;
 }
 
 .education-Titles-Large {

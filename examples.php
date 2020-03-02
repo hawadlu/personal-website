@@ -1,21 +1,15 @@
 <html lang="English">
 <!--Pulls in the head and other required pages-->
 <?php
-session_start();
 require("head.php");
 require("connect.php");
+require("functions.php");
 
 //Setup the user based records
 //Check to see if the playAroundExamples session exists
 if (!isset($_SESSION['playAroundExamples'])) {
     //Create some default Records
-    $defaultRec1 = [0, ['Images/userImages/cat.jpeg', 'Images/userImages/eraser.jpeg', 'Images/userImages/phone.jpeg'], "How I Saved To World Twice", ["CSS", "PHP", "JavaScript", "HTML"],
-        "http://luke.dx.am", "http://github.com/hawadlu", "Whoops, I forgot to write a description here.", 2019];
-    $defaultRec2 = [1, ['Images/userImages/fork.jpeg', 'Images/userImages/nailClippers.jpeg', 'Images/userImages/phone.jpeg', 'Images/userImages/spring.jpeg'],
-        "What I Ate For Breakfast", ["CSS", "PHP", "RUBY", "Perl"], 'https://breakfast.co.nz', "https://github.com/PushyPixels/BreakfastWithUnity",
-        "Contrary to the opinions of many people. I did not eat a fork, nail clippers, a phone and a spring for breakfast. I ate cornflakes instead. 
-        I know that it's disappointing and a little anticlimactic.", 2020];
-    $_SESSION['playAroundExamples'] = array($defaultRec1, $defaultRec2);
+    setupExampleSession();
 }
 
 if (isset($_SESSION['playAroundExamples'])) {
@@ -47,34 +41,6 @@ if (isset($_SESSION['playAroundExamples'])) {
     $imageArray = $_SESSION['sessionImages'];
     $languageArray = $_SESSION['sessionLanguages'];
 }
-
-//Function to check if a directory is empty
-function dir_is_empty($dir)
-{
-    $handle = opendir($dir);
-    while (false !== ($entry = readdir($handle))) {
-        if ($entry != "." && $entry != "..") {
-            closedir($handle);
-            return FALSE;
-        }
-    }
-    closedir($handle);
-    return TRUE;
-}
-
-function getUniqueValuesForSession($array, $location)
-{
-    $uniqueValues = [];
-    for ($i = 0; $i < sizeof($array); $i++) {
-        //Check if the item at the specified location already exists in the uniqueValues array
-        if (!in_array($array[$i][$location], $uniqueValues)) {
-            array_push($uniqueValues, $array[$i][$location]);
-        }
-    }
-    return $uniqueValues;
-}
-
-
 ?>
 <body class=background-img>
 <div class="page-grid-container">
@@ -82,7 +48,7 @@ function getUniqueValuesForSession($array, $location)
     <div class="roundAll editMessage">
         <p>These are your records. You can edit them by clicking on the play around tab!</p>
         <button id="showUserExamples" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userExamples', 'showUserExamples', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
-            Show me what I can mess with.
+            Show me what I can play with.
         </button>
     </div>
 
@@ -91,7 +57,7 @@ function getUniqueValuesForSession($array, $location)
     $ssCount = 1;
     ?>
 
-    <div id="userExamples" style="display:none;">
+    <div id="userExamples" style="display:none; margin-bottom: 20px;">
         <!--Show the user their own records-->
         <?php
         $examplesArray = $_SESSION['playAroundExamples'];
