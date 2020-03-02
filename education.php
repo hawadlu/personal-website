@@ -1,13 +1,14 @@
 <?php
-require("head.php");
 require("connect.php");
 require("functions.php");
+require("head.php");
 
 //Check to see if the playAroundEducation session exists and the user is not logged in
 if (!isset($_SESSION['playAroundEducation'])) {
     //Create some default records
     setupEducationSession();
 }
+
 if (isset($_SESSION['playAroundEducation'])) {
     //Setup the autocomplete education arrays for the session variables
     $institutionArray = getUniqueValuesForSession($_SESSION['playAroundEducation'], 1);
