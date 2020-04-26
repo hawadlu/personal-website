@@ -35,7 +35,7 @@
         </div>
     </div>
     <!--Disable scrolling-->
-    <body id = "body" class="background-img" style="opacity: <?php echo $opacity;?>">
+    <body id = "body" class="background-img" style="opacity: <?php echo $opacity;?>; overflow: hidden">
         <div style="text-align: center">
             <div class="indexNav">
                 <div>

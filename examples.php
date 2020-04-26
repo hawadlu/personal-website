@@ -46,10 +46,22 @@ if (isset($_SESSION['playAroundExamples'])) {
 <div class="page-grid-container">
     <!--Display a message to the user-->
     <div class="roundAll editMessage">
-        <p>These are your records. You can edit them by clicking on the play around tab!</p>
-        <button id="showUserExamples" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userExamples', 'showUserExamples', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
-            Show me what I can play with.
-        </button>
+        <?php
+        //Check if there are any records to display
+        if (sizeof($exampleNameArray) != 0) {
+            ?>
+            <p>These are your records. You can edit them by clicking on the play around tab!</p>
+            <button id="showUserExamples" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userExamples', 'showUserExamples', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
+                Show me what I can play with.
+            </button>
+            <?php
+        } else {
+            ?>
+            <p>You don't have any records yet! Click <a href="edit.php" style="color: #aa8725">here</a> to make some</p>
+            <?php
+        }
+        ?>
+
     </div>
 
     <?php
