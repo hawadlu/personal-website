@@ -203,6 +203,16 @@ button {
   font-family: Raleway ;
 }
 
+.cvDownloadButton {
+  background: none;
+  border: none;
+}
+
+.cvDownloadButton:hover {
+  color: #EF4A4A;
+  transition: 0.3s;
+}
+
 .pageLink:hover {
   color: #EF4A4A;
   transition: 0.3s;
@@ -1049,7 +1059,7 @@ button {
 
 /* The Close Button */
 .closeEditAddModal {
-  color: #aaaaaa;
+  color: #aa9b1b;
   float: left;
   font-size: 28px;
   font-weight: bold;

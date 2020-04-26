@@ -2,6 +2,22 @@
 <!--Pulls in the head and other required pages-->
 <?php
 require("head.php");
+
+//Download CV. This is here so that the user does not have to be redirected to the process page.
+if (isset($_POST['downloadCVButton'])) {
+    $file = 'CV/CV.pdf';
+
+    if (file_exists($file)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+    }
+}
 ?>
 <body onload="showPrivacy()" class="background-img">
     <div class="page-grid-container">
@@ -35,6 +51,13 @@ require("head.php");
             <div style="text-align: center">
                 <h3>Get in touch</h3>
                 <p>Email: <a href="mailto:hawadlu@outlook.com">hawadlu@outlook.com</a></p>
+
+                <form action="" method="post">
+                    <button name="downloadCVButton" type="submit" class = "cvDownloadButton">
+                        <h3>Download my CV</h3>
+                    </button>
+                </form>
+
             </div>
             <button id="show" style="display: block;" class="hidePrivacy roundBottom"
                     onclick="showElementPrivacy('privacy')">Show my cookie and privacy policy

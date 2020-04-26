@@ -697,7 +697,7 @@ function isType($type, $value)
 //Takes a value and checks if it contains any illegal characters mark of any kind. Returns the illegal character if it does, true if it does not
 function containsIllegalCharacter($value)
 {
-    $characters = ['“', '”', '"', '"', '‘', '’', "'", "'", '«', '»', '「', '」', '`'];
+    $characters = ['“', '”', '"', '"', '«', '»', '「', '」', '`'];
     for ($i = 0; $i < sizeof($characters); $i++) {
         //Check if the character is contained in the value
         if (strpos($value, $characters[$i]) !== false) {

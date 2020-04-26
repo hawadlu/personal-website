@@ -85,10 +85,21 @@ function calculateClassHeader($count, $recordCount)
 
     <!--Display a message to the user-->
     <div class="roundAll editMessage">
-        <p>These are your records. You can edit them by clicking on the play around tab!</p>
-        <button id="showUserEducation" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userEducation', 'showUserEducation', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
-            Show me what I can play with.
-        </button>
+        <?php
+        //Check if there are any records to display
+        if (sizeof($educationArray) != 0) {
+            ?>
+            <p>These are your records. You can edit them by clicking on the play around tab!</p>
+            <button id="showUserEducation" style="display: block; height: auto; padding: 0;" class="hidePrivacy" onclick="showElementWithButton('userEducation', 'showUserEducation', 'Show me what I can mess with.', 'Hide the stuff that I can mess around with.')">
+                Show me what I can play with.
+            </button>
+            <?php
+        } else {
+            ?>
+            <p>You don't have any records yet! Click <a href="edit.php" style="color: #aa8725">here</a> to make some</p>
+            <?php
+        }
+        ?>
     </div>
     <div id="userEducation" style="display: none; margin-bottom: 20px;">
         <!--Show the records that the user can edit-->
