@@ -5,17 +5,21 @@ require("head.php");
 
 //Download CV. This is here so that the user does not have to be redirected to the process page.
 if (isset($_POST['downloadCVButton'])) {
-    $file = 'CV/CV.pdf';
+    $file = "CV/CV.pdf";
 
     if (file_exists($file)) {
         header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Type: application/force-download');
+        header("Content-Disposition: attachment; filename=\"" . basename("Luke Hawinkels CV.pdf") . "\";");
+        header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . filesize($file));
+        ob_clean();
+        flush();
         readfile($file);
+        exit;
     }
 }
 ?>
