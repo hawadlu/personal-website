@@ -2,6 +2,7 @@
 <!--Allows the nav to scale for mobile devices-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="styles.css">
+<script src="js/functions.js"></script>
 
     <div class="topnav" id="myTopnav">
         <a href="index.php" class="active">Home</a>
