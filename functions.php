@@ -268,7 +268,6 @@ function deleteDirectory($filePath)
                 unlink($file);
             }
         }
-
         //Remove the directory
         rmdir($filePath);
     }

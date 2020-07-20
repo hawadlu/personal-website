@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="c6d61021-a76d-40e6-868d-8273167587a0" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" />
+      <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="b9955d98-39b9-489f-b9fe-dc10b438dbb2" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" />
+      <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="8e78243d-6355-42f4-b3df-04bf82d95770" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" />
+    </configs>
+  </component>
+</project>

@@ -1,12 +1,6 @@
-<html lang="English">
-<!--Pulls in the head and other required pages-->
 <?php
-require("head.php");
-
-//Download CV. This is here so that the user does not have to be redirected to the process page.
 if (isset($_POST['downloadCVButton'])) {
     $file = "CV/CV.pdf";
-
     if (file_exists($file)) {
         header('Content-Description: File Transfer');
         header('Content-Type: application/force-download');
@@ -22,6 +16,11 @@ if (isset($_POST['downloadCVButton'])) {
         exit;
     }
 }
+?>
+<html lang="English">
+<!--Pulls in the head and other required pages-->
+<?php
+require("head.php");
 ?>
 <body onload="showPrivacy()" class="background-img">
     <div class="page-grid-container">
