@@ -1,22 +1,3 @@
-<?php
-if (isset($_POST['downloadCVButton'])) {
-    $file = "CV/CV.pdf";
-    if (file_exists($file)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/force-download');
-        header("Content-Disposition: attachment; filename=\"" . basename("Luke Hawinkels CV.pdf") . "\";");
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        ob_clean();
-        flush();
-        readfile($file);
-        exit;
-    }
-}
-?>
 <html lang="English">
 <!--Pulls in the head and other required pages-->
 <?php
@@ -55,11 +36,8 @@ require("head.php");
                 <h3>Get in touch</h3>
                 <p>Email: <a href="mailto:hawadlu@outlook.com">hawadlu@outlook.com</a></p>
 
-                <form action="" method="post">
-                    <button name="downloadCVButton" type="submit" class = "cvDownloadButton">
-                        <h3>Download my CV</h3>
-                    </button>
-                </form>
+                <h3>My CV</h3>
+                <a class = "cvDownloadButton" href="CV/CV.pdf" download>click here to download!</a>
 
             </div>
             <button id="show" style="display: block;" class="hidePrivacy roundBottom"
