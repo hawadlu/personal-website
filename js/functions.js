@@ -59,12 +59,6 @@ function showElement(id) {
     }
 }
 
-//Code used for the slide shows
-const slideIndex = [];
-
-//Pre-populate the list. Dynamically adjusts based on the number of instances of the grid class
-const slideId = [];
-
 //Called to populate the array for each slideshow
 function populateSlideshow(className) {
     for (let i = 0; i < document.querySelectorAll("." + className).length; i++) {
