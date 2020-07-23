@@ -103,7 +103,9 @@ require("head.php");
                         <a href="http://www.networkadvertising.org/" class="onHover" style="font-size: 12px;">Network Advertising Initiative</a>
                     </li>
                 </ul>
-                <br><br>
+                <h3 class="alignTextLeft">Analytics</h3>
+                <p class="alignTextLeft">You can learn more about Google Analytics <a href="https://policies.google.com/privacy?hl=en-US">here.</a></p>
+                <br>
                 <button onclick="hideElementPrivacy('privacy')" class="roundBottom hidePrivacy">Hide</button>
             </div>
         </div>

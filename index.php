@@ -26,7 +26,7 @@
                 </h1>
             </div>
             <p style="padding: 10px;">
-                My website uses cookies to power the experience (I promise that I'm not tracking you, but if you want to look at the source code on github please feel free to do so).
+                My website uses google analytics and cookies cookies to power the experience (I promise that I'm not tracking you, but if you want to look at the source code on github please feel free to do so).
                 Click <a class="onHover" href="about.php?privacy=true">here</a>
                 to view my privacy and cookie policies. By continuing to use this website you consent to the
                 use of cookies.
