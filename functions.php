@@ -91,9 +91,9 @@ function setupEducationSession() {
 function setupExampleSession() {
     //Create some default Records
     $defaultRec1 = [0, ['images/userImages/cat.jpeg', 'images/userImages/eraser.jpeg', 'images/userImages/phone.jpeg'], "How I Saved To World Twice", ["CSS", "PHP", "JavaScript", "HTML"],
-        "http://luke.dx.am", "http://github.com/hawadlu", "Whoops, I forgot to write a description here.", 2019];
+        "http://www.lukehawinkels.com", "http://github.com/hawadlu", "Whoops, I forgot to write a description here.", 2019];
     $defaultRec2 = [1, ['images/userImages/fork.jpeg', 'images/userImages/nailClippers.jpeg', 'images/userImages/phone.jpeg', 'images/userImages/spring.jpeg'],
-        "What I Ate For Breakfast", ["CSS", "PHP", "RUBY", "Perl"], 'https://breakfast.co.nz', "https://github.com/PushyPixels/BreakfastWithUnity",
+        "What I Ate For Breakfast", ["CSS", "PHP", "RUBY", "Perl"], 'http://lukehawinkels.com', "https://github.com/PushyPixels/BreakfastWithUnity",
         "Contrary to the opinions of many people. I did not eat a fork, nail clippers, a phone and a spring for breakfast. I ate cornflakes instead. 
         I know that it's disappointing and a little anticlimactic.", 2020];
     $_SESSION['playAroundExamples'] = array($defaultRec1, $defaultRec2);
