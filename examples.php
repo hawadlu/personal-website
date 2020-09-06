@@ -43,6 +43,15 @@ if (isset($_SESSION['playAroundExamples'])) {
 <html lang="English">
 <!--Pulls in the head and other required pages-->
 <body class=background-img>
+
+<script>
+    //Variables for the slideshow
+    const slideIndex = [];
+
+    //Pre-populate the list. Dynamically adjusts based on the number of instances of the grid class
+    const slideId = [];
+</script>
+
 <div class="page-grid-container">
     <!--Display a message to the user-->
     <div class="roundAll editMessage">

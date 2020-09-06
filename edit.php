@@ -125,6 +125,15 @@ require("head.php");
 <html lang="English">
 <!-- The new project Modal -->
 <body id="body" class="background-img">
+
+<script>
+    //Variables for the slideshow
+    const slideIndex = [];
+
+    //Pre-populate the list. Dynamically adjusts based on the number of instances of the grid class
+    const slideId = [];
+</script>
+
 <div id="pageGrid" class="page-grid-container">
     <div style="background-color: white; opacity: 80%; padding-bottom: 20px;" class="roundAll">
         <!--The edit tabs-->
