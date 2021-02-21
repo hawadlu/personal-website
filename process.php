@@ -281,7 +281,7 @@ if (isset($_POST['submitExampleUpdate'])) {
         [$postedExampleYear, 'exampleYear', 'int', 4, false],
         [$postedExampleLink, 'exampleLink', 'string', 100, true],
         [$postedExampleGithub, 'exampleGithub', 'string', 100, true],
-        [$postedExampleDescription, 'exampleDescription', 'string', 1000, false]];
+        [$postedExampleDescription, 'exampleDescription', 'string', 2000, false]];
 
     $languageArray = [];
 
@@ -588,7 +588,7 @@ if (isset($_POST['newExampleRecord'])) {
         [$postedNewExampleYear, 'exampleYear', 'int', 4, false],
         [$postedNewExampleLink, 'exampleLink', 'string', 100, true],
         [$postedNewExampleGithub, 'exampleGithub', 'string', 100, true],
-        [$postedNewExampleDescription, 'exampleDescription', 'string', 1000, false]];
+        [$postedNewExampleDescription, 'exampleDescription', 'string', 2000, false]];
 
     $languagesUsed = []; //Array of languages that the user wants to add
 
