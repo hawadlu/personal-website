@@ -757,7 +757,7 @@ require("head.php");
                                     if ($link != null) {
                                         ?>
                                         Link:
-                                        <a class="pageLink" href="<?php echo $link; ?>"><?php echo $link; ?></a>
+                                        <a class="pageLink" href="<?php echo $link; ?>" target="_blank"><?php echo $link; ?></a>
                                         <?php
                                     } else {
                                         echo "Sorry, there is no link to be displayed.";
@@ -770,7 +770,7 @@ require("head.php");
                                     if ($github != null) {
                                         ?>
                                         GitHub:
-                                        <a class="pageLink" href="<?php echo $github; ?>"><?php echo $github; ?> </a>
+                                        <a class="pageLink" href="<?php echo $github; ?>" target="_blank"><?php echo $github; ?> </a>
                                         <?php
                                     } else {
                                         echo "Sorry, there is no github link.";
@@ -1648,7 +1648,7 @@ require("head.php");
                                     if ($link != null) {
                                         ?>
                                         Link:
-                                        <a class="pageLink" href="<?php echo $link; ?>"><?php echo $link; ?></a>
+                                        <a class="pageLink" href="<?php echo $link; ?>" target="_blank"><?php echo $link; ?></a>
                                         <?php
                                     } else {
                                         echo "Sorry, there is no link to be displayed.";
@@ -1661,7 +1661,7 @@ require("head.php");
                                     if ($github != null) {
                                         ?>
                                         GitHub:
-                                        <a class="pageLink" href="<?php echo $github; ?>"><?php echo $github; ?> </a>
+                                        <a class="pageLink" href="<?php echo $github; ?>" target="_blank"><?php echo $github; ?> </a>
                                         <?php
                                     } else {
                                         echo "Sorry, there is no github link.";
