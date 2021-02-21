@@ -34,7 +34,7 @@ require("head.php");
                 company.</p>
             <div style="text-align: center">
                 <h3>Get in touch</h3>
-                <p>Email: <a href="mailto:hawadlu@outlook.com">hawadlu@outlook.com</a></p>
+                <p>Email: <a href="mailto:luke@lukehawinkels.com">luke@lukehawinkels.com</a></p>
 
                 <h3>My CV</h3>
                 <a class = "cvDownloadButton" href="CV/CV.pdf" download>click here to download!</a>
