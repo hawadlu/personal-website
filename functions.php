@@ -1,5 +1,4 @@
 <?php
-session_start();
 //Includes all of the functions required by the different pages
 
 
