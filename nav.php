@@ -12,7 +12,7 @@
         <a href="edit.php">Play Around</a>
         <?
         //Check if logged in. Place a logout button if required
-        if (isset($_SESSION['loggedin'])) {
+        if (isset($_SESSION['loggedin']) && ($_SESSION['loggedin'] == true)) {
             ?>
             <a href="logout.php" style="color: #d90029">Logout</a>
             <?php

@@ -1,14 +1,16 @@
 <?php /** @noinspection ALL */
 
+session_start();
+
 //Check if the user is logged in
 require("functions.php");
-if (!isset($_SESSION['loggedin'])) {
+if (isset($_SESSION['loggedin']) && ($_SESSION['loggedin'] == true)) {
     //Set the logged in flag
-    $loggedIn = false;
-
-} else {
     $loggedIn = true;
     require("connect.php");
+
+} else {
+    $loggedIn = false;
 }
 
 //Table names from the DB
@@ -37,7 +39,7 @@ if (isset($_POST['submitEducationUpdate'])) {
     findInvalid([[$postedInstitution, 'institution', 'string', 40, false],
         [$postedSubject, 'subject', 'string', 100, false],
         [$postedSubjectYear, 'subjectYear', 'int', 4, false],
-        [$postedSubjectLevel, 'subjectLevel', 'string', 20, false],
+        [$postedSubjectLevel, 'subjectLevel', 'string', 25, false],
         [$postedCode, 'subjectCode', 'string', 10, false],
         [$postedCodeExtension, 'codeExtension', 'int', 4, false],
         [$postedCredits, 'credits', 'int', 2, false],
@@ -138,7 +140,7 @@ if (isset($_POST["newEducationRecord"])) {
     findInvalid([[$postedNewInstitution, 'institution', 'string', 40, false],
         [$postedNewSubject, 'subject', 'string', 100, false],
         [$postedNewSubjectYear, 'subjectYear', 'int', 4, false],
-        [$postedNewSubjectLevel, 'subjectLevel', 'string', 20, false],
+        [$postedNewSubjectLevel, 'subjectLevel', 'string', 25, false],
         [$postedNewSubjectCode, 'subjectCode', 'string', 10, false],
         [$postedNewCodeExtension, 'codeExtension', 'int', 4, false],
         [$postedNewCredits, 'credits', 'int', 2, false],

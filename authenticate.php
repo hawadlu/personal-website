@@ -27,8 +27,8 @@
             if (hash('sha256', $_POST['password']) == $password) {
                 // Verification success! User has logged in!
                 // Create sessions so we know the user is logged in, they basically act like cookies but remember the data on the server.
-                session_regenerate_id();
-                $_SESSION['loggedin'] = TRUE;
+                session_regenerate_id(true);
+                $_SESSION['loggedin'] = true;
                 $_SESSION['name'] = $_POST['username'];
                 $_SESSION['id'] = $id;
 
