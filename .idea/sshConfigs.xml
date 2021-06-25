@@ -8,7 +8,7 @@
       <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="b9955d98-39b9-489f-b9fe-dc10b438dbb2" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" username="2450097">
         <option name="customName" value="lukehawinkels.com" />
       </sshConfig>
-      <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="8e78243d-6355-42f4-b3df-04bf82d95770" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM">
+      <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="8e78243d-6355-42f4-b3df-04bf82d95770" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" username="2450097">
         <option name="customName" value="lukehawinkels.com" />
       </sshConfig>
     </configs>

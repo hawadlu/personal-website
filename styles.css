@@ -115,69 +115,28 @@ input[type=checkbox] {
 }
 
 /* VARIOUS BG IMAGE SIZES*/
-/*Too small for any image*/
-@media (max-width: 320px) {
+
+
+/*Devices in portrait*/
+@media (orientation: portrait) {
   .background-img {
-    background: #ffffff url("images/bg Images/min.jpeg") fixed no-repeat;
+    background-image: url("images/bg Images/Portrait.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
 
-/*Devices with a resolution between W320-W412 and H556-H732*/
-@media (min-width: 320px) and (max-width: 412px) {
+/*Devices in landscape*/
+@media (orientation: landscape) {
   .background-img {
-    background: #ffffff url("images/bg Images/w320-412 h556-732.jpeg") fixed no-repeat;
-    height: 100%;
+    background-image: url("images/bg Images/Landscape.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
 
-/*Devices with a resolution between W412-W600 and H732-H960*/
-@media (min-width: 412px) and (max-width: 600px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/w412-600 h732-960.jpeg") fixed no-repeat;
-  }
-}
-
-/*Devices with a resolution between W600-W1024 and H960-H1366*/
-@media (min-width: 600px) and (max-width: 1024px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/w600-1024 h960-1366.jpeg") fixed no-repeat;
-  }
-}
-
-/*Devices with a resolution between W1024-W2560 and H1366-H1504*/
-@media (min-width: 1024px) and (max-width: 2560px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/w1024-2560 h1366-1504.jpeg") fixed no-repeat;
-  }
-}
-
-/*Devices with a resolution between W2560-W3200 and H1504-H1800*/
-@media (min-width: 2560px) and (max-width: 3200px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/w2560-3200 h1504-1800.jpeg") fixed no-repeat;
-  }
-}
-
-/*Devices with a resolution between W3200-W3840 and H1800-H2160*/
-@media (min-width: 3200px) and (max-width: 3840px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/w3200-3840 h1800-2160.jpeg") fixed no-repeat;
-  }
-}
-
-/*Devices with a resolution between W3880-W5000 and H2160-H3750*/
-@media (min-width: 3840px) and (max-width: 5000px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/w3840-500 h2160-3750.jpeg") fixed no-repeat;
-  }
-}
-
-/*Display the largest image*/
-@media (min-width: 5000px) {
-  .background-img {
-    background: #ffffff url("images/bg Images/max.jpeg") fixed no-repeat;
-  }
-}
 
 img {
   padding: 0;
@@ -338,9 +297,11 @@ button {
   grid-template-areas: "." ".";
   padding-bottom: 75px;
   width: 90%;
-  margin: 150px 5% 75px;
+  height: 80%;
+  margin: 150px 5% 100px;
   opacity: 80%;
   border-radius: 20px;
+  overflow-y: auto;
 }
 
 .header-nav-container {
