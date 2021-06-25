@@ -1,13 +1,13 @@
 <?php
-        session_start();
+        session_start(); //required here because header.php will send the headers
         if (isset($_SESSION['loggedin'])) {
             header('Location: edit.php');
             exit();
         }
 
+        require("header.php");
         require("connect.php");
         require("head.php");
-        require("header.php");
 
         //Check to see if an error message has been set
         $errorMessage = null;

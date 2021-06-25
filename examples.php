@@ -1,5 +1,5 @@
-
 <?php
+require("header.php");
 require("connect.php");
 require("functions.php");
 require("head.php");

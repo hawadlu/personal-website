@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html lang="English">
     <!--Links to the stylesheet-->
     <link rel="stylesheet" href="styles.css">
@@ -5,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <?php
-    session_start();
-
     //Gets the current file name. Used to determine the opacity of the header and nav.
     if (basename($_SERVER["PHP_SELF"]) == "index.php") {
         $opacityHeader = "75%";

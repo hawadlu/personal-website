@@ -1,26 +1,4 @@
 <?php /** @noinspection PhpUndefinedMethodInspection */
-require("connect.php");
-require("functions.php");
-if (!isset($_SESSION['loggedin'])) {
-    //Set a NOT logged in flag
-    $loggedIn = false;
-} else {
-    //set a logged in flag
-    $loggedIn = true;
-
-    //Run several php queries to get arrays of each field of the education
-    $institutionArray = getArray("SELECT institution.institution FROM institution WHERE institution != ''", $con);
-    $subjectArray = getArray("SELECT DISTINCT subject FROM education", $con);
-    $yearArray = getArray("SELECT year.year FROM year WHERE year != ''", $con);
-    $subjectLevelArray = getArray("SELECT subjectLevel.subjectLevel FROM subjectLevel WHERE subjectLevel != ''", $con);
-    $codeArray = getArray("SELECT subjectCode.subjectCode FROM subjectCode WHERE subjectCode != ''", $con);
-    $extensionArray = getArray("SELECT codeExtension.codeExtension FROM codeExtension WHERE codeExtension != ''", $con);
-    $gradeArray = getArray("SELECT grade.grade FROM grade WHERE grade != ''", $con);
-
-    //Run queries to get arrays for each examples field
-    $exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
-    $languageArrayDB = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
-}
 
 //Check to see if an error message has been set
 $errorMessage = null;
@@ -42,6 +20,30 @@ if (isset($_COOKIE['successMsg'])) {
     }
 
     setcookie('successMsg', time() - 3600);
+}
+
+require("header.php");
+require("connect.php");
+require("functions.php");
+if (!isset($_SESSION['loggedin'])) {
+    //Set a NOT logged in flag
+    $loggedIn = false;
+} else {
+    //set a logged in flag
+    $loggedIn = true;
+
+    //Run several php queries to get arrays of each field of the education
+    $institutionArray = getArray("SELECT institution.institution FROM institution WHERE institution != ''", $con);
+    $subjectArray = getArray("SELECT DISTINCT subject FROM education", $con);
+    $yearArray = getArray("SELECT year.year FROM year WHERE year != ''", $con);
+    $subjectLevelArray = getArray("SELECT subjectLevel.subjectLevel FROM subjectLevel WHERE subjectLevel != ''", $con);
+    $codeArray = getArray("SELECT subjectCode.subjectCode FROM subjectCode WHERE subjectCode != ''", $con);
+    $extensionArray = getArray("SELECT codeExtension.codeExtension FROM codeExtension WHERE codeExtension != ''", $con);
+    $gradeArray = getArray("SELECT grade.grade FROM grade WHERE grade != ''", $con);
+
+    //Run queries to get arrays for each examples field
+    $exampleNameArray = getArray("SELECT DISTINCT name FROM examples", $con);
+    $languageArrayDB = getArray("SELECT languages.languages FROM languages WHERE languages != ''", $con);
 }
 
 //Check to see if the playAroundEducation session exists and the user is not logged in

@@ -33,7 +33,7 @@
                 $_SESSION['id'] = $id;
 
                 //Redirect to the edit page
-                redirectWithSuccess('Logged in.', 'login.php');
+                redirectWithSuccess('Logged in.', 'edit.php');
 
             } else {
                 redirectWithError('Incorrect username or password', 'login.php');
