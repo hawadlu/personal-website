@@ -260,11 +260,13 @@ button {
 /*THE FOOTER*/
 .footerLink {
   font-size: 18px;
+  color: white;
 }
 
 .footerLink:hover {
   color: #ffcf00;
   transition: 0.3s;
+  text-underline: none;
 }
 
 .footer {
@@ -367,7 +369,6 @@ button {
   border-color: #9A9591;
   transition: 0.5s;
   text-decoration-color: aquamarine;
-  color: #ffcf00;
 }
 
 /*The hide privacy button*/
@@ -377,6 +378,12 @@ button {
   padding: 10px;
   transition: 0.5s;
   height: 75px;
+}
+
+/*The text on the index buttons*/
+.indexButtonText {
+  color: #3acb0c;
+  font-size: 20px;
 }
 
 /*Hover effects for the hide privacy button*/
@@ -1042,7 +1049,7 @@ button {
 
 /* The Close Button */
 .closeEditAddModal {
-  color: #aa9b1b;
+  color: #ffed00;
   float: left;
   font-size: 28px;
   font-weight: bold;

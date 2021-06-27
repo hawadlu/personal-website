@@ -17,6 +17,9 @@
       <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="55ad257a-91ea-4a2c-a25e-c9e5e89199e0" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" username="2450097">
         <option name="customName" value="lukehawinkels.com" />
       </sshConfig>
+      <sshConfig authType="PASSWORD" host="lukehawinkels.com" id="5ca18e91-0fd7-4b45-b0fe-7cee31b83b9e" port="221" customName="lukehawinkels.com" nameFormat="CUSTOM" username="2450097">
+        <option name="customName" value="lukehawinkels.com" />
+      </sshConfig>
     </configs>
   </component>
 </project>

@@ -22,7 +22,7 @@
             <!--The text and other information displayed in the cookie popup-->
             <div style="text-align: center; padding-top: 10px">
                 <h1 style="color: black;">
-                    Important Notice
+                    Cookies
                 </h1>
             </div>
             <p style="padding: 10px;">
@@ -42,7 +42,7 @@
                 <div>
                     <a href = "about.php">
                         <button class="indexButton">
-                            <strong>
+                            <strong class = "indexButtonText">
                                 About Me
                             </strong>
                         </button>
@@ -51,7 +51,7 @@
                 <div>
                     <a href="examples.php">
                         <button class="indexButton">
-                            <strong>
+                            <strong class = "indexButtonText">
                                 Examples
                             </strong>
                         </button>
