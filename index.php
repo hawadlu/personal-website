@@ -1,7 +1,4 @@
 <?php
-    require("header.php");
-    require("head.php");
-
     if (!isset($_COOKIE["CookiePolicy"]) || $_COOKIE["CookiePolicy"] != 1) {
         setcookie("CookiePolicy", 1, time() + 600);
         $show = "grid";
@@ -10,6 +7,9 @@
         $show = "none";
         $opacity = "100%";
     }
+
+    require("header.php");
+    require("head.php");
 
     ?>
     <html lang="English">

@@ -382,8 +382,9 @@ button {
 
 /*The text on the index buttons*/
 .indexButtonText {
-  color: #3acb0c;
+  color: #00ff15;
   font-size: 20px;
+  font-weight: bolder;
 }
 
 /*Hover effects for the hide privacy button*/
