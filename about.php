@@ -48,7 +48,7 @@ require("head.php");
                 <div id="privacy" onload="" style="display: none">
                     <h3 class="alignTextLeft">Cookies Policy</h3>
                     <p class="alignTextLeft">Last updated: (27/01/2020)</p>
-                    <p class="alignTextLeft">lukehawinkels.com uses cookies on luke.dx.am. By using the Service, you consent to the use of cookies.</p>
+                    <p class="alignTextLeft">lukehawinkels.com uses cookies on lukehawinkels.com. By using the Service, you consent to the use of cookies.</p>
                     <p class="alignTextLeft">Our Cookies Policy explains what cookies are, how we use cookies, how third-parties
                         we may partner with may use cookies on the Service, your choices regarding cookies and further
                         information about cookies.</p>
