@@ -57,7 +57,7 @@ require("head.php");
                         cookie file is stored in your web browser and allows the Service or a third-party to recognize you and
                         make your next visit easier and the Service more useful to you.</p>
                     <p class="alignTextLeft">Cookies can be "persistent" or "session" cookies.</p>
-                    <strong><p class="alignTextLeft">How luke.dx.am uses cookies</p></strong>
+                    <strong><p class="alignTextLeft">How lukehawinkels.com uses cookies</p></strong>
                     <p class="alignTextLeft">When you use and access the Service, we may place a number of cookies files in your web browser.</p>
                     <p class="alignTextLeft">We use cookies for the following purposes: to enable certain functions of the
                         Service, to provide analytics, to store your preferences, to enable advertisements delivery, including behavioural advertising.</p>
