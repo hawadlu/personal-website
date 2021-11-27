@@ -10,3 +10,5 @@ CV/
 .idea/sshConfigs.xml
 
 .DS_Store
+
+.idea/
