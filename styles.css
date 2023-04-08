@@ -151,14 +151,14 @@ img {
   width: auto;
   height: auto;
   float: left;
-  padding: 10px;
+  padding: 30px;
 }
 
 .imgFloatRight {
   width: auto;
   height: auto;
   float: right;
-  padding: 10px;
+  padding: 30px;
 }
 
 /*BUTTONS*/
