@@ -14,25 +14,36 @@ require("head.php");
                 </h1>
             </div>
             <div class = "text">
-                <img class="aboutMeImg" src="images/Profile Pic.png" alt="Me">
+                <img class="imgFloatLeft" src="images/Profile Pic.png" alt="Me">
                 <p style="padding: 10px">
-                    I have chosen to go down the software development route because I feel that the teamwork environment that
-                    the industry provides is a natural fit for my personality. I enjoy working as part of a team (especially
-                    sports and development teams).
+                    At 23 years old, I am a passionate software engineer, committed to both my professional and personal pursuits. My dedication to continuous learning and growth is evident in various aspects of my life, from my career to my hobbies. With a degree in Software Engineering from Victoria University of Wellington, I specialize in developing mobile applications using React Native. This website provides more information about my background, education, and interests, including my love of model aircraft flying, long-distance running, and small project development.
+                </p>
+                <h2 style="padding-left: 10px">Professional Experience</h2>
+                <p style="padding: 10px">
+                    <img class="imgFloatRight" src="images/fiq/fiq.png" alt="Me">
+                    Currently, I am employed at FarmIQ Systems Limited, located in Wellington, New Zealand. Within the company, I am part of the team responsible for developing the <a href="#" onclick="window.location.href = chooseLink()">FarmIQ Mobile App</a>, a cross-platform application utilizing React Native with full offline capabilities. The FarmIQ app serves as a digital diary for farmers, enabling them to easily view and manage stock, mobs, paddocks, and mob movements. My primary focus has been on refining form elements, including the redevelopment of a date picker and drop-down selector.
                     <br><br>
-                    I find coding a program with constraints to be an excellent learning opportunity and an enjoyable challenge.
-                    I have been programming for five-plus years. This has included learning languages such as python, PHP, SQL,
-                    CSS and HTML.
+                    Before transitioning to a full-time role, I worked part-time at FarmIQ while completing my final year of studies. My responsibilities during this period included bug fixes in our Java application and data fixes in the SQL database, ensuring the accuracy of our customers' information.
                     <br><br>
-                    I am currently at University and practising the languages C++, Python and Java. I can bring an element of
-                    leadership and teamwork
-                    as well a hard-working, motivated personality to any role.
+                    My journey with FarmIQ began with a four-month full-time internship in November 2022. During this time, I contributed to the development of the CRV myHerd app, focusing on API and form functionality.
+                </p>
+                <h2 style="padding: 10px">Education</h2>
+                <p style="padding: 10px">
+                    <img class="imgFloatLeft" src="images/planes/BushmuleProject.png" alt="Me">
+                    Prior to my professional experience, I pursued a Bachelor of Engineering with Honours in Software Engineering at Victoria University of Wellington, graduating in May 2023. Throughout my academic journey, I worked on a diverse range of projects, such as the development of a mobile air quality monitoring system that could be attached to a drone for portable airborne air quality measurements. I also gained proficiency in various programming languages, including Java, PHP, React Native, React Ionic, C, C++, and Dafny.
                     <br><br>
-                    While in the New Zealand Cadet Corp I was a Flight Sargent which meant that I regularly had to deliver
-                    forty-five-minute lessons to thirteen and fourteen-year-olds. This involved planning the lessons while
-                    working around the tasks that I have from University and a part-time job as a waiter. This has taught me
-                    valuable leadership, communication and time management skills which I think would be a great fit for any
-                    company.</p>
+                    In addition to my studies, I worked part-time at a Chinese restaurant, which enabled me to pay off my student loans and develop essential interpersonal skills, particularly when interacting with challenging customers.
+                </p>
+                <h2 style="padding: 10px">Interests & Hobbies</h2>
+                <p style="padding: 10px">
+                    <img class="imgFloatRight" src="images/planes/Extra.png" alt="Me">
+                    In my leisure time, I enjoy the excitement of model aircraft flying, with a few notable models in my collection, such as a 1.3m Extra 300 aerobatic model aircraft and a 1.5m Bushmule twin-engine aircraft. These models offer unique challenges and thrilling experiences that I greatly appreciate.
+                    <br><br>
+                    <img class="imgFloatLeft" src="images/running/running.png" alt="Me">
+                    Additionally, I have a keen interest in long-distance running, having completed several marathons in various locations, including Wellington, Auckland, Queenstown, and Melbourne. Running has not only allowed me to explore diverse landscapes but also helped me to develop the discipline and determination required to succeed in both personal and professional endeavors.
+                    <br><br>
+                    Outside of these hobbies, I enjoy working on small projects that expand my skill set and nurture my creativity. Two notable examples include a maze solver and a grades calculator app. The maze solver was built as an extension to a university project, and you can find more details on the examples page. The grades calculator app was created to address a pain point experienced at university, as it was challenging to determine the required grades on certain assignments and exams to achieve a specific GPA. These projects showcase my dedication to continuous learning and growth, and I encourage you to explore them to gain a better understanding of my personal interests and technical abilities.
+                </p>
             </div>
             <div class = "more-info">
                 <h3>Get in touch</h3>
@@ -91,6 +102,18 @@ require("head.php");
         </div>
         <script src="js/functions.js"></script>
         <script>
+            function chooseLink() {
+                const userAgent = navigator.userAgent.toLowerCase();
+
+                if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
+                    return "https://apps.apple.com/nz/app/farmiq/id1551569914";
+                } else if (userAgent.includes("android")) {
+                    return "https://play.google.com/store/apps/details?id=nz.co.farmiq.modern&hl=en_US";
+                } else {
+                    return "https://farmiq.co.nz/";
+                }
+            }
+
             //Shows the privacy if necessary
             function showPrivacy() {
                 const urlString = window.location.href;

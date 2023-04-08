@@ -10,7 +10,7 @@
         <a href="examples.php">Examples</a>
         <a href="education.php">Education</a>
         <a href="edit.php">Play Around</a>
-        <?
+        <?php
         //Check if logged in. Place a logout button if required
         if (isset($_SESSION['loggedin']) && ($_SESSION['loggedin'] == true)) {
             ?>

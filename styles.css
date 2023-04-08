@@ -147,10 +147,17 @@ img {
 }
 
 /*Used for the image on the about me page*/
-.aboutMeImg {
+.imgFloatLeft {
   width: auto;
   height: auto;
   float: left;
+  padding: 10px;
+}
+
+.imgFloatRight {
+  width: auto;
+  height: auto;
+  float: right;
   padding: 10px;
 }
 
@@ -1100,5 +1107,3 @@ button {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
-
-
